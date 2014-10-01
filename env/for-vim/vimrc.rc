@@ -1,0 +1,12 @@
+
+
+syntax on
+
+set nu
+
+set ai
+set background=light
+set ts=4
+set sw=4
+set spell 
+set spl=en
