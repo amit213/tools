@@ -1,6 +1,34 @@
 #!/bin/sh
+#!/bin/bash
 #ss
 
 ## This is the long running shell rc..
 
-echo "Mr. Anderson, Welcome to your home dir."
+echo "Mr. Anderson, Welcome Home."
+
+#shell prompt facelift
+#export PS1="\u@\h:[\W]$ "
+export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
+#green colored.  export PS1="\e[1;32m\u@\h \w> \e[m"
+
+
+#local section
+alias s='source ~/codebase/gitBase/tools/env/myshellrc.rc'
+
+
+#screen section
+alias sc='screen -dr'
+alias sls='screen -ls'
+
+#global section
+alias ls='ls -l'
+
+alias s1='echo `pwd` > /tmp/.s1-tmp'
+alias g1='cd "`cat /tmp/.s1-tmp`"'
+alias s2='echo `pwd` > /tmp/.s2-tmp'
+alias g2='cd "`cat /tmp/.s2-tmp`"'
+alias s3='echo `pwd` > /tmp/.s3-tmp'
+alias g3='cd "`cat /tmp/.s3-tmp`"'
+
+
+
