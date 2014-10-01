@@ -1,1 +1,6 @@
 #!/bin/sh
+#ss
+
+## This is the long running shell rc..
+
+echo "Mr. Anderson, Welcome to your home dir."
