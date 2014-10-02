@@ -13,7 +13,7 @@ vimrcfile=.vimrc
 			dbg_print() {
 					is_debug_mode_on
 				 dbg=$?
-				 [ $dbg == 1 ] && $@
+				 [ $dbg -eq 1 ] && $@
 			}
 			# check if file exists
 			is_file_present() {
@@ -37,17 +37,18 @@ vimrcfile=.vimrc
 			apply_env() {
 					is_file_present ~/$shellrcfile
 					already_installed=$?
-					if [[ $already_installed == 1 ]] 
+					#if [[ $already_installed == 1 ]] 
+					if [ $already_installed -eq 1 ] 
 					then
 					 echo "Previous installation detected. Links updated."
-					 create_symlinks
+					 #create_symlinks
 					else
 						create_symlinks
 						insert_into_login_rc
 					 echo "Env config applied. Enjoy."
 					fi				
 			}
-			
+
 			create_symlinks() {
 					ln -s -f ~/tools/env/myshellrc.rc ~/.myshellrc.rc
 					ln -s -f ~/tools/env/for-vim/vimrc.rc ~/.vimrc				
