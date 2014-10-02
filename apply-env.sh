@@ -23,11 +23,11 @@ vimrcfile=.vimrc
      then
         dbg_print echo "$1 is a link and was found."
         flag=1
-     elif [[ -f $1 ]]
+     elif [ -f $1 ]
      then
         dbg_print echo "$1 is a file and was found."
         flag=1
-     elif [[ -s $1 ]]; then
+     elif [ -s $1 ]; then
         dbg_print echo "file $1 found."
      fi
      return $flag 
