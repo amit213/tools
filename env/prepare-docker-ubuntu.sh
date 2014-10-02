@@ -2,7 +2,7 @@
 #!/bin/bash
 #ss
 
-#### this is prep work for running docker on fresh Docker containers.
+#### this is prep work for running docker on fresh containers.
 
 #install docker.
 
@@ -18,4 +18,6 @@ sudo apt-get install lxc-docker -y
 echo "Docker installation done."
 echo "Adding $USER to docker group"
 sudo adduser $USER docker
+
+
 
