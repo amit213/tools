@@ -15,11 +15,11 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
   osname=`uname`
   osname_lowercase=`uname | tr '[:upper:]' '[:lower:]'`
   hostname=`hostname`
+  myshellrcfilename=".myshellrc.rc"
 
 
 #local section
-  #alias s='source ~/codebase/gitBase/tools/env/myshellrc.rc'
-  alias s='source ~/.myshellrc.rc'
+  alias s='source ~/$myshellrcfilename'
 
 #screen section
   alias sc='screen -dr'
@@ -72,8 +72,40 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      elif [[ -s $1 ]]; then
         dbg_print echo "file $1 found."
      fi
-     echo $flag
      return $flag 
+   }
+
+   #setup docker specific aliases
+   set_docker_alias() {
+     #alias drmi='docker images --no-trunc | grep none | awk '{print $3}' | xargs docker rmi'
+     alias dimg='docker images'
+     alias dps='docker ps'
+
+   }
+
+   #setup ssh related aliases
+   set_target_ssh_user_ip_port() {
+     echo "target-ip-port $1 $2 $3" >> /tmp/.$USER-target-ip-port.tmp
+
+   }
+   ssh_to_target_ip_port() {
+     is_file_present /tmp/.$USER-target-ip-port.tmp
+     ipportpresent=$?
+     if [ $ipportpresent -eq 1 ]
+     then
+      userval=`cat /tmp/.mbuser-target-ip-port.tmp | tail -n 1 | awk '{print $2}'`
+      ipval=`cat /tmp/.mbuser-target-ip-port.tmp | tail -n 1 | awk '{print $3}'`
+      portval=`cat /tmp/.mbuser-target-ip-port.tmp | tail -n 1 | awk '{print $4}'`
+      echo "running ssh -C $userval@$ipval -p $portval"
+      ssh -C $userval@$ipval -p $portval
+     else
+      echo "target ip port is not set."
+     fi     
+   }
+
+   set_ssh_alias() {
+     alias target-user-ip-port=set_target_ssh_user_ip_port
+     alias tsh=ssh_to_target_ip_port
    }
 
    ## Use this for OSX specific env config.
@@ -87,6 +119,7 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
 
      ## using grc  (generic color utility for console)
      #source "`brew --prefix`/etc/grc.bashrc"
+     set_docker_alias
    }
 
    ## Use this for Linux specific env config.
@@ -96,7 +129,7 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
    }
 
    apply_env_cfg() {
-     is_file_present ~/.myshellrc.rc
+     is_file_present ~/$myshellrcfilename
      already_installed=$?
      if [ $already_installed -eq 1 ]
      then
@@ -106,7 +139,14 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
 
    set_common_env_conf() {
      dbg_print echo "setting generic env config for all OS."
+     set_ssh_alias
    }
+
+   
+
+
+
+
 
    set_os_specific_conf() {
      set_common_env_conf
