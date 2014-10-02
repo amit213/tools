@@ -12,31 +12,31 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
 
 
 ## global variables
-		osname=`uname`
-		osname_lowercase=`uname | tr '[:upper:]' '[:lower:]'`
-		hostname=`hostname`
+  osname=`uname`
+  osname_lowercase=`uname | tr '[:upper:]' '[:lower:]'`
+  hostname=`hostname`
 
 
 #local section
-		#alias s='source ~/codebase/gitBase/tools/env/myshellrc.rc'
-		alias s='source ~/.myshellrc.rc'
+  #alias s='source ~/codebase/gitBase/tools/env/myshellrc.rc'
+  alias s='source ~/.myshellrc.rc'
 
 #screen section
-		alias sc='screen -dr'
-		alias sls='screen -ls'
+  alias sc='screen -dr'
+  alias sls='screen -ls'
 
 #global section
-		alias ll='ls -l'
-		alias M='du -sh * | grep M'
-		alias G='du -sh * | grep G'
+  alias ll='ls -l'
+  alias M='du -sh * | grep M'
+  alias G='du -sh * | grep G'
 
 
-		alias s1='echo `pwd` > /tmp/.s1-tmp'
-		alias g1='cd "`cat /tmp/.s1-tmp`"'
-		alias s2='echo `pwd` > /tmp/.s2-tmp'
-		alias g2='cd "`cat /tmp/.s2-tmp`"'
-		alias s3='echo `pwd` > /tmp/.s3-tmp'
-		alias g3='cd "`cat /tmp/.s3-tmp`"'
+  alias s1='echo `pwd` > /tmp/.s1-tmp'
+  alias g1='cd "`cat /tmp/.s1-tmp`"'
+  alias s2='echo `pwd` > /tmp/.s2-tmp'
+  alias g2='cd "`cat /tmp/.s2-tmp`"'
+  alias s3='echo `pwd` > /tmp/.s3-tmp'
+  alias g3='cd "`cat /tmp/.s3-tmp`"'
 
 
 
@@ -45,81 +45,81 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
 
 ## ==========
 #global functions
-			is_debug_mode_on() {
-				 #turn off debug mode
+   is_debug_mode_on() {
+     #turn off debug mode
      return 0
      #turn ON debug mode
      #return 1
-			}
-			dbg_print() {
-					is_debug_mode_on
-				 dbg=$?
-				 [ $dbg -eq 1 ] && $@
-			}
+   }
+   dbg_print() {
+     is_debug_mode_on
+     dbg=$?
+     [ $dbg -eq 1 ] && $@
+   }
 
-			# check if file exists
-			is_file_present() {
-				 flag=0
-					dbg_print echo "checking if file: $1 exists."
-					if [  -L $1 ] 
-					then
-								dbg_print echo "$1 is a link and was found."
-								flag=1
-					elif [[ -f $1 ]]
-					then
-								dbg_print	echo "$1 is a file and was found."
-								flag=1
-					elif [[ -s $1 ]]; then
-						  dbg_print echo "file $1 found."
-					fi
-					echo $flag
-					return $flag 
-			}
+   # check if file exists
+   is_file_present() {
+     flag=0
+     dbg_print echo "checking if file: $1 exists."
+     if [  -L $1 ] 
+     then
+        dbg_print echo "$1 is a link and was found."
+        flag=1
+     elif [[ -f $1 ]]
+     then
+        dbg_print echo "$1 is a file and was found."
+        flag=1
+     elif [[ -s $1 ]]; then
+        dbg_print echo "file $1 found."
+     fi
+     echo $flag
+     return $flag 
+   }
 
-			## Use this for OSX specific env config.
-			set_osx_conf() {
+   ## Use this for OSX specific env config.
+   set_osx_conf() {
      dbg_print echo "setting OSX env config."
      #ls gets colors
      export CLICOLOR=1
-					#export LSCOLORS=Exfxcxdxbxegedabagacad
-					export LSCOLORS=GxFxCxDxBxegedabagaced
-					export GREP_OPTIONS='--color=auto'
+     #export LSCOLORS=Exfxcxdxbxegedabagacad
+     export LSCOLORS=GxFxCxDxBxegedabagaced
+     export GREP_OPTIONS='--color=auto'
 
-					## using grc  (generic color utility for console)
-					#source "`brew --prefix`/etc/grc.bashrc"
-			}
+     ## using grc  (generic color utility for console)
+     #source "`brew --prefix`/etc/grc.bashrc"
+   }
 
-			## Use this for Linux specific env config.
-			set_linux_conf() {
-					dbg_print echo "setting Linux env config."
-					alias ls='ls --color=auto'
-			}
+   ## Use this for Linux specific env config.
+   set_linux_conf() {
+     dbg_print echo "setting Linux env config."
+     alias ls='ls --color=auto'
+   }
 
-			apply_env_cfg() {
-				 is_file_present ~/.myshellrc.rc
-					already_installed=$?
-					if [ $already_installed -eq 1 ]
-					then
-					 echo "previous installation detected."
-					fi
-			}
+   apply_env_cfg() {
+     is_file_present ~/.myshellrc.rc
+     already_installed=$?
+     if [ $already_installed -eq 1 ]
+     then
+      echo "previous installation detected."
+     fi
+   }
 
-			set_common_env_conf() {
-					dbg_print echo "setting generic env config for all OS."
-			}
+   set_common_env_conf() {
+     dbg_print echo "setting generic env config for all OS."
+   }
 
-			set_os_specific_conf() {
-					set_common_env_conf
-					if [ "$osname_lowercase" == "linux" ] 
-					then
-						set_linux_conf
-					elif [ "$osname_lowercase" == "darwin" ] 
-					then
-						set_osx_conf
-					fi
-			}
+   set_os_specific_conf() {
+     set_common_env_conf
+     if [ "$osname_lowercase" == "linux" ] 
+     then
+      set_linux_conf
+     elif [ "$osname_lowercase" == "darwin" ] 
+     then
+      set_osx_conf
+     fi
+   }
 
 ## ==========
-	
+ 
 set_os_specific_conf $osname_lowercase
 
