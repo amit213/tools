@@ -1,6 +1,7 @@
 #!/bin/sh
 #!/bin/bash
-#ss
+#ss 
+#revisions
 
 ## This is the long running shell rc..
 
