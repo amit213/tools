@@ -1,4 +1,5 @@
 #!/bin/sh
+#
 
 #global vars
 shellrcfile=.myshellrc.rc
