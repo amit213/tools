@@ -19,6 +19,7 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
   hostname=`hostname`
   myshellrcfilename=".myshellrc.rc"
   tagfilenamealiasmap="aliasmap"
+  quoteofthedayfilename=".quote-of-the-day"
 
 
 #local section
@@ -61,10 +62,9 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      linenumb=${LINENO}
      if [ $dbgflag -eq 1 ] && [ "$@" ]
      then
-        #empty param. we will just print the stack.
-        #echo "$callerapi:"
+        #we will just print the msg.
         msgval="$@"       
-        echo "$callerapi: $msgval"        
+        echo "$callerapi: $msgval"
      else
         #do nothing. 
         msgval="$@"        
@@ -104,6 +104,46 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
 
    }
 
+   function hg () { 
+     history | grep $* ;
+   }
+
+   mm() {
+     top -l 1 | head -n 10 | grep PhysMem
+   }
+
+   sayg() { 
+     wget -q -U Mozilla -O $(tr ' ' _ <<< "$1"| 
+     cut -b 1-15).mp3 "http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=$(tr ' ' + <<< "$1")"; 
+   }
+
+   listen() {
+     lsof -iTCP:$1 -sTCP:LISTEN
+   }
+   chsm() {
+     openssl dgst -md5 $1
+   }
+   xkcd() {
+     curl -s 'http://xkcd.com/rss.xml' | xpath '//item[1]/description/text()' 2>&1 | 
+     sed -n 's/.*title="\([^"]*\)".*/\1/p' | fold -s
+   }
+
+   xkcd-view() {
+     wget -O /tmp/.xkcd_$(date +%y-%m-%d).png `lynx --dump http://xkcd.com/ | 
+     grep png` > /dev/null 2>&1 ; open /tmp/.xkcd_$(date +%y-%m-%d).png
+   }
+
+   xkcd-random() {
+     wget -O /tmp/.xkcd_$(date +%y-%m-%d).png `lynx --dump dynamic.xkcd.com/comic/random/ |
+     grep png` > /dev/null 2>&1 ; open /tmp/.xkcd_$(date +%y-%m-%d).png
+   }
+
+
+   weather() {
+    curl -s "http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query=${@:-<YOURZIPORLOCATION>}" |
+    perl -ne '/<title>([^<]+)/&&printf "%s: ",$1;/<fcttext>([^<]+)/&&print $1,"\n"';
+   }
+
    #setup ssh related aliases
    set_target_ssh_user_ip_port() {
      echo "target-ip-port $1 $2 $3" >> /tmp/.$USER-target-ip-port.tmp
@@ -129,6 +169,27 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      alias tsh=ssh_to_target_ip_port
    }
 
+   # search engine on console
+   function search {
+          Q="$@";GOOG_URL='https://www.google.com/search?tbs=li:1&q=';AGENT="Mozilla/4.0";
+          stream=$(curl -A "$AGENT" -skLm 10 "${GOOG_URL}${Q//\ /+}");echo "$stream" | 
+          grep -o "href=\"/url[^\&]*&amp;" | 
+          sed 's/href=".url.q=\([^\&]*\).*/\1/';
+   }
+
+   function q {
+          wget -q -O ~/$quoteofthedayfilename https://www.goodreads.com/quotes_of_the_day; 
+          cat ~/$quoteofthedayfilename | grep '&ldquo;\|/author/show' | 
+          sed -e 's/<[a-zA-Z\/][^>]*>//g' | sed 's/&ldquo;//g' | sed 's/&rdquo;//g'
+          #osascript -e 'display notification "Lorem ipsum dolor sit amet" with title "Title"'
+   }
+
+   function myshred {
+      #openssl enc -aes-256-ecb -pass pass:"$(dd if=/dev/urandom bs=128 count=1 2>/dev/null | 
+      #base64)" -nosalt < /dev/zero > $1
+      echo ""
+   }
+
    ## Use this for OSX specific env config.
    set_osx_conf() {
      dbg_print "setting OSX env config."
@@ -138,9 +199,26 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      export LSCOLORS=GxFxCxDxBxegedabagaced
      export GREP_OPTIONS='--color=auto'
 
+     alias dns='scutil --dns | grep nameserver'
+     alias bat='ioreg -l | grep Capacity'
+     
+
      ## using grc  (generic color utility for console)
      #source "`brew --prefix`/etc/grc.bashrc"
      set_docker_alias
+   }
+   function myip {
+     wget --no-check-certificate -q checkip.dyndns.org -O ~/.index.html && 
+     cat ~/.index.html|cut -d ' ' -f 6 | cut -d '<' -f 1
+   }
+   function myip2 {
+    curl -s ip.telize.com
+    #curl -s icanhazip.com
+   }
+
+   geoip() {
+    curl -s http://www.geoiptool.com/en/?IP=$(myip) | 
+    textutil -convert txt -stdin -stdout -format html | sed -n '/Hostname/,/Hostname/p'
    }
 
    ## Use this for Linux specific env config.
@@ -197,7 +275,19 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      if [ "$1" == "help" ]
      then
          echo "total number of alias :"`alias | wc -l`""
+         dns
+         echo "external ip:" `myip2`
      fi
+   }
+
+   function askg() {   
+     Q="$@"; 
+     GOOG_URL='https://www.google.com/search?q=';  
+     AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36" elinks -dump "${GOOG_URL}${Q//\ /+}" | grep "\*" | head -1 
+   }
+   function aski {
+     for i in {1..256};do p="  $i";echo -e "${p: -3} \\0$(($i/64*100+$i%64/8*10+$i%8))";
+     done|cat -t|column -c120
    }
 
    set_common_env_conf() {
@@ -208,7 +298,6 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      alias pg='ping google.com'
      alias seta=set_alias
      alias gg=load_run_tmp_aliasmaplist
-
      func1=(show_shell_summary)
      alias i="$func1 help"
 
