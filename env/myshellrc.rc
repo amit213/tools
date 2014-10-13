@@ -10,7 +10,8 @@ echo "Mr. Anderson, Welcome Home."
 
 #shell prompt facelift
 #export PS1="\u@\h:[\W]$ "
-export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
+PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
+
 
 
 ## global variables
@@ -199,7 +200,7 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      export LSCOLORS=GxFxCxDxBxegedabagaced
      export GREP_OPTIONS='--color=auto'
 
-     alias dns='scutil --dns | grep nameserver'
+     alias listdns='scutil --dns | grep nameserver'
      alias bat='ioreg -l | grep Capacity'
      
 
@@ -211,6 +212,7 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      wget --no-check-certificate -q checkip.dyndns.org -O ~/.index.html && 
      cat ~/.index.html|cut -d ' ' -f 6 | cut -d '<' -f 1
    }
+   
    function myip2 {
     curl -s ip.telize.com
     #curl -s icanhazip.com
@@ -275,7 +277,7 @@ export PS1="\e[1;32m\u@\h:[\W]$ \e[m"
      if [ "$1" == "help" ]
      then
          echo "total number of alias :"`alias | wc -l`""
-         dns
+         #dns
          echo "external ip:" `myip2`
      fi
    }

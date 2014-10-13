@@ -27,8 +27,8 @@ function FindProxyForURL(url, host)
         { return deny;}
       if ( shExpMatch(url, "*gmail*") )
         { return deny;}
-      if ( shExpMatch(url, "*google.com*") )
-        { return deny;}
+      //if ( shExpMatch(url, "*google.com*") )
+      //  { return deny;}
       if ( shExpMatch(url, "*facebook*") ) 
         { return deny;}
       if ( shExpMatch(url, "*outlook*") ) 
