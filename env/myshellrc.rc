@@ -2,7 +2,8 @@
 #!/bin/bash
 #ss 
 #author :: amit213
-#revisions
+#
+#revision history / summary.
 #
 
 ## This is the long running shell rc..
@@ -272,7 +273,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      fi
    }
 
-   #show summary
+   #show summary. todo: include more platform specific stuff.
    show_shell_summary() {     
      dbg_print "summary type [$1]"
      if [ "$1" == "help" ]
@@ -288,6 +289,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      GOOG_URL='https://www.google.com/search?q=';  
      AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36" elinks -dump "${GOOG_URL}${Q//\ /+}" | grep "\*" | head -1 
    }
+   
    function aski {
      for i in {1..256};do p="  $i";echo -e "${p: -3} \\0$(($i/64*100+$i%64/8*10+$i%8))";
      done|cat -t|column -c120
