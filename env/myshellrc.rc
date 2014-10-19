@@ -3,7 +3,7 @@
 #ss 
 #author :: amit213
 #revisions
-#
+# license - GNU gpl
 
 ## This is the long running shell rc..
 
@@ -32,7 +32,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   alias sls='screen -ls'
 
 #global section
-  alias ll='ls -l'
+  alias ll='ls -lh'
   alias M='du -sh * | grep M'
   alias G='du -sh * | grep G'
 
@@ -83,6 +83,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    is_file_present() {
      flag=0
      dbg_print "checking if file: $1 exists."
+     if [ -z "$1" ]
+     then
+       return $flag  #empty param.
+     fi
      if [  -L $1 ] 
      then
         dbg_print "$1 is a link and was found."
@@ -113,6 +117,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    mm() {
      top -l 1 | head -n 10 | grep PhysMem
    }
+
+
+
+
 
    sayg() { 
      wget -q -U Mozilla -O $(tr ' ' _ <<< "$1"| 
@@ -219,6 +227,13 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
     #curl -s icanhazip.com
    }
 
+   #shred the file / dir
+   shred() {
+    echo "Are you sure? It can't be undone."
+    echo "Usage: gshred -v -z -n 3 -u --random-source=/dev/random <input file>"
+    echo "gshred -v -z -n 3 -u --random-source=/dev/random\"\" " | pbcopy
+   }
+
    geoip() {
     curl -s http://www.geoiptool.com/en/?IP=$(myip) | 
     textutil -convert txt -stdin -stdout -format html | sed -n '/Hostname/,/Hostname/p'
@@ -271,6 +286,54 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
       source ~/.$USER-$tagfilenamealiasmap-list.tmp
      fi
    }
+
+   #encrypt on demand. basic ssl symmetric key.
+   encryptbyssl() {
+     inputfile=$1
+     is_file_present $inputfile
+     filefound=$?
+     if [ $filefound -eq 1 ]
+      then
+         openssl enc -aes-256-cbc -a -salt -in $inputfile -out $inputfile.openssl
+         retval=$?         
+         if [ $retval -eq 0 ]; 
+          then
+             echo "$inputfile.openssl created."
+             echo "Make sure to \"shred\" the original plaintext file."
+          else
+             echo ""
+         fi
+      else
+         echo "Missing input file name. Or file not found."
+     fi
+   }
+
+   #decrypt on demand. basic ssl symmetric key.
+   decryptbyssl() {
+     inputfile=$1
+     is_file_present $inputfile
+     filefound=$?
+     if [ $filefound -eq 1 ]
+      then
+         filename=$(basename "$inputfile")
+         #echo $filename
+         extension="${filename##*.}"
+         #echo $extension
+         filefrontname="${filename%.*}"
+         #echo $filefrontname
+         openssl enc -d -aes-256-cbc -a -salt -in $inputfile -out plain.$filefrontname
+         retval=$?         
+         if [ $retval -eq 0 ]; 
+          then
+             echo "plain.$filefrontname created."
+          else
+             echo ""
+         fi             
+      else
+         echo "Missing input file name. Or file not found."
+     fi
+   }
+
 
    #show summary
    show_shell_summary() {     
