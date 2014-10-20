@@ -117,7 +117,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
 
    #wrapper over is file present
-   file_check() {
+   file_present() {
      dbg_print "[${*}]"
      is_file_present $1
      if (( "$?" ))
@@ -183,9 +183,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
 
    ssh_to_target_ip_port() {
-     is_file_present /tmp/.$USER-target-ip-port.tmp
-     ipportpresent=$?
-     if [ $ipportpresent -eq 1 ]
+     if file_present /tmp/.$USER-target-ip-port.tmp
      then
       userval=`cat /tmp/.mbuser-target-ip-port.tmp | tail -n 1 | awk '{print $2}'`
       ipval=`cat /tmp/.mbuser-target-ip-port.tmp | tail -n 1 | awk '{print $3}'`
@@ -204,7 +202,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
    #load up custom configuration
    load_customized_shellrc() {    
-     if file_check $HOME/$mycustomshellrcfilename
+     if file_present $HOME/$mycustomshellrcfilename
      then
         dbg_print "loading custom shellrc : $HOME/$mycustomshellrcfilename"
         source $HOME/$mycustomshellrcfilename
@@ -280,9 +278,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
 
    apply_env_cfg() {
-     is_file_present ~/$myshellrcfilename
-     already_installed=$?
-     if [ $already_installed -eq 1 ]
+     if file_present $HOME/$myshellrcfilename
      then
       echo "previous installation detected."
      fi
@@ -313,9 +309,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
    #load and run tmp alias map list
    load_run_tmp_aliasmaplist() {
-     is_file_present ~/.$USER-$tagfilenamealiasmap-list.tmp
-     already_installed=$?
-     if [ $already_installed -eq 1 ]
+     if file_present $HOME/.$USER-$tagfilenamealiasmap-list.tmp
      then
       source ~/.$USER-$tagfilenamealiasmap-list.tmp
      fi
@@ -324,9 +318,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    #encrypt on demand. basic ssl symmetric key.
    encryptbyssl() {
      inputfile=$1
-     is_file_present $inputfile
-     filefound=$?
-     if [ $filefound -eq 1 ]
+     if file_present $inputfile
       then
          openssl enc -aes-256-cbc -a -salt -in $inputfile -out $inputfile.openssl
          retval=$?         
@@ -345,9 +337,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    #decrypt on demand. basic ssl symmetric key.
    decryptbyssl() {
      inputfile=$1
-     is_file_present $inputfile
-     filefound=$?
-     if [ $filefound -eq 1 ]
+     if file_present $inputfile
       then
          filename=$(basename "$inputfile")
          #echo $filename
