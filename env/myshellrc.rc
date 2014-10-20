@@ -14,7 +14,6 @@ echo "Mr. Anderson, Welcome Home."
 PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
 
-
 ## global variables. platform agnostic.
   osname=`uname`
   osname_lowercase=`uname | tr '[:upper:]' '[:lower:]'`
@@ -22,6 +21,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   myshellrcfilename=".myshellrc.rc"
   tagfilenamealiasmap="aliasmap"
   quoteofthedayfilename=".quote-of-the-day"
+  mycustomshellrcfilename=".customshellrc"
+  _TRUE=0
+  _FALSE=1
+  shellrc_dbg=0
 
 
 #local section
@@ -49,8 +52,18 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 ## ==========
 #global functions
    is_debug_mode_on() {
-     #turn ON(1) off(0) debug mode
-     return 0
+     #shell rc ON(1) off(0) debug mode     
+     return $shellrc_dbg
+   }
+   toggle_shellrc_dbg_mode() {
+     if (( $shellrc_dbg ))
+      then
+         shellrc_dbg=0
+         echo "shell debug is now OFF"         
+      else
+         shellrc_dbg=1
+         echo "shell debug is now ON"
+     fi
    }
    dbg_print_on() {
      is_debug_mode_on
@@ -82,7 +95,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    # check if file exists
    is_file_present() {
      flag=0
-     dbg_print "checking if file: $1 exists."
+     dbg_print "checking if file: $1 exists?"
+     dbg_print "[${*}]"
      if [ -z "$1" ]
      then
        return $flag  #empty param.
@@ -102,6 +116,18 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      return $flag 
    }
 
+   #wrapper over is file present
+   file_check() {
+     dbg_print "[${*}]"
+     is_file_present $1
+     if (( "$?" ))
+      then
+        return $_TRUE
+       else
+        return $_FALSE
+     fi
+   }
+
    #setup docker specific aliases
    set_docker_alias() {
      #alias drmi='docker images --no-trunc | grep none | awk '{print $3}' | xargs docker rmi'
@@ -117,9 +143,6 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    mm() {
      top -l 1 | head -n 10 | grep PhysMem
    }
-
-
-
 
 
    sayg() { 
@@ -156,9 +179,9 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
    #setup ssh related aliases
    set_target_ssh_user_ip_port() {
-     echo "target-ip-port $1 $2 $3" >> /tmp/.$USER-target-ip-port.tmp
-
+     echo "target-ip-port $1 $2 $3"   /tmp/.$USER-target-ip-port.tmp
    }
+
    ssh_to_target_ip_port() {
      is_file_present /tmp/.$USER-target-ip-port.tmp
      ipportpresent=$?
@@ -177,6 +200,17 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    set_ssh_alias() {
      alias target-user-ip-port=set_target_ssh_user_ip_port
      alias tsh=ssh_to_target_ip_port
+   }
+
+   #load up custom configuration
+   load_customized_shellrc() {    
+     if file_check $HOME/$mycustomshellrcfilename
+     then
+        dbg_print "loading custom shellrc : $HOME/$mycustomshellrcfilename"
+        source $HOME/$mycustomshellrcfilename
+     else
+        dbg_print "no custom shellrc found. file: $HOME/$mycustomshellrcfilename"
+     fi
    }
 
    # search engine on console
@@ -210,13 +244,13 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      export GREP_OPTIONS='--color=auto'
 
      alias listdns='scutil --dns | grep nameserver'
-     alias bat='ioreg -l | grep Capacity'
-     
+     alias bat='ioreg -l | grep Capacity'        
 
      ## using grc  (generic color utility for console)
      #source "`brew --prefix`/etc/grc.bashrc"
      set_docker_alias
    }
+
    function myip {
      wget --no-check-certificate -q checkip.dyndns.org -O ~/.index.html && 
      cat ~/.index.html|cut -d ' ' -f 6 | cut -d '<' -f 1
@@ -334,7 +368,6 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      fi
    }
 
-
    #show summary. todo: include more platform specific stuff.
    show_shell_summary() {     
      dbg_print "summary type [$1]"
@@ -343,6 +376,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
          echo "total number of alias :"`alias | wc -l`""
          #dns
          echo "external ip:" `myip2`
+         mm
      fi
    }
 
@@ -367,6 +401,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias gg=load_run_tmp_aliasmaplist
      func1=(show_shell_summary)
      alias i="$func1 help"
+     alias tdbg=toggle_shellrc_dbg_mode
 
    }
 
