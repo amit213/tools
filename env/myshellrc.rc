@@ -25,6 +25,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   _TRUE=0
   _FALSE=1
   shellrc_dbg=0
+  wifiidname=""
 
 
 #local section
@@ -125,6 +126,15 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
         return $_TRUE
        else
         return $_FALSE
+     fi
+   }
+
+   if_this_is_osx() {     
+     if [ "$osname_lowercase" == "darwin" ] 
+     then
+      return $_TRUE
+     else
+      return $_FALSE
      fi
    }
 
@@ -247,6 +257,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      ## using grc  (generic color utility for console)
      #source "`brew --prefix`/etc/grc.bashrc"
      set_docker_alias
+     wifiNetworkname=`/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | grep ' SSID'`
    }
 
    function myip {
@@ -366,6 +377,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
          #dns
          echo "external ip:" `myip2`
          mm
+         echo "Wireless"$wifiNetworkname
      fi
    }
 
@@ -391,7 +403,6 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      func1=(show_shell_summary)
      alias i="$func1 help"
      alias tdbg=toggle_shellrc_dbg_mode
-
    }
 
    set_os_specific_conf() {
