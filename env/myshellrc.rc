@@ -262,8 +262,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    #shred the file / dir
    shred() {
     echo "Are you sure? It can't be undone."
-    echo "Usage: gshred -v -z -n 3 -u --random-source=/dev/random <input file>"
-    echo "gshred -v -z -n 3 -u --random-source=/dev/random\"\" " | pbcopy
+    echo "Usage: gshred -v -z -n 5 -u --random-source=/dev/random <input file>"
+    echo "gshred -v -z -n 5 -u --random-source=/dev/random\"\" " | pbcopy
    }
 
    geoip() {
@@ -283,7 +283,6 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
       echo "previous installation detected."
      fi
    }
-
 
    #save tmp file - list and order of params 
    # 1:$USER  2:$tag 3:$shortform 4:$aliasstr 
