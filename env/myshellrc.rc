@@ -187,6 +187,18 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
     perl -ne '/<title>([^<]+)/&&printf "%s: ",$1;/<fcttext>([^<]+)/&&print $1,"\n"';
    }
 
+   #print all local IPs for osx
+   get_all_local_ip_for_osx() {
+     listoflocalIPs=`ifconfig | grep inet | grep netmask | awk '{print $2}'`
+     tmplist=""     
+     for i in $listoflocalIPs
+     do
+        tmplist="$i  |  $tmplist  "
+     done
+     tmplist="LocalIPs --> $tmplist"
+     listoflocalIPs=$tmplist
+     unset tmplist     
+   }
    #setup ssh related aliases
    set_target_ssh_user_ip_port() {
      echo "target-ip-port $1 $2 $3"   /tmp/.$USER-target-ip-port.tmp
@@ -253,11 +265,12 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
      alias listdns='scutil --dns | grep nameserver'
      alias bat='ioreg -l | grep Capacity'        
-
+     get_all_local_ip_for_osx
      ## using grc  (generic color utility for console)
      #source "`brew --prefix`/etc/grc.bashrc"
      set_docker_alias
      wifiNetworkname=`/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | grep ' SSID'`
+
    }
 
    function myip {
@@ -378,6 +391,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
          echo "external ip:" `myip2`
          mm
          echo "Wireless"$wifiNetworkname
+         echo $listoflocalIPs
      fi
    }
 
