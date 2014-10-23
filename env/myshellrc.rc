@@ -24,8 +24,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   mycustomshellrcfilename=".customshellrc"
   _TRUE=0
   _FALSE=1
-  shellrc_dbg=0
-  wifiidname=""
+  shellrc_dbg=0  
 
 
 #local section
