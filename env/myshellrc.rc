@@ -24,7 +24,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   mycustomshellrcfilename=".customshellrc"
   _TRUE=0
   _FALSE=1
-  shellrc_dbg=0  
+  shellrc_dbg=0
+  cpustring=""
+  hostfirstname=""
+  osverstring=""
 
 
 #local section
@@ -269,6 +272,9 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      #source "`brew --prefix`/etc/grc.bashrc"
      set_docker_alias
      wifiNetworkname=`/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | grep ' SSID'`
+     cpustring=`sysctl -n machdep.cpu.brand_string`
+     hostfirstname=`scutil --get ComputerName`
+     osverstring=`sw_vers | awk -F':\t' '{print $2}' | paste -d ' ' - - -`
 
    }
 
@@ -391,6 +397,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
          mm
          echo "Wireless"$wifiNetworkname
          echo $listoflocalIPs
+         echo "Powered by : "$cpustring
+         echo "My name is : "$hostfirstname "( $osverstring )"
      fi
    }
 
