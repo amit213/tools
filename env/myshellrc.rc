@@ -88,6 +88,14 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
         msgval="$@"        
      fi
    }
+   echo_if_nonempty() {
+     if [[ "$@" ]]
+      then
+        echo $@
+      else
+        dbg_print $@        
+      fi
+   }
    myecho() {
       funcname=$1
       #msgval = entire msg except for the first param.
@@ -275,7 +283,11 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      cpustring=`sysctl -n machdep.cpu.brand_string`
      hostfirstname=`scutil --get ComputerName`
      osverstring=`sw_vers | awk -F':\t' '{print $2}' | paste -d ' ' - - -`
-
+     #macvram=`system_profiler SPDisplaysDataType | grep VRAM`
+     #macresolution=`system_profiler SPDisplaysDataType | grep Resolution`
+     #macmodelname=`system_profiler SPHardwareDataType | grep "Model Name"`
+     batterycyclecount=`system_profiler SPPowerDataType | grep "Cycle Count"`
+     macbootvolume=`system_profiler SPSoftwareDataType | grep "Boot Volume"`
    }
 
    function myip {
@@ -385,7 +397,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
          echo "Missing input file name. Or file not found."
      fi
    }
-
+   
    #show summary. todo: include more platform specific stuff.
    show_shell_summary() {     
      dbg_print "summary type [$1]"
@@ -398,8 +410,23 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
          echo "Wireless"$wifiNetworkname
          echo $listoflocalIPs
          echo "Powered by : "$cpustring
+         echo_if_nonempty $macmodelname
          echo "My name is : "$hostfirstname "( $osverstring )"
+         echo_if_nonempty $macvram
+         echo_if_nonempty $macresolution
+         echo_if_nonempty $macbootvolume
+         echo_if_nonempty $batterycyclecount         
      fi
+
+     if [ "$2" == "ex" ]
+      then
+         if if_this_is_osx 
+         then
+            info=`system_profiler SPHardwareDataType output`
+            echo $info
+         fi
+    fi
+
    }
 
    function askg() {   
@@ -423,6 +450,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias gg=load_run_tmp_aliasmaplist
      func1=(show_shell_summary)
      alias i="$func1 help"
+     alias ii="$func1 help ex"
      alias tdbg=toggle_shellrc_dbg_mode
    }
 
