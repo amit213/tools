@@ -28,6 +28,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   cpustring=""
   hostfirstname=""
   osverstring=""
+  ctagsbin='ctags'
 
 
 #local section
@@ -163,8 +164,13 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    mm() {
      top -l 1 | head -n 10 | grep PhysMem
    }
-
-
+   build_run_cscope() {
+     tmpstr="*.$1"   
+     #find . -name "$tmpstr" > cscope.files
+     find . -name "*.py" -o -name "*.c" -o -name "*.h" > cscope.files
+     $ctagsbin -R .     
+     cscope -uR
+   }
    sayg() { 
      wget -q -U Mozilla -O $(tr ' ' _ <<< "$1"| 
      cut -b 1-15).mp3 "http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=$(tr ' ' + <<< "$1")"; 
@@ -288,6 +294,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      #macmodelname=`system_profiler SPHardwareDataType | grep "Model Name"`
      batterycyclecount=`system_profiler SPPowerDataType | grep "Cycle Count"`
      macbootvolume=`system_profiler SPSoftwareDataType | grep "Boot Volume"`
+     ctagsbin='/usr/local/Cellar/ctags/5.8/bin/ctags'
    }
 
    function myip {
@@ -452,6 +459,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias i="$func1 help"
      alias ii="$func1 help ex"
      alias tdbg=toggle_shellrc_dbg_mode
+     alias tp='cd /tmp'
+     alias csc="build_run_cscope $1"
    }
 
    set_os_specific_conf() {
