@@ -20,6 +20,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   hostname=`hostname`
   myshellrcfilename=".myshellrc.rc"
   tagfilenamealiasmap="aliasmap"
+  tmpaliasfilename=".temp-aliasmap.tmp"
   quoteofthedayfilename=".quote-of-the-day"
   mycustomshellrcfilename=".customshellrc"
   _TRUE=0
@@ -327,8 +328,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
    #save tmp file - list and order of params 
    # 1:$USER  2:$tag 3:$shortform 4:$aliasstr 
-   save_to_tmp_file_with_tagname() {
-     filename1=.$USER-$tagfilenamealiasmap-list.tmp
+   save_to_tmp_file_with_tagname() {     
+     filename1=$HOME/$tmpaliasfilename
      dbg_print "save_to_tmp_file_with_tagname param: $@"
      echo "$aliasstr" >> ~/$filename1          
    }
@@ -349,9 +350,9 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
    #load and run tmp alias map list
    load_run_tmp_aliasmaplist() {
-     if file_present $HOME/.$USER-$tagfilenamealiasmap-list.tmp
+     if file_present $HOME/$tmpaliasfilename
      then
-      source ~/.$USER-$tagfilenamealiasmap-list.tmp
+      source $HOME/$tmpaliasfilename
      fi
    }
 
