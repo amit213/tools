@@ -29,6 +29,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   hostfirstname=""
   osverstring=""
   ctagsbin='ctags'
+  quickeditor='vim'
+
 
 
 #local section
@@ -175,7 +177,21 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      wget -q -U Mozilla -O $(tr ' ' _ <<< "$1"| 
      cut -b 1-15).mp3 "http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=$(tr ' ' + <<< "$1")"; 
    }
-
+   bless_this_app() {
+     if if_this_is_osx     
+      then
+        echo "xattr -d -r com.apple.quarantine /Applications/yourApp.app"
+     fi      
+   }
+   myedit() {
+     if if_this_is_osx     
+      then
+        if file_present $1
+        then
+          open -a $quickeditor $1
+        fi
+     fi          
+   }
    listen() {
      lsof -iTCP:$1 -sTCP:LISTEN
    }
@@ -196,7 +212,9 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      wget -O /tmp/.xkcd_$(date +%y-%m-%d).png `lynx --dump dynamic.xkcd.com/comic/random/ |
      grep png` > /dev/null 2>&1 ; open /tmp/.xkcd_$(date +%y-%m-%d).png
    }
-
+   speed_check() { 
+     wget -O /dev/null http://download.fedoraproject.org/pub/fedora/linux/releases/20/Live/x86_64/Fedora-Live-Desktop-x86_64-20-1.iso
+   }
 
    weather() {
     curl -s "http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query=${@:-<YOURZIPORLOCATION>}" |
@@ -270,6 +288,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
       echo ""
    }
 
+
    ## Use this for OSX specific env config.
    set_osx_conf() {
      dbg_print "setting OSX env config."
@@ -295,6 +314,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      batterycyclecount=`system_profiler SPPowerDataType | grep "Cycle Count"`
      macbootvolume=`system_profiler SPSoftwareDataType | grep "Boot Volume"`
      ctagsbin='/usr/local/Cellar/ctags/5.8/bin/ctags'
+     quickeditor='/Applications/MacVim.app'
    }
 
    function myip {
