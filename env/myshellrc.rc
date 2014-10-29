@@ -47,15 +47,6 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   alias G='du -sh * | grep G'
 
 
-  alias s1='echo `pwd` > /tmp/.s1-tmp'
-  alias g1='cd "`cat /tmp/.s1-tmp`"'
-  alias s2='echo `pwd` > /tmp/.s2-tmp'
-  alias g2='cd "`cat /tmp/.s2-tmp`"'
-  alias s3='echo `pwd` > /tmp/.s3-tmp'
-  alias g3='cd "`cat /tmp/.s3-tmp`"'
-
-
-
 ## ==========
 #global functions
    is_debug_mode_on() {
@@ -394,6 +385,22 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      fi     
    }
 
+   create_dir_bookmarks() {
+     #create alias s4="push_and_pop_dir push tmp4"
+     #create alias g4="push_and_pop_dir pop tmp4"
+     for i in {1..8}
+     do
+       itr="$i"
+       save="s$itr"       
+       go="g$itr"       
+       tag="tmp$itr"
+       aliasstr="alias '$save=push_and_pop_dir push $tag'"
+       dbg_print $aliasstr
+       alias $save="push_and_pop_dir push $tag"
+       alias $go="push_and_pop_dir pop $tag"
+     done     
+   }
+
    #encrypt on demand. basic ssl symmetric key.
    encryptbyssl() {
      inputfile=$1
@@ -494,8 +501,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias tp='cd /tmp'
      alias csc="build_run_cscope $1"  #runs cscope and ctags on source file tree.
      alias hdump="history >> $HOME/$historydumpfile"
-     alias s4="push_and_pop_dir push tmp4"
-     alias g4="push_and_pop_dir pop tmp4"
+     create_dir_bookmarks
 
    }
 
