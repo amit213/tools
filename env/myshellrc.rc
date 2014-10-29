@@ -22,6 +22,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   tmpaliasfilename=".temp-aliasmap.tmp"
   quoteofthedayfilename=".quote-of-the-day"
   mycustomshellrcfilename=".customshellrc"
+  historydumpfile="last.txt"
   _TRUE=0
   _FALSE=1
   shellrc_dbg=0
@@ -382,6 +383,17 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      fi
    }
 
+   push_and_pop_dir() {
+     if [[ "$1" == "push" ]]
+     then
+          echo `pwd` > /tmp/.$2-tmp
+     fi
+     if [[ "$1" == "pop" ]]
+     then         
+          cd "`cat /tmp/.$2-tmp`"
+     fi     
+   }
+
    #encrypt on demand. basic ssl symmetric key.
    encryptbyssl() {
      inputfile=$1
@@ -480,7 +492,11 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias ii="$func1 help ex"
      alias tdbg=toggle_shellrc_dbg_mode
      alias tp='cd /tmp'
-     alias csc="build_run_cscope $1"
+     alias csc="build_run_cscope $1"  #runs cscope and ctags on source file tree.
+     alias hdump="history >> $HOME/$historydumpfile"
+     alias s4="push_and_pop_dir push tmp4"
+     alias g4="push_and_pop_dir pop tmp4"
+
    }
 
    set_os_specific_conf() {
