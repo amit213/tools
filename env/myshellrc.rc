@@ -91,6 +91,14 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
         dbg_print $@        
       fi
    }
+   is_param_empty() {
+      if [[ "$@" ]]
+      then
+        return $_FALSE
+      else
+        return $_TRUE  
+      fi      
+   }
    myecho() {
       funcname=$1
       #msgval = entire msg except for the first param.
@@ -307,6 +315,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      macbootvolume=`system_profiler SPSoftwareDataType | grep "Boot Volume"`
      ctagsbin='/usr/local/Cellar/ctags/5.8/bin/ctags'
      quickeditor='/Applications/MacVim.app'
+     alias sm=send_mail_msg
    }
 
    function myip {
@@ -324,6 +333,20 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
     echo "Are you sure? It can't be undone."
     echo "Usage: gshred -v -z -n 5 -u --random-source=/dev/random <input file>"
     echo "gshred -v -z -n 5 -u --random-source=/dev/random\"\" " | pbcopy
+   }
+   send_mail_msg() {
+      if is_param_empty "$@"
+      then
+        echo "you forgot to pass user@email and msg."
+      else
+        allparams=$@      
+        emailstr=$(echo $allparams | awk '{print $1}')
+        pRest=$(echo $allparams | awk '{$1="";print $0}')
+        dbg_print "echo $emailstr $pRest"
+        echo $pRest | mail -s "ping from $USER" $emailstr
+        unset emailstr
+        unset allparams
+      fi
    }
 
    geoip() {
@@ -386,8 +409,6 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
 
    create_dir_bookmarks() {
-     #create alias s4="push_and_pop_dir push tmp4"
-     #create alias g4="push_and_pop_dir pop tmp4"
      for i in {1..8}
      do
        itr="$i"
