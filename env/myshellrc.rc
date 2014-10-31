@@ -160,9 +160,23 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
 
    function hg () { 
-     history | grep $* ;
+     if is_param_empty "$@"
+     then
+        :
+     else
+        history | grep $* ;
+     fi
    }
-
+   are_we_online() {
+    wget -q --tries=2 --timeout=1 --spider http://google.com
+    if [[ $? -eq 0 ]]; then
+            dbg_print "Online"
+            return $_TRUE
+    else
+            dbg_print "Offline"
+            return $_FALSE
+    fi
+   }
    mm() {
      top -l 1 | head -n 10 | grep PhysMem
    }
@@ -207,6 +221,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      wget -O /tmp/.xkcd_$(date +%y-%m-%d).png `lynx --dump http://xkcd.com/ | 
      grep png` > /dev/null 2>&1 ; open /tmp/.xkcd_$(date +%y-%m-%d).png
    }
+
 
    xkcd-random() {
      wget -O /tmp/.xkcd_$(date +%y-%m-%d).png `lynx --dump dynamic.xkcd.com/comic/random/ |
@@ -316,6 +331,9 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      ctagsbin='/usr/local/Cellar/ctags/5.8/bin/ctags'
      quickeditor='/Applications/MacVim.app'
      alias sm=send_mail_msg
+     alias capture_screen='screencapture -x /tmp/"screen-shot-`date`".jpg'
+     serialnum=`ioreg -c "IOPlatformExpertDevice" | awk 'BEGIN{FS="\""}; /IOPlatformSerialNumber/ {print $4}'`
+     notebookSerialNum="Serial Num : $serialnum"
    }
 
    function myip {
@@ -482,7 +500,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
          echo_if_nonempty $macvram
          echo_if_nonempty $macresolution
          echo_if_nonempty $macbootvolume
-         echo_if_nonempty $batterycyclecount         
+         echo_if_nonempty $batterycyclecount
+         echo_if_nonempty $notebookSerialNum   
      fi
 
      if [ "$2" == "ex" ]
