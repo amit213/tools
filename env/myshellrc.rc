@@ -345,6 +345,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
     curl -s ip.telize.com
     #curl -s icanhazip.com
    }
+   show_top() {
+    top -o cpu
+    #top -o vsize
+   }
 
    #shred the file / dir
    shred() {
@@ -384,7 +388,14 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
       echo "previous installation detected."
      fi
    }
+   run_web_server() {      
+     python -m SimpleHTTPServer ${1:-16000} 
+   }
 
+   xman() {
+     #man -t "${1}" | open -f -a /Applications/Preview.app
+     man -t $@ | open -f -a /Applications/Preview.app
+   }
    #save tmp file - list and order of params 
    # 1:$USER  2:$tag 3:$shortform 4:$aliasstr 
    save_to_tmp_file_with_tagname() {     
