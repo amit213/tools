@@ -349,6 +349,9 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
     top -o cpu
     #top -o vsize
    }
+   make_console_app() {
+    pyinstaller --onefile $1
+   }
 
    #shred the file / dir
    shred() {
