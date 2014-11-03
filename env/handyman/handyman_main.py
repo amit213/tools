@@ -15,6 +15,7 @@ class handyMantool(object):
        self._toolParser = argparse.ArgumentParser(description='The handyman is here.')
        self._toolArgs = None
        self._toolUtil = cHandyUtil()
+       self._toolWorker = cToolWorker()
        return
       def init_tool_params(self):
        self.param_table = [
@@ -45,7 +46,11 @@ class handyMantool(object):
       @tag.setter
       def tag_setter(self, value):
           self._tag = value          
-      
+      @property
+      def toolWorker(self):
+          return self._toolWorker
+            
+
 
       @classmethod
       def init(cls):       
@@ -65,9 +70,12 @@ class handyMantool(object):
 
       def gen_events_from_parsed_args(self):              
        if self.toolArgs.task is not None :                  
-         for itr in sum(self.toolArgs.task, []):
-            fn = self.scanwifi_actionfn
-            self.enqueue_new_event(cEvent('task', itr, fn))
+         for itr in sum(self.toolArgs.task, []):            
+            if hasattr(self.toolWorker, itr.lower() + '_actionfn'):
+              fn = getattr(self.toolWorker, itr.lower() + '_actionfn')
+            else:
+              fn = getattr(self.toolWorker, 'generic' + '_actionfn')            
+            self.enqueue_new_event(cEvent('task', itr.lower(), fn))
 
        #self.enqueue_new_event(cEvent("task", "greet", string))
        return
@@ -88,16 +96,11 @@ class handyMantool(object):
        print self._toolArgs
        return
 
-      def process_all_events(self):       
+      def process_all_events(self):        
        for evt in self.eventList:        
-        evt.event_payload(evt.event_name)      
+        evt.event_payload(evt)      
         pass
        return 
-
-      def scanwifi_actionfn(self, value=None):
-       print "**", value
-       return
-
 
 class sshBookmark:
       #

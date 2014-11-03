@@ -76,8 +76,21 @@ class cHandyUtil(object):
 		return selfVer
 
 
-
-
+class cToolWorker(object):
+	"""docstring for cToolWorker"""
+	def __init__(self, arg=None):
+		super(cToolWorker, self).__init__()
+		self.arg = arg
+		return
+	def samplebox_actionfn(self, eventObj=None):
+		print 'SAMPLE_BOX ========>', eventObj.event_name
+		return
+	def generic_actionfn(self, eventObj=None):
+		print "**", eventObj.event_name
+		return
+	def scanwifi_actionfn(self, eventObj=None):
+		print 'scanwifi ========>', eventObj.event_name
+		return
 
 
 def myprint(args):
