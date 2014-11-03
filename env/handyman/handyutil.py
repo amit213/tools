@@ -4,7 +4,6 @@
 #
 import argparse
 #from handyman_main import handyMantool
-#from handyman_main import cEvent
 import handyman_main
 #from handyman_main import *
 
@@ -31,50 +30,62 @@ class cEvent(object):
       @event_name.setter
       def event_name(self, value):
           self._event_name = value
+      @property
+      def event_payload(self):
+          return self._event_payload
+      @event_payload.setter
+      def event_payload(self, value):
+          self._event_payload = value
       
       
+class cHandyUtil(object):
+	def __init__(self):
+		return
+	@classmethod
+	def greetMe123(string):			
+		#e1 = cEvent("task", "greet", string)
+		hToolObj = None	
+		hToolObj = handyman_main.handyMantool.getToolInstance()	
+		hToolObj.enqueue_new_event(cEvent("task", "greet", string))
+		return
+
+	def utilParseParams(self, tmpObj=None):
+		hToolObj = None	
+		hToolObj = handyman_main.handyMantool.getToolInstance()		
+		parser1 = hToolObj.toolParser
+				
+		for entries in hToolObj.getParamTable():		
+			parser1.add_argument(entries[0], help=entries[1])
+		#parser1.add_argument("foobog", nargs='?', type=int)
+		fn = hToolObj.holaecho
+
+		parser1.add_argument("-task", help="specify the task name", \
+							dest='task', action='append', nargs='+')
+		parser1.add_argument("-pack", help="specify the task name", \
+							dest=None, action='append')
+
+		parser1.add_argument("-bookmark", action=None)		
+
+		parser1.add_argument("-greet", type=fn)
+		args = parser1.parse_args()	
+		hToolObj.toolArgs = args	
+		return
+
+	def utilVer():
+		selfVer = "0.0.1u"		
+		return selfVer
+
+
+
+
+
 
 def myprint(args):
   print args
   return
 
-def utilVer():
-	selfVer = "0.0.1u"
-	print "util version :", selfVer
-	return
 
 
-def greetMe(string):	
-	
-	#e1 = cEvent("task", "greet", string)
-	hToolObj = None	
-	hToolObj = handyman_main.handyMantool.getToolInstance()	
-	#print hToolObj.getParamTable()
-	#hToolObj.appendParamTable([string, string])
-	#print hToolObj.getParamTable()
-	hToolObj.enqueue_new_event(cEvent("task", "greet", string))
-	return
-
-def utilParseParams(tmpObj=None):
-	
-	parser1 = argparse.ArgumentParser(description='The handyman is here.')
-
-	
-	#parser1.add_argument('greet', nargs='?', help='issue a greeting')
-	#parser1.add_argument('opentunnels', nargs='?', help='open tunnels based on envconfig')
-	#parser1.add_argument('listopentunnels', help='open tunnels based on envconfig', nargs='?')
-	
-	#for entries in tmpObj.getParamTable():		
-	#	parser1.add_argument(entries[0], help=entries[1], nargs='?')
-	#parser1.add_argument("foobog", nargs='?', type=int)
-	parser1.add_argument("-t", "-task", help="specify the task name", \
-						required=False)
-	parser1.add_argument("-bookmark")
-	parser1.add_argument("-greet", type=greetMe)
-	args = parser1.parse_args()
-	
-	#print (args.task)	
-	return
 
 
 def utilApiCall():

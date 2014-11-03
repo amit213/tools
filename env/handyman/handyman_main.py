@@ -12,14 +12,28 @@ class handyMantool(object):
        self.param_table = []
        self._tag = None
        self._eventList = []       
+       self._toolParser = argparse.ArgumentParser(description='The handyman is here.')
+       self._toolArgs = None
+       self._toolUtil = cHandyUtil()
        return
       def init_tool_params(self):
        self.param_table = [
-                            ['club', 'what does club param do'],
-                            ['clean', 'what does clean param do'],
-                            ['sample', 'what does sample param do'],
+                            [ '-club', 'what does club param do'],
+                            [ '-clean', 'what does clean param do'],
+                            [ '-sample', 'what does sample param do'],
                           ]       
        return
+
+      @property
+      def toolParser(self):
+          return self._toolParser
+      @property
+      def toolArgs(self):
+          return self._toolArgs
+      @toolArgs.setter
+      def toolArgs(self, value):
+          self._toolArgs = value
+      
       def appendParamTable(self, value=None):
        self.param_table.append(value)
        return
@@ -49,6 +63,19 @@ class handyMantool(object):
        print "echoing :", hola
        pass
 
+      def gen_events_from_parsed_args(self):              
+       if self.toolArgs.task is not None :                  
+         for itr in sum(self.toolArgs.task, []):
+            fn = self.scanwifi_actionfn
+            self.enqueue_new_event(cEvent('task', itr, fn))
+
+       #self.enqueue_new_event(cEvent("task", "greet", string))
+       return
+
+      def tool_parse_params(self):
+       self._toolUtil.utilParseParams()
+       self.gen_events_from_parsed_args()
+       return
       def enqueue_new_event(self, eventObj=None):
        self._eventList.append(eventObj)
        return
@@ -57,13 +84,19 @@ class handyMantool(object):
       def eventList(self):
        return self._eventList
 
-      def process_all_events(self):
-       print "processing all events"
-       for evt in self.eventList:
-        print evt.event_name
+      def printToolSummary(self):
+       print self._toolArgs
+       return
+
+      def process_all_events(self):       
+       for evt in self.eventList:        
+        evt.event_payload(evt.event_name)      
         pass
        return 
 
+      def scanwifi_actionfn(self, value=None):
+       print "**", value
+       return
 
 
 class sshBookmark:
@@ -109,10 +142,9 @@ def main():
   h1 = handyMantool()
   h1.setToolInstance(h1)
   h1.init_tool_params()  
-  utilParseParams(h1) 
+  h1.tool_parse_params() 
   h1.process_all_events()
   return
-
 
 
 if __name__ == "__main__":  main()
