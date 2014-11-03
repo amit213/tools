@@ -5,7 +5,6 @@
 from handyutil import *
 import argparse
 
-
 class handyMantool(object):
       _toolObj = None
       def __init__(self):   
