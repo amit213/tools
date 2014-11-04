@@ -7,23 +7,46 @@ import argparse
 
 class handyMantool(object):
       _toolObj = None
-      def __init__(self):   
-       self.param_table = []
+      def __init__(self):          
+       self.paramList = []
        self._tag = None
        self._eventList = []       
        self._toolParser = argparse.ArgumentParser(description='The handyman is here.')
        self._toolArgs = None
        self._toolUtil = cHandyUtil()
        self._toolWorker = cToolWorker()
+       self._envConfig = cEnvConfigVar('/tmp/gaboo.conf')
        return
       def init_tool_params(self):
-       self.param_table = [
-                            [ '-club', 'what does club param do'],
-                            [ '-clean', 'what does clean param do'],
-                            [ '-sample', 'what does sample param do'],
-                          ]       
-       return
+       self.paramList.append(cToolParam(paramShort='-dump',
+                     paramHelp='dump sample config file',
+                     paramAction='append',
+                     paramNargs ='?'
+                     ))
 
+       self.paramList.append(cToolParam(paramShort='-gabu',
+                     paramHelp='guucha puucha',
+                     paramAction='append',
+                     paramNargs ='?',
+                     paramType=self.get_callback_fn('test_callbackfn')
+                     ))
+       return
+      @property
+      def paramList(self):
+          return self._paramList
+      @paramList.setter
+      def paramList(self, value):  #TODO confirm this action
+          #self._paramList.append(value)
+          self._paramList = value
+
+      def getParamList(self): return self._paramList
+      @property
+      def envConfig(self):
+          return self._envConfig
+      @envConfig.setter
+      def envConfig(self, value):
+          self._envConfig = value
+      
       @property
       def toolParser(self):
           return self._toolParser
@@ -34,11 +57,13 @@ class handyMantool(object):
       def toolArgs(self, value):
           self._toolArgs = value
       
-      def appendParamTable(self, value=None):
-       self.param_table.append(value)
-       return
-      def getParamTable(self):
-       return self.param_table
+      @property
+      def eventList(self):
+          return self._eventList
+      @eventList.setter
+      def eventList(self, value):
+          self._eventList = value
+      
       @property
       def tag(self):
           return self._tag
@@ -48,9 +73,13 @@ class handyMantool(object):
       @property
       def toolWorker(self):
           return self._toolWorker
-            
-
-
+      @property
+      def toolUtil(self):
+          return self._toolUtil
+      @toolUtil.setter
+      def toolUtil(self, value):
+          self._toolUtil = value
+           
       @classmethod
       def init(cls):       
        return cls
@@ -74,17 +103,17 @@ class handyMantool(object):
               fn = getattr(self.toolWorker, itr.lower() + '_actionfn')
             else:
               fn = getattr(self.toolWorker, 'generic' + '_actionfn')            
-            self.enqueue_new_event(cEvent('task', itr.lower(), fn))
-
-       #self.enqueue_new_event(cEvent("task", "greet", string))
+            self.enqueue_new_event(cEvent('task', itr.lower(), None, fn),
+                                   tags=None)
        return
 
       def tool_parse_params(self):
-       self._toolUtil.utilParseParams()
+       self.toolUtil.utilParseParams()
        self.gen_events_from_parsed_args()
        return
-      def enqueue_new_event(self, eventObj=None):
-       self._eventList.append(eventObj)
+      def enqueue_new_event(self, eventObj=None,
+                            tags=None):
+       self.eventList.append(eventObj)       
        return
 
       @property
@@ -97,31 +126,12 @@ class handyMantool(object):
 
       def process_all_events(self):        
        for evt in self.eventList:        
-        evt.event_payload(evt)      
+        evt.event_payload_fn(evt)
         pass
        return 
+      def get_callback_fn(self, name=None):
+       return getattr(self.toolWorker,name)       
 
-class sshBookmark:
-      #
-      # store, launch and run ssh sessions.
-      #
-      def __init__(self):
-       self.name="empty"
-       return
-
-      def __init__(self, name="null", 
-                   connectToPort="22",
-                   username="user"):
-       self.name=name
-       self.connectToPort=connectToPort
-       self.username=username
-       self.connectToIP=""
-       return
-
-
-      def list_bookmark(self):
-       print self.name
-       return
 
 
 
