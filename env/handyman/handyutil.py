@@ -12,15 +12,30 @@ import ConfigParser
 from configobj import ConfigObj
 
 
+
+class cToolBase(object):
+      def __init__(self, arg=None):          
+       super(cToolBase, self).__init__()
+       return
+      def enqueue_fn(self, arg=None):
+       hToolObj = handyman_main.handyMantool.getToolInstance() 
+       hToolObj.enqueue_new_event(arg)
+       return
+      @property
+      def hTool(self):
+          self._hTool = handyman_main.handyMantool.getToolInstance() 
+          return self._hTool
+       
+     
 class cEvent(object):
-      def __init__(self, event_type=None,
-                   event_name=None,
-                   event_payload=None,
-                   event_payload_fn = None):
-       self._event_type = event_type
-       self._event_name = event_name
-       self._event_payload = event_payload
-       self._event_payload_fn = event_payload_fn
+      def __init__(self, evtType=None,
+                   evtName=None,
+                   evtPayload=None,
+                   evtPayload_fn = None):
+       self._event_type = evtType
+       self._event_name = evtName
+       self._event_payload = evtPayload
+       self._event_payload_fn = evtPayload_fn
        return
       @property
       def event_type(self):
@@ -169,13 +184,25 @@ class cEnvConfigVar(object):
     def __init__(self, file=None):
      self._conf = ConfigObj(file)
      pass
-    def dump_sample_data():
-     print "dumping sample data"
+    @property
+    def conf(self):
+        return self._conf
+    @conf.setter
+    def conf(self, value):
+        self._conf = value
+    def dump_sample_data(self, arg=None):
+     self.conf['sshbookmark1'] = {}
+     self.conf['sshbookmark1'] = {"sshtoIP" : "127.0.0.1",
+                                  "bindtoLocalPort" : "5050",
+                                  "sshtoPort" : "465",
+                                  "sshoptions" : "-C -N"
+                                  }
+     self.conf.write()                                  
      return
 
 
 
-class cToolWorker(object):
+class cToolWorker(cToolBase):
     """docstring for cToolWorker"""
     def __init__(self, arg=None):
         super(cToolWorker, self).__init__()
@@ -194,8 +221,11 @@ class cToolWorker(object):
     def spawnssh_callbackfn(self, eventObj=None):
         print isinstance(eventObj.event_payload, sshBookmark)
         return
-    def test_callbackfn(self, arg=None):
-        print ">>>>>>>>>>>", arg
+    def test_callbackfn(self, arg=None):                
+        self.enqueue_fn(cEvent(evtName="homeland",evtPayload_fn=
+                    #self.generic_actionfn))
+                    self.hTool.envConfig.dump_sample_data))
+                    #cEnvConfigVar().dump_sample_data))
         return
     def opentunnel_actionfn(self, eventObj=None):
 

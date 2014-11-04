@@ -7,7 +7,8 @@ import argparse
 
 class handyMantool(object):
       _toolObj = None
-      def __init__(self):          
+      def __init__(self):
+       self._toolBase = cToolBase()       
        self.paramList = []
        self._tag = None
        self._eventList = []       
@@ -15,7 +16,7 @@ class handyMantool(object):
        self._toolArgs = None
        self._toolUtil = cHandyUtil()
        self._toolWorker = cToolWorker()
-       self._envConfig = cEnvConfigVar('/tmp/gaboo.conf')
+       self._envConfig = cEnvConfigVar(r'/tmp/gaboo.conf')
        return
       def init_tool_params(self):
        self.paramList.append(cToolParam(paramShort='-dump',
@@ -90,6 +91,7 @@ class handyMantool(object):
       @classmethod
       def setToolInstance(self, toolObj):
        handyman_main.handyMantool._toolObj = toolObj
+       #self._toolBase.hTool = toolObj
        return
 
       def holaecho(self, hola='Florida'):
