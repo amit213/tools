@@ -140,21 +140,18 @@ class sshBookmark(object):
        print self.name
        return
       
-class cHandyUtil(object):
+class cHandyUtil(cToolBase):
     def __init__(self):
         return
     @classmethod
-    def greetMe123(string):
-        hToolObj = handyman_main.handyMantool.getToolInstance() 
-        hToolObj.enqueue_new_event(cEvent("task", "greet", string))
+    def greetMe123(self, string):        
+        self.enqueue_fn(cEvent("task", "greet", string))
         return
 
     def utilParseParams(self, tmpObj=None):
-        hToolObj = None 
-        hToolObj = handyman_main.handyMantool.getToolInstance()     
-        parser1 = hToolObj.toolParser
-                
-        for entries in hToolObj.paramList:
+        parser1 = self.hTool.toolParser
+
+        for entries in self.hTool.paramList:
           parser1.add_argument(entries.paramShort, 
                                help=entries.paramHelp,
                                dest=entries.paramDest,
@@ -162,7 +159,7 @@ class cHandyUtil(object):
                                nargs=entries.paramNargs,
                                type=entries.paramType)
 
-        fn = hToolObj.holaecho
+        fn = self.hTool.holaecho
 
         parser1.add_argument("-task", help="specify the task name", \
                             dest='task', action='append', nargs='+')
@@ -173,7 +170,7 @@ class cHandyUtil(object):
 
         parser1.add_argument("-greet", type=fn)
         args = parser1.parse_args() 
-        hToolObj.toolArgs = args    
+        self.hTool.toolArgs = args    
         return
 
     def utilVer():
@@ -191,13 +188,22 @@ class cEnvConfigVar(object):
     def conf(self, value):
         self._conf = value
     def dump_sample_data(self, arg=None):
+     """ 
      self.conf['sshbookmark1'] = {}
-     self.conf['sshbookmark1'] = {"sshtoIP" : "127.0.0.1",
+     self.conf['sshbookmark1'] = {
+                                  "bookmarkname" : "ssh5050via465",
+                                  "sshtoIP" : "127.0.0.1",
                                   "bindtoLocalPort" : "5050",
                                   "sshtoPort" : "465",
                                   "sshoptions" : "-C -N"
+
                                   }
-     self.conf.write()                                  
+     """
+     #self.conf.write()
+     #self.conf
+     #self.conf.append()
+     print self.conf
+
      return
 
 
@@ -234,9 +240,8 @@ class cToolWorker(cToolBase):
         #                 stdout=subprocess.PIPE,
         #                 stderr=subprocess.PIPE
         #                )
-        b1 = sshBookmark()
-        hToolObj = handyman_main.handyMantool.getToolInstance() 
-        hToolObj.enqueue_new_event(cEvent("subtask","spawnssh", 
+        b1 = sshBookmark()        
+        self.enqueue_fn(cEvent("subtask","spawnssh", 
                                    b1, self.spawnssh_callbackfn),                                   
                                   )
         return
