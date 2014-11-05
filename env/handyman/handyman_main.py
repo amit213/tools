@@ -17,27 +17,10 @@ class handyMantool(object):
        self._toolUtil = cHandyUtil()
        self._toolWorker = cToolWorker()
        self._envConfig = cEnvConfigVar(r'/tmp/gaboo.conf')
+       self._membObjList = []
+       self.compileMemberObjList()
        return
       def init_tool_params(self):
-       self.paramList.append(cToolParam(paramShort='-dump',
-                     paramHelp='dump sample config file',
-                     paramAction='append',
-                     paramNargs ='?'
-                     ))
-
-
-       self.paramList.append(cToolParam(paramShort='-greet',
-                     paramHelp='greetings on your way',
-                     paramAction='append',
-                     paramNargs ='+',                     
-                     paramType=self.holaecho
-                     ))
-       self.paramList.append(cToolParam(paramShort='-task',
-                     paramHelp='task to execute',
-                     paramAction='append',
-                     paramNargs ='+',                     
-                     paramDest='task'                     
-                     ))       
        self.toolUtil.init_tool_params()
        return
       @property
@@ -87,8 +70,7 @@ class handyMantool(object):
           return self._toolUtil
       @toolUtil.setter
       def toolUtil(self, value):
-          self._toolUtil = value
-           
+          self._toolUtil = value           
       @classmethod
       def init(cls):       
        return cls
@@ -99,14 +81,34 @@ class handyMantool(object):
       @classmethod
       def setToolInstance(self, toolObj):
        handyman_main.handyMantool._toolObj = toolObj
-       #self._toolBase.hTool = toolObj
+       #self._toolBase.hTool = toolObj       
        return
+      @property
+      def membObjList(self):
+          return self._membObjList
+      @membObjList.setter
+      def membObjList(self, value):
+          self._membObjList.append(value)
+          
+      def compileMemberObjList(self, arg=None):
+       for attr, value in self.__dict__.iteritems():
+          self.membObjList = attr       
+       return
+
 
       def holaecho(self, hola='Florida'):
        print "echoing :", hola
-       for objid in dir(self):
-          if callable(objid):
-           print objid
+       
+       #for objid in dir(self):
+       #   if callable(getattr(self, objid)):
+       #    print getattr(self, objid)             
+
+         #if callable(dir(getattr(self, itr))):
+           #print callable(dir(getattr(self,itr)))
+
+         #if getattr(self,itr):
+          #if getattr(getattr(self,itr), hola):
+          # print hola, ' is Found'
        pass
 
       def gen_events_from_parsed_args(self):              
@@ -166,6 +168,7 @@ def main():
   
   h1 = handyMantool()
   h1.setToolInstance(h1)
+
   h1.init_tool_params()  
   h1.tool_parse_params() 
   h1.process_all_events()

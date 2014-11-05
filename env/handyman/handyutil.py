@@ -24,6 +24,13 @@ class cToolBase(object):
        elif isinstance(arg, cToolParam):
         hToolObj.paramList.append(arg)
        return
+      def getfn(self, fnName=None):
+        if fnName:      
+         for memberobj in self.hTool.membObjList:
+           for method in dir(getattr(self.hTool, memberobj)):
+             if callable((getattr(getattr(self.hTool, memberobj),method))) and method == fnName:            
+              fnName = getattr(getattr(self.hTool, memberobj),method)
+        return fnName
       @property
       def hTool(self):
           self._hTool = handyman_main.handyMantool.getToolInstance() 
@@ -144,19 +151,33 @@ class sshBookmark(object):
        return
       
 class cHandyUtil(cToolBase):
-    def __init__(self):
+    def __init__(self):        
         return
-    @classmethod
-    def greetMe123(self, string):        
-        self.enqueue_fn(cEvent("task", "greet", string))
-        return
+
     def init_tool_params(self, arg=None):
         self.enqueue_fn(cToolParam(paramShort='-gabu',
                      paramHelp='guucha puucha',
                      paramAction='append',
-                     paramNargs ='?',
-                     #paramType=self.get_callback_fn('test_callbackfn')
+                     paramNargs ='?',                     
+                     paramType=self.getfn(fnName='test_callbackfn')
                      ))
+        self.enqueue_fn(cToolParam(paramShort='-dump',
+                     paramHelp='dump sample config file',
+                     paramAction='append',
+                     paramNargs ='?'
+                     ))
+        self.enqueue_fn(cToolParam(paramShort='-task',
+                     paramHelp='task to execute',
+                     paramAction='append',
+                     paramNargs ='+',                     
+                     paramDest='task'                     
+                     ))
+        self.enqueue_fn(cToolParam(paramShort='-greet',
+                     paramHelp='greetings on your way',
+                     paramAction='append',
+                     paramNargs ='+',                     
+                     paramType=self.hTool.holaecho
+                     ))        
         pass
         return
 
@@ -170,9 +191,6 @@ class cHandyUtil(cToolBase):
                                action=entries.paramAction,
                                nargs=entries.paramNargs,
                                type=entries.paramType)
-
-
-
 
         args = parser1.parse_args() 
         self.hTool.toolArgs = args    
@@ -222,7 +240,6 @@ class cEnvConfigVar(object):
       for level2 in self.conf[level1]:
         print list(self.conf[level1][level2])
         
-          
      return
     def parse_conf(self, arg=None):
 
@@ -251,7 +268,8 @@ class cToolWorker(cToolBase):
     def test_callbackfn(self, arg=None):                
         self.enqueue_fn(cEvent(evtName="homeland",evtPayload_fn=
                     #self.generic_actionfn))
-                    self.hTool.envConfig.dump_sample_data))
+                    #self.hTool.envConfig.dump_sample_data))
+                    self.getfn('dump_sample_data')))
                     #cEnvConfigVar().dump_sample_data))
         return
     def opentunnel_actionfn(self, eventObj=None):
