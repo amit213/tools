@@ -24,6 +24,13 @@ class cToolBase(object):
        elif isinstance(arg, cToolParam):
         hToolObj.paramList.append(arg)
        return
+      def raise_error(self, event=None, errmsg=None):
+       if type(event) is cEvent:
+         if type(errmsg) is str:          
+          event.event_payload = event.event_name + ' : ' + errmsg
+          event.event_payload_fn = self.getfn('raise_error_callbackfn')
+          self.enqueue_fn(event)
+       return 
       def getfn(self, fnName=None):
         if fnName:      
          for memberobj in self.hTool.membObjList:
@@ -37,7 +44,7 @@ class cToolBase(object):
           return self._hTool
        
      
-class cEvent(object):
+class cEvent(cToolBase):
       def __init__(self, evtType=None,
                    evtName=None,
                    evtPayload=None,
@@ -177,7 +184,13 @@ class cHandyUtil(cToolBase):
                      paramAction='append',
                      paramNargs ='+',                     
                      paramType=self.hTool.holaecho
-                     ))        
+                     ))
+        self.enqueue_fn(cToolParam(paramShort='-list',
+                     paramHelp='list items of your interest',
+                     paramAction='append',
+                     paramNargs ='+',                     
+                     paramDest='list',                     
+                     ))                             
         pass
         return
 
@@ -252,11 +265,17 @@ class cToolWorker(cToolBase):
         super(cToolWorker, self).__init__()
         self.arg = arg
         return
+    def raise_error_callbackfn(self, eventObj=None):
+        if type(eventObj) is cEvent and eventObj is not None:
+           print eventObj.event_payload
+        return    
     def samplebox_actionfn(self, eventObj=None):
         pass
         return
+
     def generic_actionfn(self, eventObj=None):
         print "**", eventObj.event_name
+        eventObj.raise_error(event=eventObj, errmsg='invalid option')
         return
     def scanwifi_actionfn(self, eventObj=None):
         print os.system("/System/Library/"
@@ -271,6 +290,18 @@ class cToolWorker(cToolBase):
                     #self.hTool.envConfig.dump_sample_data))
                     self.getfn('dump_sample_data')))
                     #cEnvConfigVar().dump_sample_data))
+        return
+    def list_actionfn(self, eventObj=None):
+        #print "calling list_actionfn ", type(eventObj), eventObj #eventObj.event_name
+
+        #if type(eventObj) is cEvent:          
+        #  eventObj.event_payload = eventObj.event_name + " is an invalid list option."
+        #  eventObj.event_payload_fn = self.getfn('raise_error_callbackfn')
+        #  self.enqueue_fn(eventObj)
+        eventObj.raise_error(event=eventObj, errmsg='invalid list option')
+        return        
+    def bm_actionfn(self, eventObj=None):
+        print "printing the big list of bookmarks", eventObj.event_name
         return
     def opentunnel_actionfn(self, eventObj=None):
 

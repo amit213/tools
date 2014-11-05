@@ -97,21 +97,33 @@ class handyMantool(object):
 
 
       def holaecho(self, hola='Florida'):
-       print "echoing :", hola
-       
-       #for objid in dir(self):
-       #   if callable(getattr(self, objid)):
-       #    print getattr(self, objid)             
-
-         #if callable(dir(getattr(self, itr))):
-           #print callable(dir(getattr(self,itr)))
-
-         #if getattr(self,itr):
-          #if getattr(getattr(self,itr), hola):
-          # print hola, ' is Found'
+       print "echoing :", hola       
        pass
 
-      def gen_events_from_parsed_args(self):              
+      def gen_event_for_argSwitch(self, argSwitch=None, 
+                                        switchValueList=None):
+       """ argSwitch is -list, -task etc. top level switch. """
+       """ switchValueList is the values supplied for given switch """       
+       if switchValueList is not None :                  
+         for itr in sum(switchValueList, []):
+          if itr is not None:            
+            if hasattr(self.toolWorker, itr.lower() + '_actionfn'):
+              fn = getattr(self.toolWorker, itr.lower() + '_actionfn')
+            elif hasattr(self.toolWorker, argSwitch.lower() + '_actionfn'):
+              fn = getattr(self.toolWorker, argSwitch.lower() + '_actionfn')
+            else:
+              fn = getattr(self.toolWorker, 'generic' + '_actionfn')            
+            self.enqueue_new_event(cEvent(argSwitch, itr.lower(), None, fn),
+                                   tags=None)       
+       return
+      def gen_events_from_parsed_args(self):
+       for argSwitch in self.getmembListForObj(self.toolArgs):
+          if getattr(self.toolArgs, argSwitch) is not None:
+            switchValueList = getattr(self.toolArgs, argSwitch)                        
+            self.gen_event_for_argSwitch(
+                     argSwitch=argSwitch,  # -list, -task etc.
+                     switchValueList=switchValueList)  # -list <one two three>
+       """
        if self.toolArgs.task is not None :                  
          for itr in sum(self.toolArgs.task, []):            
             if hasattr(self.toolWorker, itr.lower() + '_actionfn'):
@@ -120,6 +132,7 @@ class handyMantool(object):
               fn = getattr(self.toolWorker, 'generic' + '_actionfn')            
             self.enqueue_new_event(cEvent('task', itr.lower(), None, fn),
                                    tags=None)
+       """
        return
 
       def tool_parse_params(self):
@@ -147,6 +160,11 @@ class handyMantool(object):
       def get_callback_fn(self, name=None):
        return getattr(self.toolWorker,name)       
 
+      def getmembListForObj(self, obj=None):
+        lst1 = []
+        for attr, value in obj.__dict__.iteritems():
+          lst1.append(attr)
+        return lst1
 
 
 
