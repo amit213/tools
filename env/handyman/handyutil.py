@@ -19,7 +19,10 @@ class cToolBase(object):
        return
       def enqueue_fn(self, arg=None):
        hToolObj = handyman_main.handyMantool.getToolInstance() 
-       hToolObj.enqueue_new_event(arg)
+       if isinstance(arg, cEvent):
+        hToolObj.enqueue_new_event(arg)
+       elif isinstance(arg, cToolParam):
+        hToolObj.paramList.append(arg)
        return
       @property
       def hTool(self):
@@ -147,6 +150,15 @@ class cHandyUtil(cToolBase):
     def greetMe123(self, string):        
         self.enqueue_fn(cEvent("task", "greet", string))
         return
+    def init_tool_params(self, arg=None):
+        self.enqueue_fn(cToolParam(paramShort='-gabu',
+                     paramHelp='guucha puucha',
+                     paramAction='append',
+                     paramNargs ='?',
+                     #paramType=self.get_callback_fn('test_callbackfn')
+                     ))
+        pass
+        return
 
     def utilParseParams(self, tmpObj=None):
         parser1 = self.hTool.toolParser
@@ -159,16 +171,9 @@ class cHandyUtil(cToolBase):
                                nargs=entries.paramNargs,
                                type=entries.paramType)
 
-        fn = self.hTool.holaecho
 
-        parser1.add_argument("-task", help="specify the task name", \
-                            dest='task', action='append', nargs='+')
-        parser1.add_argument("-pack", help="specify the task name", \
-                            dest=None, action='append')
 
-        parser1.add_argument("-bookmark", action=None)      
 
-        parser1.add_argument("-greet", type=fn)
         args = parser1.parse_args() 
         self.hTool.toolArgs = args    
         return
@@ -179,7 +184,9 @@ class cHandyUtil(cToolBase):
 
 class cEnvConfigVar(object):
     def __init__(self, file=None):
-     self._conf = ConfigObj(file)
+     self._conf = ConfigObj(file,
+                            list_values=True,
+                            indent_type='    ')
      pass
     @property
     def conf(self):
@@ -189,8 +196,9 @@ class cEnvConfigVar(object):
         self._conf = value
     def dump_sample_data(self, arg=None):
      """ 
-     self.conf['sshbookmark1'] = {}
-     self.conf['sshbookmark1'] = {
+     self.conf['mbuser'] = {}
+     self.conf['mbuser']['sshbookmarks'] = {}
+     self.conf['mbuser']['sshbookmarks']['bm001'] = {
                                   "bookmarkname" : "ssh5050via465",
                                   "sshtoIP" : "127.0.0.1",
                                   "bindtoLocalPort" : "5050",
@@ -202,10 +210,23 @@ class cEnvConfigVar(object):
      #self.conf.write()
      #self.conf
      #self.conf.append()
-     print self.conf
+     #print self.conf.sections
+     #print self.conf.scalars
+     #print self.conf.section('mbuser')
+     #print list(self.conf['mbuser']['sshbookmarks'])
+     #('bookmarkname')
+
+     #for itr in self.conf.itervalues():
+     # print itr
+     for level1 in self.conf.sections:
+      for level2 in self.conf[level1]:
+        print list(self.conf[level1][level2])
+        
+          
+     return
+    def parse_conf(self, arg=None):
 
      return
-
 
 
 class cToolWorker(cToolBase):

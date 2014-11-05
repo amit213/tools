@@ -25,12 +25,20 @@ class handyMantool(object):
                      paramNargs ='?'
                      ))
 
-       self.paramList.append(cToolParam(paramShort='-gabu',
-                     paramHelp='guucha puucha',
+
+       self.paramList.append(cToolParam(paramShort='-greet',
+                     paramHelp='greetings on your way',
                      paramAction='append',
-                     paramNargs ='?',
-                     paramType=self.get_callback_fn('test_callbackfn')
+                     paramNargs ='+',                     
+                     paramType=self.holaecho
                      ))
+       self.paramList.append(cToolParam(paramShort='-task',
+                     paramHelp='task to execute',
+                     paramAction='append',
+                     paramNargs ='+',                     
+                     paramDest='task'                     
+                     ))       
+       self.toolUtil.init_tool_params()
        return
       @property
       def paramList(self):
@@ -96,6 +104,9 @@ class handyMantool(object):
 
       def holaecho(self, hola='Florida'):
        print "echoing :", hola
+       for objid in dir(self):
+          if callable(objid):
+           print objid
        pass
 
       def gen_events_from_parsed_args(self):              
