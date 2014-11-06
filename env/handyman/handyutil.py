@@ -36,8 +36,8 @@ class cToolBase(object):
          for memberobj in self.hTool.membObjList:
            for method in dir(getattr(self.hTool, memberobj)):
              if callable((getattr(getattr(self.hTool, memberobj),method))) and method == fnName:            
-              fnName = getattr(getattr(self.hTool, memberobj),method)
-        return fnName
+              fn = getattr(getattr(self.hTool, memberobj),method)
+        return fn
       @property
       def hTool(self):
           self._hTool = handyman_main.handyMantool.getToolInstance() 
@@ -189,24 +189,23 @@ class cHandyUtil(cToolBase):
                      paramHelp='list items of your interest',
                      paramAction='append',
                      paramNargs ='+',                     
-                     paramDest='list',                     
+                     paramDest='list',
+                     #paramType=self.getfn(fnName='list_actionfn')                     
                      ))                             
         pass
         return
 
-    def utilParseParams(self, tmpObj=None):
-        parser1 = self.hTool.toolParser
+    def utilParseParams(self, tmpObj=None):        
 
         for entries in self.hTool.paramList:
-          parser1.add_argument(entries.paramShort, 
+          self.hTool.toolParser.add_argument(entries.paramShort, 
                                help=entries.paramHelp,
                                dest=entries.paramDest,
                                action=entries.paramAction,
                                nargs=entries.paramNargs,
                                type=entries.paramType)
 
-        args = parser1.parse_args() 
-        self.hTool.toolArgs = args    
+        self.hTool.toolArgs = self.hTool.toolParser.parse_args()         
         return
 
     def utilVer():
@@ -294,14 +293,25 @@ class cToolWorker(cToolBase):
     def list_actionfn(self, eventObj=None):
         #print "calling list_actionfn ", type(eventObj), eventObj #eventObj.event_name
 
-        #if type(eventObj) is cEvent:          
+        #if type(eventObj) is cEvent:
         #  eventObj.event_payload = eventObj.event_name + " is an invalid list option."
         #  eventObj.event_payload_fn = self.getfn('raise_error_callbackfn')
         #  self.enqueue_fn(eventObj)
-        eventObj.raise_error(event=eventObj, errmsg='invalid list option')
+        #eventObj.event_name
+        #eventObj.event_payload_fn=self.hTool.holaecho
+        #self.enqueue_fn(eventObj)
+        
+
+        if type(eventObj) is cEvent:
+         self.raise_error(event=eventObj, errmsg='invalid list option')
+        elif type(eventObj) is str:
+         # test code
+         # 
+         self.raise_error(errmsg=eventObj) 
         return        
     def bm_actionfn(self, eventObj=None):
         print "printing the big list of bookmarks", eventObj.event_name
+
         return
     def opentunnel_actionfn(self, eventObj=None):
 
