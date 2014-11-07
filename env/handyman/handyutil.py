@@ -11,13 +11,20 @@ import subprocess
 import ConfigParser
 from configobj import ConfigObj
 
-
+class cTryRun(object):
+      def __init__(self):
+        pass
 
 class cToolBase(object):
       def __init__(self, arg=None):          
        super(cToolBase, self).__init__()
        return
+      @classmethod
+      def base_echo(self, arg):
+       print arg
+       return
       def enqueue_fn(self, arg=None):
+       #import handyman_main
        hToolObj = handyman_main.handyMantool.getToolInstance() 
        if isinstance(arg, cEvent):
         hToolObj.enqueue_new_event(arg)
@@ -158,10 +165,12 @@ class sshBookmark(object):
        return
       
 class cHandyUtil(cToolBase):
-    def __init__(self):        
+    def __init__(self):
+
         return
 
     def init_tool_params(self, eventObj=None, arg=None):
+
         self.enqueue_fn(cToolParam(paramShort='-test',
                      paramHelp='calling testfn',
                      paramAction='append',
@@ -234,7 +243,6 @@ class cEnvConfigVar(object):
                                   "bindtoLocalPort" : "5050",
                                   "sshtoPort" : "465",
                                   "sshoptions" : "-C -N"
-
                                   }
      """
      #self.conf.write()
@@ -275,7 +283,8 @@ class cToolWorker(cToolBase):
     def generic_actionfn(self, eventObj=None):
         print "**", eventObj.event_name, eventObj.event_type
 
-        eventObj.raise_error(event=eventObj, errmsg='invalid option')
+        eventObj.raise_error(event=eventObj, 
+                 errmsg='invalid ' + eventObj.event_type + ' option')
         return
     def scanwifi_actionfn(self, eventObj=None):
         print os.system("/System/Library/"
@@ -312,7 +321,10 @@ class cToolWorker(cToolBase):
         return        
     def bm_actionfn(self, eventObj=None):
         print "printing the big list of bookmarks", eventObj.event_name
-
+        return
+    def handysleep_callbackfn(self, eventObj=None):
+        from time import sleep
+        sleep(2)
         return
     def opentunnel_actionfn(self, eventObj=None):
 

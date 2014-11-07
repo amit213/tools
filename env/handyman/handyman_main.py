@@ -4,6 +4,20 @@
 #
 from handyutil import *
 import argparse
+import handyutil
+from time import sleep
+#from handyutil import cToolBase
+#from handyutil import cEvent
+#from handyutil import cToolParam
+#from handyutil import sshBookmark
+#from handyutil import cHandyUtil
+#from handyutil import cEnvConfigVar
+#from handyutil import cToolWorker
+
+
+class cTryRun2(object):
+      def __init__(self):
+        pass
 
 class handyMantool(object):
       _toolObj = None
@@ -19,12 +33,22 @@ class handyMantool(object):
        self._envConfig = cEnvConfigVar(r'/tmp/gaboo.conf')
        self._membObjList = []
        self.compileMemberObjList()
+       #self.q = cTryRun()
        return
-      def init_tool_params(self):
-       self.toolUtil.init_tool_params()
-       #fn = cHandyUtil.init_tool_params
-       #self.enqueue_new_event(cEvent("housekeeping",None, 
-       #                        None, None))
+      def init_tool(self, arg=None):
+       #self.toolUtil.init_tool_params()
+       #from handyutil import cToolBase
+       #cToolBase.base_echo("mangle box 123")
+       #print callable()
+       self.enqueue_new_event(cEvent("housekeeping", 
+                    "setupparamtable",
+                    evtPayload_fn=self.toolUtil.init_tool_params))
+       self.enqueue_new_event(cEvent("housekeeping", 
+                    "initparamandparseargs",
+                    evtPayload_fn=self.toolUtil.utilParseParams))
+       self.enqueue_new_event(cEvent("housekeeping", 
+                    "geneventsfromargs",
+                    evtPayload_fn=self.gen_events_from_parsed_args))
        return
       @property
       def paramList(self):
@@ -100,8 +124,11 @@ class handyMantool(object):
 
 
       def holaecho(self, hola='Florida'):
-       print "echoing :", hola       
-       pass
+       if type(hola) is str:
+        print "echoing :", hola        
+       elif type(hola) is cEvent:
+        print "echoing event :", hola.event_name        
+        pass
 
       def gen_event_for_argSwitch(self, argSwitch=None, 
                                         switchValueList=None):
@@ -129,7 +156,7 @@ class handyMantool(object):
                                    tags=None)
 
        return
-      def gen_events_from_parsed_args(self):
+      def gen_events_from_parsed_args(self, eventObj=None):
        for argSwitch in self.getmembListForObj(self.toolArgs):
           if getattr(self.toolArgs, argSwitch) is not None:
             switchValueList = getattr(self.toolArgs, argSwitch)                        
@@ -148,10 +175,10 @@ class handyMantool(object):
        """
        return
 
-      def tool_parse_params(self):
-       self.toolUtil.utilParseParams()
-       self.gen_events_from_parsed_args()
-       return
+      #def tool_parse_params(self):
+      # self.toolUtil.utilParseParams()       
+      # self.gen_events_from_parsed_args()
+      # return
       def enqueue_new_event(self, eventObj=None,
                             tags=None):
        self.eventList.append(eventObj)       
@@ -166,8 +193,10 @@ class handyMantool(object):
        return
 
       def process_all_events(self):        
-       for evt in self.eventList:        
-        evt.event_payload_fn(evt)
+       for evt in self.eventList:
+        func = evt.event_payload_fn
+        func(evt)
+        #evt.event_payload_fn(evt)
         pass
        return 
       def get_callback_fn(self, name=None):
@@ -197,11 +226,13 @@ def main():
   #printVer()
   #create_ssh_bookmark()
   
+    
   h1 = handyMantool()
-  h1.setToolInstance(h1)
+  
+  h1.setToolInstance(h1)  
 
-  h1.init_tool_params()  
-  h1.tool_parse_params() 
+  h1.init_tool()
+
   h1.process_all_events()
 
   return
