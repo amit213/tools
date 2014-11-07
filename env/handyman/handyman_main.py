@@ -22,6 +22,9 @@ class handyMantool(object):
        return
       def init_tool_params(self):
        self.toolUtil.init_tool_params()
+       #fn = cHandyUtil.init_tool_params
+       #self.enqueue_new_event(cEvent("housekeeping",None, 
+       #                        None, None))
        return
       @property
       def paramList(self):
@@ -112,9 +115,19 @@ class handyMantool(object):
             elif hasattr(self.toolWorker, argSwitch.lower() + '_actionfn'):
               fn = getattr(self.toolWorker, argSwitch.lower() + '_actionfn')
             else:
-              fn = getattr(self.toolWorker, 'generic' + '_actionfn')            
-            self.enqueue_new_event(cEvent(argSwitch, itr.lower(), None, fn),
-                                   tags=None)       
+              fn = getattr(self.toolWorker, 'generic' + '_actionfn')
+            #attaching original param Entry as payload. For invoking call chain.  
+            for param in self.paramList:
+                if argSwitch == param.paramDest:
+                 eventPayload = param
+                else:
+                 eventPayload = None
+            self.enqueue_new_event(cEvent(evtType=argSwitch, 
+                                          evtName=itr.lower(),
+                                          evtPayload=eventPayload, 
+                                          evtPayload_fn=fn),                                                     
+                                   tags=None)
+
        return
       def gen_events_from_parsed_args(self):
        for argSwitch in self.getmembListForObj(self.toolArgs):
@@ -124,12 +137,12 @@ class handyMantool(object):
                      argSwitch=argSwitch,  # -list, -task etc.
                      switchValueList=switchValueList)  # -list <one two three>
        """
-       if self.toolArgs.task is not None :                  
-         for itr in sum(self.toolArgs.task, []):            
+       if self.toolArgs.task is not None :
+         for itr in sum(self.toolArgs.task, []):
             if hasattr(self.toolWorker, itr.lower() + '_actionfn'):
               fn = getattr(self.toolWorker, itr.lower() + '_actionfn')
             else:
-              fn = getattr(self.toolWorker, 'generic' + '_actionfn')            
+              fn = getattr(self.toolWorker, 'generic' + '_actionfn')
             self.enqueue_new_event(cEvent('task', itr.lower(), None, fn),
                                    tags=None)
        """
@@ -190,6 +203,7 @@ def main():
   h1.init_tool_params()  
   h1.tool_parse_params() 
   h1.process_all_events()
+
   return
 
 

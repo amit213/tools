@@ -161,12 +161,12 @@ class cHandyUtil(cToolBase):
     def __init__(self):        
         return
 
-    def init_tool_params(self, arg=None):
-        self.enqueue_fn(cToolParam(paramShort='-gabu',
-                     paramHelp='guucha puucha',
+    def init_tool_params(self, eventObj=None, arg=None):
+        self.enqueue_fn(cToolParam(paramShort='-test',
+                     paramHelp='calling testfn',
                      paramAction='append',
-                     paramNargs ='?',                     
-                     paramType=self.getfn(fnName='test_callbackfn')
+                     paramNargs ='*',                     
+                     #paramType=self.getfn(fnName='test_callbackfn')
                      ))
         self.enqueue_fn(cToolParam(paramShort='-dump',
                      paramHelp='dump sample config file',
@@ -273,7 +273,8 @@ class cToolWorker(cToolBase):
         return
 
     def generic_actionfn(self, eventObj=None):
-        print "**", eventObj.event_name
+        print "**", eventObj.event_name, eventObj.event_type
+
         eventObj.raise_error(event=eventObj, errmsg='invalid option')
         return
     def scanwifi_actionfn(self, eventObj=None):
@@ -289,6 +290,7 @@ class cToolWorker(cToolBase):
                     #self.hTool.envConfig.dump_sample_data))
                     self.getfn('dump_sample_data')))
                     #cEnvConfigVar().dump_sample_data))
+        print self.getfn('dump_sample_data').im_class
         return
     def list_actionfn(self, eventObj=None):
         #print "calling list_actionfn ", type(eventObj), eventObj #eventObj.event_name
@@ -300,7 +302,6 @@ class cToolWorker(cToolBase):
         #eventObj.event_name
         #eventObj.event_payload_fn=self.hTool.holaecho
         #self.enqueue_fn(eventObj)
-        
 
         if type(eventObj) is cEvent:
          self.raise_error(event=eventObj, errmsg='invalid list option')
@@ -325,7 +326,6 @@ class cToolWorker(cToolBase):
                                    b1, self.spawnssh_callbackfn),                                   
                                   )
         return
-
 
 def myprint(args):
   print args
