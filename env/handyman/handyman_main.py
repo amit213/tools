@@ -143,12 +143,13 @@ class handyMantool(object):
               fn = getattr(self.toolWorker, argSwitch.lower() + '_actionfn')
             else:
               fn = getattr(self.toolWorker, 'generic' + '_actionfn')
-            #attaching original param Entry as payload. For invoking call chain.  
+
+            #attaching original param Entry as payload. For invoking call chain.
+            eventPayload = None
             for param in self.paramList:
                 if argSwitch == param.paramDest:
                  eventPayload = param
-                else:
-                 eventPayload = None
+            
             self.enqueue_new_event(cEvent(evtType=argSwitch, 
                                           evtName=itr.lower(),
                                           evtPayload=eventPayload, 

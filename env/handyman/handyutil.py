@@ -10,6 +10,7 @@ import os
 import subprocess
 import ConfigParser
 from configobj import ConfigObj
+import feedparser
 
 class cTryRun(object):
       def __init__(self):
@@ -91,7 +92,7 @@ class cToolParam(object):
      def __init__(self, arg=None, paramShort=None,
                   paramHelp=None, paramAction=None,
                   paramDest=None, paramNargs=None,
-                  paramType=None                  
+                  paramType=None, paramKeywordMap=None,                
                  ):
       super(cToolParam, self).__init__()
       self.paramShort = paramShort
@@ -101,7 +102,14 @@ class cToolParam(object):
       self.paramNargs = paramNargs
       self.paramType = paramType
       self.arg = arg
+      self.paramKeywordMap = paramKeywordMap
       return
+      @property
+      def paramKeywordMap(self):
+          return self._paramKeywordMap
+      @paramKeywordMap.setter
+      def paramKeywordMap(self, value):
+          self._paramKeywordMap = value      
       @property
       def paramType(self):
           return self._paramType
@@ -186,7 +194,9 @@ class cHandyUtil(cToolBase):
                      paramHelp='task to execute',
                      paramAction='append',
                      paramNargs ='+',                     
-                     paramDest='task'                     
+                     paramDest='task',
+                     paramKeywordMap={'gnews' : 'get_news_headlines'
+                                     }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
                      paramHelp='greetings on your way',
@@ -279,12 +289,31 @@ class cToolWorker(cToolBase):
     def samplebox_actionfn(self, eventObj=None):
         pass
         return
+    def get_news_headlines(self, eventObj=None):
+        
+        import feedparser
+        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss' 
+        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=openstack&output=rss'
+        url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + 'cloud' + '&output=rss'
+        # just some GNews feed - I'll use a specific search later
+        feed = feedparser.parse(url)
+        for post in feed.entries:
+           print post.title
+        return
+    def generic_actionfn(self, eventObj=None):        
+        argIsconsumed=False
+        if type(eventObj.event_payload) is cToolParam:
+          tmpparam = eventObj.event_payload
+          if eventObj.event_name in tmpparam.paramKeywordMap.keys():
+            tmpfn = self.getfn(tmpparam.paramKeywordMap[eventObj.event_name])
+            self.enqueue_fn(cEvent(evtPayload_fn=tmpfn))
+            argIsconsumed=True
 
-    def generic_actionfn(self, eventObj=None):
-        print "**", eventObj.event_name, eventObj.event_type
-
-        eventObj.raise_error(event=eventObj, 
+        if not argIsconsumed:
+          print "**", eventObj.event_name, eventObj.event_type
+          eventObj.raise_error(event=eventObj, 
                  errmsg='invalid ' + eventObj.event_type + ' option')
+
         return
     def scanwifi_actionfn(self, eventObj=None):
         print os.system("/System/Library/"
