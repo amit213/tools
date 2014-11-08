@@ -41,14 +41,14 @@ class handyMantool(object):
        #cToolBase.base_echo("mangle box 123")
        #print callable()
        self.enqueue_new_event(cEvent("housekeeping", 
-                    "setupparamtable",
-                    evtPayload_fn=self.toolUtil.init_tool_params))
+                  "setupparamtable",
+                  evtPayload_fn=self.toolUtil.init_tool_params))
        self.enqueue_new_event(cEvent("housekeeping", 
-                    "initparamandparseargs",
-                    evtPayload_fn=self.toolUtil.utilParseParams))
+                  "initparamandparseargs",
+                  evtPayload_fn=self.toolUtil.utilParseParams))
        self.enqueue_new_event(cEvent("housekeeping", 
-                    "geneventsfromargs",
-                    evtPayload_fn=self.gen_events_from_parsed_args))
+                  "geneventsfromargs",
+                  evtPayload_fn=self.gen_events_from_parsed_args))
        return
       @property
       def paramList(self):
@@ -133,7 +133,7 @@ class handyMantool(object):
       def gen_event_for_argSwitch(self, argSwitch=None, 
                                         switchValueList=None):
        """ argSwitch is -list, -task etc. top level switch. """
-       """ switchValueList is the values supplied for given switch """       
+       """ switchValueList is the values supplied for given switch """         
        if switchValueList is not None :                  
          for itr in sum(switchValueList, []):
           if itr is not None:            
@@ -160,10 +160,16 @@ class handyMantool(object):
       def gen_events_from_parsed_args(self, eventObj=None):
        for argSwitch in self.getmembListForObj(self.toolArgs):
           if getattr(self.toolArgs, argSwitch) is not None:
-            switchValueList = getattr(self.toolArgs, argSwitch)                        
-            self.gen_event_for_argSwitch(
-                     argSwitch=argSwitch,  # -list, -task etc.
-                     switchValueList=switchValueList)  # -list <one two three>
+            switchValueList = getattr(self.toolArgs, argSwitch)
+
+            self.toolUtil.gen_event_for_argPhrase(argSwitch=argSwitch,
+                                    switchValueList=switchValueList)
+            
+            #self.gen_event_for_argSwitch(
+            #         argSwitch=argSwitch,  # -list, -task etc.
+            #         switchValueList=switchValueList)  # -list <one two three>
+
+
        """
        if self.toolArgs.task is not None :
          for itr in sum(self.toolArgs.task, []):

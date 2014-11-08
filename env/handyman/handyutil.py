@@ -24,7 +24,7 @@ class cToolBase(object):
       def base_echo(self, arg):
        print arg
        return
-      def enqueue_fn(self, arg=None):
+      def enqueue_fn(self, arg=None, tags=None):
        #import handyman_main
        hToolObj = handyman_main.handyMantool.getToolInstance() 
        if isinstance(arg, cEvent):
@@ -39,13 +39,46 @@ class cToolBase(object):
           event.event_payload_fn = self.getfn('raise_error_callbackfn')
           self.enqueue_fn(event)
        return 
-      def getfn(self, fnName=None):
+      def getfn(self, fnName=None, 
+                argSwitch=None,
+                headKeyword=None):
+        fn = None        
         if fnName:      
          for memberobj in self.hTool.membObjList:
            for method in dir(getattr(self.hTool, memberobj)):
              if callable((getattr(getattr(self.hTool, memberobj),method))) and method == fnName:            
               fn = getattr(getattr(self.hTool, memberobj),method)
+        # search fn signature from standard list of callbacks and actionfn(s)              
+        if argSwitch is not None:
+          if headKeyword is not None:
+            if hasattr(self.hTool.toolWorker, headKeyword.lower() + '_actionfn'):
+              fn = getattr(self.hTool.toolWorker, headKeyword.lower() + '_actionfn')
+            #if hasattr(self.hTool.toolWorker, argSwitch.lower() + '_actionfn'):
+            #  fn = getattr(self.hTool.toolWorker, argSwitch.lower() + '_actionfn')
+
+        if fn is None:
+          fn = getattr(self.hTool.toolWorker, 'generic' + '_actionfn')        
         return fn
+      def getParamfromArgSwitch(self,argSwitch=None):
+        tmpParamobj=None
+        for param in self.hTool.paramList:
+          if argSwitch == param.paramDest:
+              tmpParamobj = param              
+        return tmpParamobj
+      def getPhrase(self, eventObj=None, 
+                    returnType=None, 
+                    filler=None):
+        retval = ""
+        if eventObj is not None and type(eventObj) is cEvent:
+          tmpList = list(eventObj.event_payload.getPhrase())
+          #exclude the head
+          tmpList.pop(0)
+          if tmpList is not None:
+            #for token in eventObj.event_payload.getPhrase():
+            for token in tmpList:
+              retval = token + filler + retval
+        return retval
+
       @property
       def hTool(self):
           self._hTool = handyman_main.handyMantool.getToolInstance() 
@@ -149,8 +182,22 @@ class cToolParam(object):
       def paramNargs(self, value):
           self._paramNargs = value
 
-      
-class sshBookmark(object):
+class cToolPayload(cToolBase):
+      def __init__(self, payloadToolParamObj=None,
+                   payloadArgPhrase=None):
+       self._payloadList=[]
+       self.packPayload(payloadToolParamObj)
+       self.packPayload(payloadArgPhrase)
+       return      
+      def packPayload(self, value):
+          self._payloadList.append(value)
+      @property
+      def payload(self):
+          return self._payloadList
+      def getPhrase(self):
+          return self._payloadList[1]
+
+class sshBookmark(cToolBase):
       #
       # store, launch and run ssh sessions.
       #
@@ -166,7 +213,6 @@ class sshBookmark(object):
        self.username=username
        self.connectToIP=""
        return
-
 
       def list_bookmark(self):
        print self.name
@@ -209,10 +255,13 @@ class cHandyUtil(cToolBase):
                      paramAction='append',
                      paramNargs ='+',                     
                      paramDest='list',
+                     paramKeywordMap={'bm' : 'bm_callbackfn'
+                                     }                     
                      #paramType=self.getfn(fnName='list_actionfn')                     
                      ))                             
         pass
         return
+
 
     def utilParseParams(self, tmpObj=None):        
 
@@ -230,6 +279,25 @@ class cHandyUtil(cToolBase):
     def utilVer():
         selfVer = "0.0.1u"      
         return selfVer
+
+    def gen_event_for_argPhrase(self, argSwitch=None, 
+                                switchValueList=None):        
+        if switchValueList is not None:
+          listOflists = list(switchValueList)
+          while listOflists:
+            phrase = listOflists.pop(0)
+            headKeyword = phrase[0]
+            pyld = cToolPayload(
+                        payloadToolParamObj=self.getParamfromArgSwitch(argSwitch),
+                        payloadArgPhrase=phrase)  
+
+            self.enqueue_fn(cEvent(evtType=argSwitch, 
+                        evtName=headKeyword,
+                        evtPayload=pyld,
+                        evtPayload_fn=self.getfn(argSwitch=argSwitch, 
+                                                 headKeyword=headKeyword)),
+                        tags=None)
+        return
 
 class cEnvConfigVar(object):
     def __init__(self, file=None):
@@ -289,24 +357,27 @@ class cToolWorker(cToolBase):
     def samplebox_actionfn(self, eventObj=None):
         pass
         return
-    def get_news_headlines(self, eventObj=None):
-        
+    def get_news_headlines(self, eventObj=None):        
         import feedparser
-        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss' 
+        searchKey=u'local'
         #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=openstack&output=rss'
-        url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + 'cloud' + '&output=rss'
+        searchKey=self.getPhrase(eventObj=eventObj,
+                                 filler='+')
+        url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
         # just some GNews feed - I'll use a specific search later
         feed = feedparser.parse(url)
         for post in feed.entries:
            print post.title
         return
     def generic_actionfn(self, eventObj=None):        
-        argIsconsumed=False
-        if type(eventObj.event_payload) is cToolParam:
-          tmpparam = eventObj.event_payload
+        argIsconsumed=False        
+        if type(eventObj.event_payload) is cToolPayload:
+          tmpparam = eventObj.event_payload.payload[0]
           if eventObj.event_name in tmpparam.paramKeywordMap.keys():
             tmpfn = self.getfn(tmpparam.paramKeywordMap[eventObj.event_name])
-            self.enqueue_fn(cEvent(evtPayload_fn=tmpfn))
+            #self.enqueue_fn(cEvent(evtPayload_fn=tmpfn))
+            eventObj.event_payload_fn = tmpfn
+            self.enqueue_fn(eventObj)
             argIsconsumed=True
 
         if not argIsconsumed:
@@ -348,8 +419,12 @@ class cToolWorker(cToolBase):
          # 
          self.raise_error(errmsg=eventObj) 
         return        
-    def bm_actionfn(self, eventObj=None):
-        print "printing the big list of bookmarks", eventObj.event_name
+    def bm_callbackfn(self, eventObj=None):
+        print "printing the big list of bookmarks", eventObj.event_name, eventObj.event_payload.getPhrase()
+        if type(eventObj) is cEvent:        
+          if type(eventObj.event_payload) is cToolPayload:
+            #print 'proper payload --> ', eventObj.event_payload.getPhrase()
+            pass
         return
     def handysleep_callbackfn(self, eventObj=None):
         from time import sleep
