@@ -69,10 +69,17 @@ class cToolBase(object):
                     returnType=None, 
                     filler=None):
         retval = ""
+        if filler is None:
+          filler = ""
         if eventObj is not None and type(eventObj) is cEvent:
           tmpList = list(eventObj.event_payload.getPhrase())
+
           #exclude the head
           tmpList.pop(0)
+
+          # reverse it so that the final output comes out 
+          # in proper order as fed in by the user.
+          tmpList.reverse()          
           if tmpList is not None:
             #for token in eventObj.event_payload.getPhrase():
             for token in tmpList:
@@ -241,7 +248,8 @@ class cHandyUtil(cToolBase):
                      paramAction='append',
                      paramNargs ='+',                     
                      paramDest='task',
-                     paramKeywordMap={'gnews' : 'get_news_headlines'
+                     paramKeywordMap={'gnews'  : 'get_news_headlines',
+                                      'search' : 'generate_search_result'
                                      }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
@@ -357,13 +365,36 @@ class cToolWorker(cToolBase):
     def samplebox_actionfn(self, eventObj=None):
         pass
         return
+
+    def generate_search_result(self, eventObj=None):        
+        import feedparser
+        searchKey = u'local'
+        searchKey = self.getPhrase(eventObj=eventObj, filler='+')
+        #url = 'http://www.google.com/search?q=' + searchKey
+        url = 'http://www.google.com/search?q=akshar'
+        import requests
+        #from bs4 import BeautifulSoup
+        url = "http://search.yahoo.com/search?p=%s"
+        query = "python"
+        r = requests.get(url % query) 
+
+        
+        
+
+
     def get_news_headlines(self, eventObj=None):        
         import feedparser
         searchKey=u'local'
         #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=openstack&output=rss'
         searchKey=self.getPhrase(eventObj=eventObj,
                                  filler='+')
-        url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
+        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss'
+        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=snc&output=rss'
+        #url = 'http://www.bhaskar.com/rss-feed/2313/'
+
+        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
+        url = 'http://feeds.bbci.co.uk/news/rss.xml'
+
         # just some GNews feed - I'll use a specific search later
         feed = feedparser.parse(url)
         for post in feed.entries:
