@@ -248,8 +248,10 @@ class cHandyUtil(cToolBase):
                      paramAction='append',
                      paramNargs ='+',                     
                      paramDest='task',
-                     paramKeywordMap={'gnews'  : 'get_news_headlines',
-                                      'search' : 'generate_search_result'
+                     paramKeywordMap={
+                       'gnews'  : 'get_news_headlines',
+                       'search' : 'generate_search_result',
+                       'chro'   : 'launch_browser_tab',
                                      }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
@@ -378,10 +380,14 @@ class cToolWorker(cToolBase):
         query = "python"
         r = requests.get(url % query) 
 
-        
-        
-
-
+    def launch_browser_tab(self, eventObj=None):
+        import webbrowser
+        new = 2 
+        searchKey=self.getPhrase(eventObj=eventObj,
+                                 filler='+')        
+        url = 'http://www.google.com/search?q=' + searchKey
+        webbrowser.open(url,new=new)
+        return
     def get_news_headlines(self, eventObj=None):        
         import feedparser
         searchKey=u'local'
@@ -392,8 +398,8 @@ class cToolWorker(cToolBase):
         #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=snc&output=rss'
         #url = 'http://www.bhaskar.com/rss-feed/2313/'
 
-        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
-        url = 'http://feeds.bbci.co.uk/news/rss.xml'
+        url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
+        #url = 'http://feeds.bbci.co.uk/news/rss.xml'
 
         # just some GNews feed - I'll use a specific search later
         feed = feedparser.parse(url)
@@ -404,12 +410,13 @@ class cToolWorker(cToolBase):
         argIsconsumed=False        
         if type(eventObj.event_payload) is cToolPayload:
           tmpparam = eventObj.event_payload.payload[0]
-          if eventObj.event_name in tmpparam.paramKeywordMap.keys():
-            tmpfn = self.getfn(tmpparam.paramKeywordMap[eventObj.event_name])
-            #self.enqueue_fn(cEvent(evtPayload_fn=tmpfn))
-            eventObj.event_payload_fn = tmpfn
-            self.enqueue_fn(eventObj)
-            argIsconsumed=True
+          if hasattr(tmpparam, 'paramKeywordMap'):
+            if eventObj.event_name in tmpparam.paramKeywordMap.keys():
+              tmpfn = self.getfn(tmpparam.paramKeywordMap[eventObj.event_name])
+              #self.enqueue_fn(cEvent(evtPayload_fn=tmpfn))
+              eventObj.event_payload_fn = tmpfn
+              self.enqueue_fn(eventObj)
+              argIsconsumed=True
 
         if not argIsconsumed:
           print "**", eventObj.event_name, eventObj.event_type
