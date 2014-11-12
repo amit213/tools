@@ -72,10 +72,11 @@ class cToolBase(object):
         if filler is None:
           filler = ""
         if eventObj is not None and type(eventObj) is cEvent:
-          tmpList = list(eventObj.event_payload.getPhrase())
+          tmpList = list(eventObj.event_payload.getPayloadPhrase())
 
-          #exclude the head
-          tmpList.pop(0)
+          #exclude the head          
+          if tmpList is not None:
+            tmpList.pop(0)
 
           # reverse it so that the final output comes out 
           # in proper order as fed in by the user.
@@ -201,8 +202,20 @@ class cToolPayload(cToolBase):
       @property
       def payload(self):
           return self._payloadList
-      def getPhrase(self):
-          return self._payloadList[1]
+
+      def getPayloadPhrase(self, phraseType=None):
+          payloaditem = ""
+          retval = ""
+          if phraseType is None:
+            phraseType = list
+          for payloaditem in self.payload:
+            if isinstance(payloaditem, phraseType):              
+              retval = payloaditem
+            if isinstance(payloaditem, phraseType):              
+              retval = payloaditem
+              #retval = payloaditem
+          #return self._payloadList[1]
+          return payloaditem
 
 class sshBookmark(cToolBase):
       #
@@ -258,7 +271,7 @@ class cHandyUtil(cToolBase):
                      paramHelp='greetings on your way',
                      paramAction='append',
                      paramNargs ='+',                     
-                     paramType=self.hTool.holaecho
+                     paramType=self.getfn(fnName='hola')
                      ))
         self.enqueue_fn(cToolParam(paramShort='-list',
                      paramHelp='list items of your interest',
@@ -294,19 +307,24 @@ class cHandyUtil(cToolBase):
                                 switchValueList=None):        
         if switchValueList is not None:
           listOflists = list(switchValueList)
-          while listOflists:
-            phrase = listOflists.pop(0)
-            headKeyword = phrase[0]
-            pyld = cToolPayload(
-                        payloadToolParamObj=self.getParamfromArgSwitch(argSwitch),
-                        payloadArgPhrase=phrase)  
+          while listOflists:              
+              phrase = listOflists.pop(0)              
+              headKeyword = phrase[0]              
+              if (phrase.count(None) == len(phrase)):
+                # the arg was directly consumed by the callback fn
+                # specified with the param
+                pass
+              else:
+                pyld = cToolPayload(
+                            payloadToolParamObj=self.getParamfromArgSwitch(argSwitch),
+                            payloadArgPhrase=phrase)  
 
-            self.enqueue_fn(cEvent(evtType=argSwitch, 
-                        evtName=headKeyword,
-                        evtPayload=pyld,
-                        evtPayload_fn=self.getfn(argSwitch=argSwitch, 
-                                                 headKeyword=headKeyword)),
-                        tags=None)
+                self.enqueue_fn(cEvent(evtType=argSwitch, 
+                            evtName=headKeyword,
+                            evtPayload=pyld,
+                            evtPayload_fn=self.getfn(argSwitch=argSwitch, 
+                                                     headKeyword=headKeyword)),
+                            tags=None)
         return
 
 class cEnvConfigVar(object):
@@ -380,13 +398,32 @@ class cToolWorker(cToolBase):
         query = "python"
         r = requests.get(url % query) 
 
-    def launch_browser_tab(self, eventObj=None):
-        import webbrowser
-        new = 2 
+    def hola(self, hola='Florida'):
+        if type(hola) is str:
+          print "echoing :", hola        
+        elif type(hola) is cEvent:
+          print "echoing event :", hola.event_name        
+        pass
+
+    def spawn_browser_tab(self, eventObj=None):
+        if type(eventObj.event_payload) is cToolPayload:
+          url = eventObj.event_payload.getPayloadPhrase(phraseType=str)
+          import webbrowser
+          new = 2
+          webbrowser.open(url,new=new)
+        return 
+    def launch_browser_tab(self, eventObj=None):              
+        searchKey=""
         searchKey=self.getPhrase(eventObj=eventObj,
                                  filler='+')        
         url = 'http://www.google.com/search?q=' + searchKey
-        webbrowser.open(url,new=new)
+        #url = 'https://www.google.com/search?num=100&q=site:lifehacker.com&site:amazon.com&q=%s' % searchKey
+        #url = 'https://www.google.com/search?num=100&q=site:lifehacker.com&site:amazon.com&q=' + searchKey
+        #url = 'https://www.google.com/search?num=100&q=site:lifehacker.com&site:amazon.com&q=iphone6'        
+        
+        self.enqueue_fn(cEvent(evtName='spawn browser tab',
+             evtPayload=cToolPayload(payloadArgPhrase=url),
+             evtPayload_fn=self.spawn_browser_tab))
         return
     def get_news_headlines(self, eventObj=None):        
         import feedparser

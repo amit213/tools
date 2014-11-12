@@ -123,12 +123,6 @@ class handyMantool(object):
        return
 
 
-      def holaecho(self, hola='Florida'):
-       if type(hola) is str:
-        print "echoing :", hola        
-       elif type(hola) is cEvent:
-        print "echoing event :", hola.event_name        
-        pass
 
       def gen_event_for_argSwitch(self, argSwitch=None, 
                                         switchValueList=None):
@@ -161,10 +155,10 @@ class handyMantool(object):
        for argSwitch in self.getmembListForObj(self.toolArgs):
           if getattr(self.toolArgs, argSwitch) is not None:
             switchValueList = getattr(self.toolArgs, argSwitch)
+            if switchValueList is not None:             
+             self.toolUtil.gen_event_for_argPhrase(argSwitch=argSwitch,
+                                     switchValueList=switchValueList)
 
-            self.toolUtil.gen_event_for_argPhrase(argSwitch=argSwitch,
-                                    switchValueList=switchValueList)
-            
             #self.gen_event_for_argSwitch(
             #         argSwitch=argSwitch,  # -list, -task etc.
             #         switchValueList=switchValueList)  # -list <one two three>
