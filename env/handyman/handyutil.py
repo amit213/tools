@@ -36,7 +36,7 @@ class cToolBase(object):
        if type(event) is cEvent:
          if type(errmsg) is str:          
           event.event_payload = event.event_name + ' : ' + errmsg
-          event.event_payload_fn = self.getfn('raise_error_callbackfn')
+          event.event_payload_fn = self.getfn('error_reporting_callbackfn')
           self.enqueue_fn(event)
        return 
       def getfn(self, fnName=None, 
@@ -203,19 +203,22 @@ class cToolPayload(cToolBase):
       def payload(self):
           return self._payloadList
 
-      def getPayloadPhrase(self, phraseType=None):
+      def getPayloadPhrase(self, outType=None,
+                           keepheadKeyword=True):
           payloaditem = ""
           retval = ""
-          if phraseType is None:
-            phraseType = list
-          for payloaditem in self.payload:
-            if isinstance(payloaditem, phraseType):              
-              retval = payloaditem
-            if isinstance(payloaditem, phraseType):              
-              retval = payloaditem
-              #retval = payloaditem
-          #return self._payloadList[1]
-          return payloaditem
+          if outType is None:
+            outType = list
+          for payloaditem in self.payload:            
+            if isinstance(payloaditem, list):
+              retval = list(payloaditem)
+
+          if (keepheadKeyword == False):
+            retval.pop(0)
+          if (outType == str):
+            return ' '.join(retval)
+
+          return retval
 
 class sshBookmark(cToolBase):
       #
@@ -250,6 +253,10 @@ class cHandyUtil(cToolBase):
                      paramAction='append',
                      paramNargs ='*',                     
                      #paramType=self.getfn(fnName='test_callbackfn')
+                     paramDest='test',
+                     paramKeywordMap={
+                            'sleep'   : 'handysleep_callbackfn',
+                                     }
                      ))
         self.enqueue_fn(cToolParam(paramShort='-dump',
                      paramHelp='dump sample config file',
@@ -262,16 +269,18 @@ class cHandyUtil(cToolBase):
                      paramNargs ='+',                     
                      paramDest='task',
                      paramKeywordMap={
-                       'gnews'  : 'get_news_headlines',
-                       'search' : 'generate_search_result',
-                       'chro'   : 'launch_browser_tab',
+                       'gnews'   : 'get_news_headlines',
+                       'search'  : 'generate_search_result',
+                       'chro'    : 'launch_browser_tab',
+                       'mailme'  : 'test_mailme',
+                       'shellvar': 'process_shell_var'
                                      }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
                      paramHelp='greetings on your way',
                      paramAction='append',
                      paramNargs ='+',                     
-                     paramType=self.getfn(fnName='hola')
+                     #paramType=self.getfn(fnName='hola')
                      ))
         self.enqueue_fn(cToolParam(paramShort='-list',
                      paramHelp='list items of your interest',
@@ -312,7 +321,7 @@ class cHandyUtil(cToolBase):
               headKeyword = phrase[0]              
               if (phrase.count(None) == len(phrase)):
                 # the arg was directly consumed by the callback fn
-                # specified with the param
+                # specified with the param. So no further events required.
                 pass
               else:
                 pyld = cToolPayload(
@@ -378,7 +387,7 @@ class cToolWorker(cToolBase):
         super(cToolWorker, self).__init__()
         self.arg = arg
         return
-    def raise_error_callbackfn(self, eventObj=None):
+    def error_reporting_callbackfn(self, eventObj=None):
         if type(eventObj) is cEvent and eventObj is not None:
            print eventObj.event_payload
         return    
@@ -405,6 +414,41 @@ class cToolWorker(cToolBase):
           print "echoing event :", hola.event_name        
         pass
 
+    def spawn_this_cmd(self, eventObj=None):
+        if type(eventObj.event_payload) is cToolPayload:
+          cmdstr = eventObj.event_payload.getPayloadPhrase(phraseType=str)          
+          #print subprocess.Popen(["ssh", "root@107.170.194.30", "-D 65000", "-C", "-p 465"],
+          #print subprocess.Popen(["touch","/tmp/chimpfoobog.txt"],
+          subprocess.Popen([cmdstr],
+                           shell=False,
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE
+                          )
+        return 
+
+    def process_shell_var(self, eventObj=None):
+        print eventObj.event_payload.getPayloadPhrase(#outType=str,
+                                     keepheadKeyword=True)
+
+        return    
+    def test_mailme(self, eventObj=None):
+        #cmdstr = 'echo subject | mail -s "`date`" trigger@recipe.ifttt.com  -f fgdswcfc@sharklasers.com'
+        #cmdstr = 'touch /tmp/chimpfoobog.txt'
+        #self.enqueue_fn(cEvent(evtName='spawn browser tab',
+        #     evtPayload=cToolPayload(payloadArgPhrase=cmdstr),
+        #     evtPayload_fn=self.spawn_this_cmd))
+
+        """
+        import smtplib
+        from email.mime.text import MIMEText
+        msg = MIMEText('hello Zion')
+        msg['Subject'] = 'The contents of wall'
+        msg['From'] = 'selfemailid'
+        msg['To'] = 'trigger@recipe.ifttt.com'
+        s = smtplib.SMTP('localhost')
+        s.sendmail(me, [you], msg.as_string())
+        s.quit()
+        return """
     def spawn_browser_tab(self, eventObj=None):
         if type(eventObj.event_payload) is cToolPayload:
           url = eventObj.event_payload.getPayloadPhrase(phraseType=str)
@@ -435,7 +479,9 @@ class cToolWorker(cToolBase):
         #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=snc&output=rss'
         #url = 'http://www.bhaskar.com/rss-feed/2313/'
 
-        url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
+        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
+        #url = 'http://feeds.feedburner.com/TechCrunch/'
+        url = 'http://www.baps.org/RSSfeed.aspx'
         #url = 'http://feeds.bbci.co.uk/news/rss.xml'
 
         # just some GNews feed - I'll use a specific search later
@@ -456,7 +502,7 @@ class cToolWorker(cToolBase):
               argIsconsumed=True
 
         if not argIsconsumed:
-          print "**", eventObj.event_name, eventObj.event_type
+          #print "**", eventObj.event_name, eventObj.event_type
           eventObj.raise_error(event=eventObj, 
                  errmsg='invalid ' + eventObj.event_type + ' option')
 
@@ -465,6 +511,7 @@ class cToolWorker(cToolBase):
         print os.system("/System/Library/"
             "PrivateFrameworks/Apple80211.framework/Resources/airport --scan")
         return
+
     def spawnssh_callbackfn(self, eventObj=None):
         print isinstance(eventObj.event_payload, sshBookmark)
         return
@@ -503,7 +550,10 @@ class cToolWorker(cToolBase):
         return
     def handysleep_callbackfn(self, eventObj=None):
         from time import sleep
-        sleep(2)
+        #napDuration = float(eventObj.event_payload.getPayloadPhrase(outType=str,
+        #                             keepheadKeyword=True))
+        napDuration=1
+        sleep(napDuration)
         return
     def opentunnel_actionfn(self, eventObj=None):
 
