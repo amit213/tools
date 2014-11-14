@@ -256,6 +256,7 @@ class cHandyUtil(cToolBase):
                      paramDest='test',
                      paramKeywordMap={
                             'sleep'   : 'handysleep_callbackfn',
+                            'd'       : 'dump_sample_data',
                                      }
                      ))
         self.enqueue_fn(cToolParam(paramShort='-dump',
@@ -287,8 +288,10 @@ class cHandyUtil(cToolBase):
                      paramAction='append',
                      paramNargs ='+',                     
                      paramDest='list',
-                     paramKeywordMap={'bm' : 'bm_callbackfn'
-                                     }                     
+                     paramKeywordMap={
+                       'bm'     :  'bm_callbackfn',
+                       'conf'   :  'dump_handytool_config',
+                                      }                     
                      #paramType=self.getfn(fnName='list_actionfn')                     
                      ))                             
         pass
@@ -336,7 +339,7 @@ class cHandyUtil(cToolBase):
                             tags=None)
         return
 
-class cEnvConfigVar(object):
+class cEnvConfigVar(cToolBase):
     def __init__(self, file=None):
      self._conf = ConfigObj(file,
                             list_values=True,
@@ -371,11 +374,43 @@ class cEnvConfigVar(object):
 
      #for itr in self.conf.itervalues():
      # print itr
-     for level1 in self.conf.sections:
-      for level2 in self.conf[level1]:
-        print list(self.conf[level1][level2])
-        
+     
+
+     self.print_conf_entries(self.conf)
+     self.hTool.envConfig.append_conf_entries(
+                                   listofEntries=['feeds', 'feedbookmarks'],
+                                   dataKeyVal = {'tc' : 'http://tc-crunch123'})
+     self.print_conf_entries(self.conf)
+     self.commit_conf_to_file(self.conf)
      return
+    def commit_conf_to_file(self, confObjArg=None):
+     if confObjArg is not None and type(confObjArg) is ConfigObj: 
+          confObjArg.write()
+     return
+    def append_conf_entries(self, 
+                            listofEntries=None,
+                            dataKeyVal=None):
+     
+     #self.conf["".join(self.conf.keys())][''.join(word)] = {}
+     self.conf["".join(self.conf.keys())][''.join(listofEntries[0])] = {}
+     self.conf["".join(self.conf.keys())][''.join(listofEntries[0])][''.join(listofEntries[1])] = {}
+     self.conf["".join(self.conf.keys())][''.join(listofEntries[0])][''.join(listofEntries[1])] =  dataKeyVal
+     #self.conf[self.conf.keys()][listofEntries[0]][listofEntries[1]]= 
+     return
+
+    def print_conf_entries(self, confObj=None):     
+     if confObj is not ConfigObj:
+        confObj = self.hTool.envConfig.conf
+
+     if confObj is not None and type(confObj) is ConfigObj: 
+       for itr in confObj.iterkeys():
+         print '* ', itr, ' *'
+       for level1 in confObj.sections:
+        for level2 in confObj[level1]:
+          print 'Section : ',level2
+          print ' ',list(confObj[level1][level2])
+          for data in confObj[level1][level2]:
+            print '   ',confObj[level1][level2][data]
     def parse_conf(self, arg=None):
 
      return
@@ -427,9 +462,13 @@ class cToolWorker(cToolBase):
         return 
 
     def process_shell_var(self, eventObj=None):
-        print eventObj.event_payload.getPayloadPhrase(#outType=str,
+        tmpstr =  eventObj.event_payload.getPayloadPhrase(outType=str,
                                      keepheadKeyword=True)
-
+        tmplst = tmpstr.split()
+        print tmplst[0]
+        print ("".join(tmplst[1])).split('=')
+        #if "=" in "".join(tmplst[1]) : 
+        #  print "true"
         return    
     def test_mailme(self, eventObj=None):
         #cmdstr = 'echo subject | mail -s "`date`" trigger@recipe.ifttt.com  -f fgdswcfc@sharklasers.com'
@@ -515,7 +554,7 @@ class cToolWorker(cToolBase):
     def spawnssh_callbackfn(self, eventObj=None):
         print isinstance(eventObj.event_payload, sshBookmark)
         return
-    def test_callbackfn(self, arg=None):                
+    def test_callbackfn(self, arg=None): 
         self.enqueue_fn(cEvent(evtName="homeland",evtPayload_fn=
                     #self.generic_actionfn))
                     #self.hTool.envConfig.dump_sample_data))
@@ -524,15 +563,6 @@ class cToolWorker(cToolBase):
         print self.getfn('dump_sample_data').im_class
         return
     def list_actionfn(self, eventObj=None):
-        #print "calling list_actionfn ", type(eventObj), eventObj #eventObj.event_name
-
-        #if type(eventObj) is cEvent:
-        #  eventObj.event_payload = eventObj.event_name + " is an invalid list option."
-        #  eventObj.event_payload_fn = self.getfn('raise_error_callbackfn')
-        #  self.enqueue_fn(eventObj)
-        #eventObj.event_name
-        #eventObj.event_payload_fn=self.hTool.holaecho
-        #self.enqueue_fn(eventObj)
 
         if type(eventObj) is cEvent:
          self.raise_error(event=eventObj, errmsg='invalid list option')
@@ -554,6 +584,10 @@ class cToolWorker(cToolBase):
         #                             keepheadKeyword=True))
         napDuration=1
         sleep(napDuration)
+        return
+    def dump_handytool_config(self, eventObj=None):
+        self.enqueue_fn(
+          cEvent(evtPayload_fn=self.hTool.envConfig.print_conf_entries))
         return
     def opentunnel_actionfn(self, eventObj=None):
 

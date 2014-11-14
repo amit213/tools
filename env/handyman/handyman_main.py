@@ -221,12 +221,7 @@ def create_ssh_bookmark():
   s1.list_bookmark()
   return
 
-def main():
-
-  #selfVer = "0.0.1"
-  #printVer()
-  #create_ssh_bookmark()
-  
+def main():  
     
   h1 = handyMantool()
   
