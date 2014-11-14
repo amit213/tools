@@ -270,7 +270,7 @@ class cHandyUtil(cToolBase):
                      paramNargs ='+',                     
                      paramDest='task',
                      paramKeywordMap={
-                       'gnews'   : 'get_news_headlines',
+                       'feeds'   : 'process_feeds',
                        'search'  : 'generate_search_result',
                        'chro'    : 'launch_browser_tab',
                        'mailme'  : 'test_mailme',
@@ -376,14 +376,75 @@ class cEnvConfigVar(cToolBase):
      # print itr
      
 
-     self.print_conf_entries(self.conf)
-     self.hTool.envConfig.append_conf_entries(
-                                   listofEntries=['feeds', 'feedbookmarks'],
-                                   dataKeyVal = {'tc' : 'http://tc-crunch123'})
-     self.print_conf_entries(self.conf)
-     self.commit_conf_to_file(self.conf)
+     #self.print_conf_entries(self.conf)
+     #self.hTool.envConfig.append_conf_entries(
+     #                              listofEntries=['feeds', 'feedbookmarks'],
+     #                              dataKeyVal = {'tc' : 'http://tc-crunch123'})
+     #self.print_conf_entries(self.conf)
+     #self.commit_conf_to_file(self.conf)
+     #tmpstr = 'does this go'
+
+     #self.conf.walk(self.conf_walkfn,
+     #               call_on_sections=True, keyarg=tmpstr)     
+
      return
+    def save_keyval_to_conf(self, 
+                            eventObj=None,
+                            key=None,
+                            val=None,                            
+                            parentSection=None,
+                           ):
+     
+     if eventObj is not None and type(eventObj) is cEvent:       
+       argList = eventObj.event_payload.getPayloadPhrase(
+                                     keepheadKeyword=True)       
+       if len(argList) == 3:
+        #section, key, val - we allow 3 items at a time for now.
+        parentSection, key, val = argList
+
+
+     self.conf.walk(self.conf_walkfn,
+                    call_on_sections=True, 
+                    keyarg=key,
+                    valarg=val,
+                    parentSection=parentSection,
+                    )
+     return
+
+    def get_value_from_conf(self, key=None, val=None,
+                            parentSection=None):
+     resultList = []
+     self.conf.walk(self.conf_walkfn,
+                    call_on_sections=True, 
+                    keyarg=key, 
+                    parentSection=parentSection,
+                    resultList=resultList)
+     if len(resultList) > 0:
+        return resultList
+     return None
+     
+    def conf_walkfn(self, section, key, 
+                    keyarg=None, valarg=None,
+                    parentSection=None, resultList=None):
+
+     if keyarg and valarg:       
+       if parentSection is not None and section.name == parentSection:
+         #print ' saving new value... ', keyarg , valarg, section.name
+         section[keyarg] = valarg         
+         self.enqueue_fn(
+          cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
+
+
+     if keyarg is not None and key == keyarg:
+        if parentSection is not None and section.name != parentSection:
+          return          
+        if resultList is not None:
+          resultList.append(section[key])
+     return
+
     def commit_conf_to_file(self, confObjArg=None):
+     if confObjArg is None or type(confObjArg) is not ConfigObj:
+       confObjArg = self.hTool.envConfig.conf
      if confObjArg is not None and type(confObjArg) is ConfigObj: 
           confObjArg.write()
      return
@@ -508,25 +569,46 @@ class cToolWorker(cToolBase):
              evtPayload=cToolPayload(payloadArgPhrase=url),
              evtPayload_fn=self.spawn_browser_tab))
         return
-    def get_news_headlines(self, eventObj=None):        
+    def process_feeds(self, eventObj=None):        
         import feedparser
-        searchKey=u'local'
-        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=openstack&output=rss'
-        searchKey=self.getPhrase(eventObj=eventObj,
-                                 filler='+')
-        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss'
-        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=snc&output=rss'
-        #url = 'http://www.bhaskar.com/rss-feed/2313/'
+        searchKey=u''
+        #searchKey=self.getPhrase(eventObj=eventObj,
+        #                         filler='+')
+        feedArgs =  eventObj.event_payload.getPayloadPhrase(
+                                     keepheadKeyword=False)
 
-        #url = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&q=' + searchKey + '&output=rss'
-        #url = 'http://feeds.feedburner.com/TechCrunch/'
-        url = 'http://www.baps.org/RSSfeed.aspx'
-        #url = 'http://feeds.bbci.co.uk/news/rss.xml'
+        #check if it's a bookmark saving task.
+        if len(feedArgs) >= 2 and feedArgs[0] == 'bm':
+          #this indicates key=val format.
+          #feedArgs.pop(0)
+          feedArgs[0] = 'feedbookmarks'
+          feedbmList = (" ".join(feedArgs)).split(' ')
+          self.enqueue_fn(
+               cEvent(
+                evtPayload=cToolPayload(payloadArgPhrase=feedbmList),
+                evtPayload_fn=self.hTool.envConfig.save_keyval_to_conf))
+          return
 
-        # just some GNews feed - I'll use a specific search later
-        feed = feedparser.parse(url)
-        for post in feed.entries:
-           print post.title
+        if len(feedArgs) <= 0:
+          feedsourcebm = 'gnews'
+        elif len(feedArgs) > 1:
+          feedsourcebm = feedArgs.pop(0)
+          searchKey = '+'.join(feedArgs)
+        else:
+          feedsourcebm = feedArgs.pop(0)
+
+        urlbm = self.hTool.envConfig.get_value_from_conf(feedsourcebm, 
+                                     parentSection='feedbookmarks')
+        
+        if urlbm:
+
+          url = ''.join(urlbm)
+          url = url + searchKey
+
+          feed = feedparser.parse(url)
+          for post in feed.entries:
+             print post.title
+
         return
     def generic_actionfn(self, eventObj=None):        
         argIsconsumed=False        

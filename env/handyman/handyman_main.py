@@ -196,7 +196,8 @@ class handyMantool(object):
       def process_all_events(self):        
        for evt in self.eventList:
         func = evt.event_payload_fn
-        func(evt)
+        eventObj = evt
+        func(eventObj)
         #evt.event_payload_fn(evt)
         pass
        return 
