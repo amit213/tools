@@ -6,14 +6,6 @@ from handyutil import *
 import argparse
 import handyutil
 from time import sleep
-#from handyutil import cToolBase
-#from handyutil import cEvent
-#from handyutil import cToolParam
-#from handyutil import sshBookmark
-#from handyutil import cHandyUtil
-#from handyutil import cEnvConfigVar
-#from handyutil import cToolWorker
-
 
 class cTryRun2(object):
       def __init__(self):
@@ -40,6 +32,12 @@ class handyMantool(object):
        #from handyutil import cToolBase
        #cToolBase.base_echo("mangle box 123")
        #print callable()
+
+       #self.enqueue_new_event(cEvent("preshut", 
+       #           "shutdown",
+       #           evtPayload_fn=self.toolWorker.hola),
+       #           tags='at end')
+
        self.enqueue_new_event(cEvent("housekeeping", 
                   "setupparamtable",
                   evtPayload_fn=self.toolUtil.init_tool_params))
@@ -182,7 +180,10 @@ class handyMantool(object):
       # return
       def enqueue_new_event(self, eventObj=None,
                             tags=None):
-       self.eventList.append(eventObj)       
+       if tags == 'insertBeforeLast':
+         self.eventList.insert(len(self.eventList)-1, eventObj) 
+       else:
+         self.eventList.append(eventObj)       
        return
 
       @property

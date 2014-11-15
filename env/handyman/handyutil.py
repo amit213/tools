@@ -195,6 +195,10 @@ class cToolPayload(cToolBase):
                    payloadArgPhrase=None):
        self._payloadList=[]
        self.packPayload(payloadToolParamObj)
+       
+       #if type(payloadArgPhrase) is str:       
+       payloadArgPhrase = list(payloadArgPhrase)
+
        self.packPayload(payloadArgPhrase)
        return      
       def packPayload(self, value):
@@ -204,7 +208,8 @@ class cToolPayload(cToolBase):
           return self._payloadList
 
       def getPayloadPhrase(self, outType=None,
-                           keepheadKeyword=True):
+                           keepheadKeyword=True,
+                           argProcessing=False):
           payloaditem = ""
           retval = ""
           if outType is None:
@@ -215,8 +220,13 @@ class cToolPayload(cToolBase):
 
           if (keepheadKeyword == False):
             retval.pop(0)
-          if (outType == str):
+          
+          if (outType == str) and argProcessing:
             return ' '.join(retval)
+          if (outType == str):
+            return ''.join(retval)
+            
+
 
           return retval
 
@@ -387,8 +397,17 @@ class cEnvConfigVar(cToolBase):
      #self.conf.walk(self.conf_walkfn,
      #               call_on_sections=True, keyarg=tmpstr)     
 
+     #print self.get_value_from_conf(key='feedbookmarks')
+     #import tempfile
+     #fp = tempfile.NamedTemporaryFile()
+     #fp = tempfile.mktemp()
+     #print fp.name
+     #fp.write(u'Hello world!')
+     #fp.seek(0)
+     #print fp.read()
+
      return
-    def save_keyval_to_conf(self, 
+    def update_keyval_to_conf(self, 
                             eventObj=None,
                             key=None,
                             val=None,                            
@@ -397,11 +416,12 @@ class cEnvConfigVar(cToolBase):
      
      if eventObj is not None and type(eventObj) is cEvent:       
        argList = eventObj.event_payload.getPayloadPhrase(
-                                     keepheadKeyword=True)       
-       if len(argList) == 3:
+                                     keepheadKeyword=True)
+       if len(argList) == 2:
+        parentSection, key = argList
+       elif len(argList) == 3:
         #section, key, val - we allow 3 items at a time for now.
         parentSection, key, val = argList
-
 
      self.conf.walk(self.conf_walkfn,
                     call_on_sections=True, 
@@ -422,10 +442,22 @@ class cEnvConfigVar(cToolBase):
      if len(resultList) > 0:
         return resultList
      return None
-     
+
     def conf_walkfn(self, section, key, 
                     keyarg=None, valarg=None,
                     parentSection=None, resultList=None):
+
+     if keyarg and valarg is None:
+       if parentSection is not None and section.name == parentSection:
+         #this is a delete opration.
+         if key == keyarg:
+           #print ' -->> ==>> ', keyarg, key, section[keyarg]
+           pass
+
+         
+         #self.conf.pop(keyarg)
+         self.enqueue_fn(
+          cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
 
      if keyarg and valarg:       
        if parentSection is not None and section.name == parentSection:
@@ -512,7 +544,7 @@ class cToolWorker(cToolBase):
 
     def spawn_this_cmd(self, eventObj=None):
         if type(eventObj.event_payload) is cToolPayload:
-          cmdstr = eventObj.event_payload.getPayloadPhrase(phraseType=str)          
+          cmdstr = eventObj.event_payload.getPayloadPhrase(outType=str)          
           #print subprocess.Popen(["ssh", "root@107.170.194.30", "-D 65000", "-C", "-p 465"],
           #print subprocess.Popen(["touch","/tmp/chimpfoobog.txt"],
           subprocess.Popen([cmdstr],
@@ -549,11 +581,11 @@ class cToolWorker(cToolBase):
         s.sendmail(me, [you], msg.as_string())
         s.quit()
         return """
-    def spawn_browser_tab(self, eventObj=None):
+    def spawn_browser_tab(self, eventObj=None):        
         if type(eventObj.event_payload) is cToolPayload:
-          url = eventObj.event_payload.getPayloadPhrase(phraseType=str)
+          url = eventObj.event_payload.getPayloadPhrase(outType=str)
           import webbrowser
-          new = 2
+          new = 2          
           webbrowser.open(url,new=new)
         return 
     def launch_browser_tab(self, eventObj=None):              
@@ -577,16 +609,22 @@ class cToolWorker(cToolBase):
         feedArgs =  eventObj.event_payload.getPayloadPhrase(
                                      keepheadKeyword=False)
 
+        if len(feedArgs) == 1 and feedArgs[0] == 'help':
+          print ' feeds <source> <optional search keyword>'
+          tmpbm = self.hTool.envConfig.get_value_from_conf(key='feedbookmarks')
+          tmpbm = tmpbm.pop(0)
+          for itr in tmpbm.keys():
+            print ' - %-9s ' % itr , ' : ',tmpbm[itr]
+          return
         #check if it's a bookmark saving task.
         if len(feedArgs) >= 2 and feedArgs[0] == 'bm':
-          #this indicates key=val format.
-          #feedArgs.pop(0)
+          #this indicates "bm key val" format.
           feedArgs[0] = 'feedbookmarks'
-          feedbmList = (" ".join(feedArgs)).split(' ')
+          feedbmList = (" ".join(feedArgs)).split(' ')          
           self.enqueue_fn(
-               cEvent(
+              cEvent(
                 evtPayload=cToolPayload(payloadArgPhrase=feedbmList),
-                evtPayload_fn=self.hTool.envConfig.save_keyval_to_conf))
+                evtPayload_fn=self.hTool.envConfig.update_keyval_to_conf))
           return
 
         if len(feedArgs) <= 0:
@@ -601,13 +639,35 @@ class cToolWorker(cToolBase):
                                      parentSection='feedbookmarks')
         
         if urlbm:
-
           url = ''.join(urlbm)
           url = url + searchKey
 
           feed = feedparser.parse(url)
           for post in feed.entries:
              print post.title
+             self.save_to_temp_file(
+               lineList=[post.link, post.title])
+
+             #self.enqueue_fn(cEvent(evtName='spawn browser tab',
+             #      evtPayload=cToolPayload(payloadArgPhrase=post.link),
+             #      evtPayload_fn=self.spawn_browser_tab))     
+        
+        
+        return
+    def save_to_temp_file(self, lineList=None):
+        fp = open("/tmp/testpad.html","a+")
+        tmpList = []
+        fp.write(u"\n\n")
+        tmpList.append(u'<p>')
+        tmpList.append(u'<a href="')
+        tmpList.append(lineList[0])
+        tmpList.append(u'">')
+        tmpList.append(lineList[1])
+        tmpList.append(u'</a>')
+        tmpList.append(u'</p>')
+        #print tmpList
+        fp.write(u" ".join(tmpList))
+        tmpList = []
 
         return
     def generic_actionfn(self, eventObj=None):        
@@ -662,10 +722,21 @@ class cToolWorker(cToolBase):
         return
     def handysleep_callbackfn(self, eventObj=None):
         from time import sleep
-        #napDuration = float(eventObj.event_payload.getPayloadPhrase(outType=str,
-        #                             keepheadKeyword=True))
-        napDuration=1
+        napDuration = 1
+        arg = None
+        if type(eventObj.event_payload) is cToolPayload:
+          arg = eventObj.event_payload.getPayloadPhrase(
+                                     outType = list,
+                                     keepheadKeyword=True)        
+        if arg and len(arg) > 1 and arg[0] == 'sleep':
+          arg.pop(0)
+        if arg and len(arg) >= 1: 
+          napDuration = float("".join(arg))
+        print 'sleeping for : ', napDuration
         sleep(napDuration)
+        self.enqueue_fn(cEvent(
+                evtPayload=cToolPayload(payloadArgPhrase=str(napDuration)),
+                evtPayload_fn=self.handysleep_callbackfn))
         return
     def dump_handytool_config(self, eventObj=None):
         self.enqueue_fn(
