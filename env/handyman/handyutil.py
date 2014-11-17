@@ -3,7 +3,6 @@
 #util used by wrapper tool for automation and env config.
 #
 import argparse
-#from handyman_main import handyMantool
 import handyman_main
 #from handyman_main import *
 import os
@@ -373,14 +372,6 @@ class cEnvConfigVar(cToolBase):
                                   "sshoptions" : "-C -N"
                                   }
      """
-     #self.conf.write()
-     #self.conf
-     #self.conf.append()
-     #print self.conf.sections
-     #print self.conf.scalars
-     #print self.conf.section('mbuser')
-     #print list(self.conf['mbuser']['sshbookmarks'])
-     #('bookmarkname')
 
      #for itr in self.conf.itervalues():
      # print itr
@@ -451,7 +442,7 @@ class cEnvConfigVar(cToolBase):
        if parentSection is not None and section.name == parentSection:
          #this is a delete opration.
          if key == keyarg:
-           #print ' -->> ==>> ', keyarg, key, section[keyarg]
+           
            pass
 
          
