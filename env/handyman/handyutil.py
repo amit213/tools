@@ -396,7 +396,16 @@ class cEnvConfigVar(cToolBase):
      #fp.write(u'Hello world!')
      #fp.seek(0)
      #print fp.read()
+     #url = 'http://www.google.com/search?q=' + searchKey
+     url = 'https://en.wikipedia.org/wiki/Usa'
+     import requests
+     #from bs4 import BeautifulSoup
+     #url = "http://search.yahoo.com/search?p=%s"
+     #query = "python"
+     r = requests.get(url) 
 
+     print r.text
+     print dir(r)
      return
     def update_keyval_to_conf(self, 
                             eventObj=None,
@@ -475,11 +484,6 @@ class cEnvConfigVar(cToolBase):
                             listofEntries=None,
                             dataKeyVal=None):
      
-     #self.conf["".join(self.conf.keys())][''.join(word)] = {}
-     self.conf["".join(self.conf.keys())][''.join(listofEntries[0])] = {}
-     self.conf["".join(self.conf.keys())][''.join(listofEntries[0])][''.join(listofEntries[1])] = {}
-     self.conf["".join(self.conf.keys())][''.join(listofEntries[0])][''.join(listofEntries[1])] =  dataKeyVal
-     #self.conf[self.conf.keys()][listofEntries[0]][listofEntries[1]]= 
      return
 
     def print_conf_entries(self, confObj=None):     
