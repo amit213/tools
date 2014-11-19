@@ -283,7 +283,8 @@ class cHandyUtil(cToolBase):
                        'search'  : 'generate_search_result',
                        'chro'    : 'launch_browser_tab',
                        'mailme'  : 'test_mailme',
-                       'shellvar': 'process_shell_var'
+                       'shellvar': 'process_shell_var',
+                       'conf'    : 'process_conf_task',
                                      }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
@@ -397,37 +398,124 @@ class cEnvConfigVar(cToolBase):
      #fp.seek(0)
      #print fp.read()
      #url = 'http://www.google.com/search?q=' + searchKey
-     url = 'https://en.wikipedia.org/wiki/Usa'
+     #url = 'https://en.wikipedia.org/wiki/Usa'
+     #-----------------------
+     #eventObj = arg     
+     #if type(eventObj.event_payload) is cToolPayload:
+     # print eventObj.event_payload.getPayloadPhrase(keepheadKeyword=True)
+     #return
+     #-------------------------
+     tmpbm = self.hTool.envConfig.get_value_from_conf(key='feeds')
+     #print tmpbm
+     print self.hTool.envConfig.does_section_exist(sectionName='feeds')
+
+
+     return 
+
+     url = 'http://www.usconstitution.net/const.txt'
      import requests
+     #import HTMLParser
+     import html2text
+     #from HTMLParser import HTMLParser
      #from bs4 import BeautifulSoup
      #url = "http://search.yahoo.com/search?p=%s"
      #query = "python"
      r = requests.get(url) 
+     
+     textStream =  str(html2text.html2text(r.text))
+     testList = textStream.split()
+     wordTable = {}
+     for item in testList:
+        wordTable[item] = 0
+     for item in testList:
+        wordTable[item] = wordTable[item] + 1
 
-     print r.text
-     print dir(r)
+     #print wordTable
+     for key in wordTable.keys():
+      if wordTable[key] > 80:
+        print " -- ", key, wordTable[key]
+     #print dir(r)
+
+     import redis
+     
+     #r = redis.Redis(host='192.168.59.103',port=6500)
+     r = redis.from_url('redis://192.168.59.103:6500')
+
+     print r.set('first', '1')
+     #for key in wordTable.keys():
+     # r.set(key, wordTable[key])
+     #for key in r.keys():
+     # if int(r.get(key)) > 80:
+     #   print " from redis : ", key, r.get(key)
+
+     from threading import Thread
+     #Threadarray = [0..20]
+
+     for i in range(5):
+      #Threadarray[i] = Thread(target=self.test_thread_proc)
+      #Threadarray[i].start()
+      t1 = Thread(target=self.test_thread_proc)
+      t1.start()
+
+     #t1.join()
+     print "Exit--"
      return
+
+    def test_thread_proc(self, arg=None):
+
+     from time import sleep
+     import time
+     start_time = time.time()
+     #for i in range(5):
+     #   print "."
+     #   sleep(1)
+     import redis
+     r = redis.Redis(host='192.168.59.103',port=6500)
+     #print r.set('first', '1')
+     #for key in wordTable.keys():
+     # r.set(key, wordTable[key])
+     for key in r.keys():
+      if int(r.get(key)) > 80:
+        str =  " from redis : ", key, r.get(key)
+
+     print 'Time Spent', (time.time() - start_time)
+     return 
+
     def update_keyval_to_conf(self, 
                             eventObj=None,
                             key=None,
                             val=None,                            
                             parentSection=None,
                            ):
-     
+     createNewSection = False
      if eventObj is not None and type(eventObj) is cEvent:       
        argList = eventObj.event_payload.getPayloadPhrase(
-                                     keepheadKeyword=True)
-       if len(argList) == 2:
+                                     keepheadKeyword=True)       
+       if len(argList) == 1:
+        parentSection = argList.pop(0)
+        if not self.hTool.envConfig.does_section_exist(sectionName=parentSection):          
+          createNewSection=True
+       elif len(argList) == 2:
         parentSection, key = argList
        elif len(argList) == 3:
         #section, key, val - we allow 3 items at a time for now.
         parentSection, key, val = argList
 
+     if createNewSection:
+      tmpconfObj = self.hTool.envConfig.conf
+      tmpList = tmpconfObj.keys()
+      self.hTool.envConfig.conf[tmpList[0]][parentSection] = {}
+      self.enqueue_fn(
+          cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
+      return
+
+     print 'Final --> ', parentSection, key, val
      self.conf.walk(self.conf_walkfn,
                     call_on_sections=True, 
                     keyarg=key,
                     valarg=val,
                     parentSection=parentSection,
+                    createNewSection=createNewSection,
                     )
      return
 
@@ -445,13 +533,14 @@ class cEnvConfigVar(cToolBase):
 
     def conf_walkfn(self, section, key, 
                     keyarg=None, valarg=None,
-                    parentSection=None, resultList=None):
+                    parentSection=None, resultList=None,
+                    sectionPresent=None,
+                    createNewSection=None):
 
      if keyarg and valarg is None:
-       if parentSection is not None and section.name == parentSection:
+       if parentSection is not None and section.name == parentSection:         
          #this is a delete opration.
-         if key == keyarg:
-           
+         if key == keyarg:           
            pass
 
          
@@ -459,10 +548,10 @@ class cEnvConfigVar(cToolBase):
          self.enqueue_fn(
           cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
 
-     if keyarg and valarg:       
+     if keyarg and valarg:              
        if parentSection is not None and section.name == parentSection:
-         #print ' saving new value... ', keyarg , valarg, section.name
-         section[keyarg] = valarg         
+         print ' saving new value... ', keyarg , valarg, section.name
+         section[keyarg] = valarg
          self.enqueue_fn(
           cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
 
@@ -480,6 +569,14 @@ class cEnvConfigVar(cToolBase):
      if confObjArg is not None and type(confObjArg) is ConfigObj: 
           confObjArg.write()
      return
+    def does_section_exist(self, ConfigObj=None, sectionName=None):
+     if sectionName:
+       tmpbm = self.hTool.envConfig.get_value_from_conf(key=sectionName) 
+       if tmpbm:
+        return True
+       else:
+        return False
+     return False
     def append_conf_entries(self, 
                             listofEntries=None,
                             dataKeyVal=None):
@@ -554,7 +651,7 @@ class cToolWorker(cToolBase):
                                      keepheadKeyword=True)
         tmplst = tmpstr.split()
         print tmplst[0]
-        print ("".join(tmplst[1])).split('=')
+        #print ("".join(tmplst[1])).split('=')
         #if "=" in "".join(tmplst[1]) : 
         #  print "true"
         return    
@@ -733,6 +830,35 @@ class cToolWorker(cToolBase):
                 evtPayload=cToolPayload(payloadArgPhrase=str(napDuration)),
                 evtPayload_fn=self.handysleep_callbackfn))
         return
+    def process_conf_task(self, eventObj=None):
+        if type(eventObj.event_payload) is cToolPayload:
+           tmpPhrase = eventObj.event_payload.getPayloadPhrase(keepheadKeyword=True)
+        if (len(tmpPhrase) >= 2) and tmpPhrase[0] == 'conf':
+          tmpPhrase.pop(0)
+
+        if tmpPhrase[0] == 'add':          
+          tmpPhrase.pop(0)
+          if len(tmpPhrase) == 1:
+            #adding section.            
+            tmpsection = tmpPhrase            
+            self.enqueue_fn(
+              cEvent(
+                evtPayload=cToolPayload(payloadArgPhrase=tmpsection),
+                evtPayload_fn=self.hTool.envConfig.update_keyval_to_conf)) 
+
+          elif len(tmpPhrase) == 2:
+            tmpkey, tmpval = tmpPhrase 
+            #adding key val vars.            
+            tmpList = []
+            tmpList.append('envvars')
+            tmpList = tmpList + tmpPhrase            
+            self.enqueue_fn(
+              cEvent(
+                evtPayload=cToolPayload(payloadArgPhrase=tmpList),
+                evtPayload_fn=self.hTool.envConfig.update_keyval_to_conf))
+          return
+
+        return    
     def dump_handytool_config(self, eventObj=None):
         self.enqueue_fn(
           cEvent(evtPayload_fn=self.hTool.envConfig.print_conf_entries))
