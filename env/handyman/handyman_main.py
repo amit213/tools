@@ -7,6 +7,7 @@ import argparse
 import handyutil
 from time import sleep
 
+
 class cTryRun2(object):
       def __init__(self):
         pass
@@ -27,6 +28,7 @@ class handyMantool(object):
        self.compileMemberObjList()
        #self.q = cTryRun()
        return
+       
       def init_tool(self, arg=None):
        #self.toolUtil.init_tool_params()
        #from handyutil import cToolBase
@@ -210,7 +212,6 @@ class handyMantool(object):
         for attr, value in obj.__dict__.iteritems():
           lst1.append(attr)
         return lst1
-
 
 
 def printVer():

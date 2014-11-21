@@ -10,10 +10,19 @@ import subprocess
 import ConfigParser
 from configobj import ConfigObj
 import feedparser
+import logging
+
 
 class cTryRun(object):
       def __init__(self):
         pass
+
+def dbgprint(arg=None,):
+  hToolObj = handyman_main.handyMantool.getToolInstance() 
+  hToolObj.toolUtil.logger.debug(arg)
+  #hToolObj.toolUtil.logger.error(arg)  
+  return
+
 
 class cToolBase(object):
       def __init__(self, arg=None):          
@@ -91,6 +100,17 @@ class cToolBase(object):
         if eventObj and type(eventObj.event_payload) is cToolPayload:
            retval = eventObj.event_payload.getPayloadPhrase(
                                 keepheadKeyword=keepheadKeyword)           
+        return retval
+      def getRedisInstance(self, dbNum=None):
+        retval = None
+        import redis
+        # param as non-url redis.Redis(host='192.168.59.103',port=6500)
+        redisurl = self.hTool.envConfig.get_value_from_conf(key='redisserverurl')
+        dbgprint('connecting to redis server at (%s)'
+                  % (redisurl))
+        if redisurl:
+          r = redis.from_url("".join(redisurl), db=dbNum)
+          retval = r
         return retval
       @property
       def hTool(self):
@@ -258,11 +278,32 @@ class sshBookmark(cToolBase):
       
 class cHandyUtil(cToolBase):
     def __init__(self):
-
+        self._logger = logging.getLogger()
         return
+    @property
+    def logger(self):
+        return self._logger
+    @logger.setter
+    def logger(self, value):
+        self._logger = value
+    
+    def init_tool_logger(self):
+      #logging.basicConfig(filename='log_filename.txt')
 
+      self.logger = logging.getLogger()
+      self.logger.setLevel(logging.ERROR)
+      logsh = logging.StreamHandler()
+      logsh.setLevel(logging.DEBUG)
+      #formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+      formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(message)s')
+      logsh.setFormatter(formatter)
+      self.logger.addHandler(logsh)
+
+      self.logger.debug('this is a debug msg')
+
+      return
     def init_tool_params(self, eventObj=None, arg=None):
-
+        self.init_tool_logger()
         self.enqueue_fn(cToolParam(paramShort='-test',
                      paramHelp='calling testfn',
                      paramAction='append',
@@ -344,6 +385,7 @@ class cHandyUtil(cToolBase):
                 # specified with the param. So no further events required.
                 pass
               else:
+                dbgprint('argSwitch is (%s) phrase is (%s)' % (argSwitch, phrase))
                 pyld = cToolPayload(
                             payloadToolParamObj=self.getParamfromArgSwitch(argSwitch),
                             payloadArgPhrase=phrase)  
@@ -368,6 +410,9 @@ class cEnvConfigVar(cToolBase):
     @conf.setter
     def conf(self, value):
         self._conf = value
+
+    
+        
     def dump_sample_data(self, arg=None):
      """ 
      self.conf['mbuser'] = {}
@@ -381,20 +426,6 @@ class cEnvConfigVar(cToolBase):
                                   }
      """
 
-     #for itr in self.conf.itervalues():
-     # print itr
-     
-
-     #self.print_conf_entries(self.conf)
-     #self.hTool.envConfig.append_conf_entries(
-     #                              listofEntries=['feeds', 'feedbookmarks'],
-     #                              dataKeyVal = {'tc' : 'http://tc-crunch123'})
-     #self.print_conf_entries(self.conf)
-     #self.commit_conf_to_file(self.conf)
-     #tmpstr = 'does this go'
-
-     #self.conf.walk(self.conf_walkfn,
-     #               call_on_sections=True, keyarg=tmpstr)     
 
      #print self.get_value_from_conf(key='feedbookmarks')
      #import tempfile
@@ -410,38 +441,9 @@ class cEnvConfigVar(cToolBase):
      #eventObj = arg     
      #if type(eventObj.event_payload) is cToolPayload:
      # print eventObj.event_payload.getPayloadPhrase(keepheadKeyword=True)
-     #return
+
+     return
      #-------------------------
-     tmpbm = self.hTool.envConfig.get_value_from_conf(key='feeds')
-     #print tmpbm
-     print self.hTool.envConfig.does_section_exist(sectionName='feeds')
-
-
-     return 
-
-     url = 'http://www.usconstitution.net/const.txt'
-     import requests
-     #import HTMLParser
-     import html2text
-     #from HTMLParser import HTMLParser
-     #from bs4 import BeautifulSoup
-     #url = "http://search.yahoo.com/search?p=%s"
-     #query = "python"
-     r = requests.get(url) 
-     
-     textStream =  str(html2text.html2text(r.text))
-     testList = textStream.split()
-     wordTable = {}
-     for item in testList:
-        wordTable[item] = 0
-     for item in testList:
-        wordTable[item] = wordTable[item] + 1
-
-     #print wordTable
-     for key in wordTable.keys():
-      if wordTable[key] > 80:
-        print " -- ", key, wordTable[key]
-     #print dir(r)
 
 
      from threading import Thread
@@ -495,7 +497,9 @@ class cEnvConfigVar(cToolBase):
           cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
       return
 
-     #print 'Final --> ', parentSection, key, val
+     dbgprint('update item key=(%s) val=(%s) incoming-section=(%s)'
+              % (key, val, parentSection))
+
      self.conf.walk(self.conf_walkfn,
                     call_on_sections=True, 
                     keyarg=key,
@@ -533,13 +537,10 @@ class cEnvConfigVar(cToolBase):
          self.enqueue_fn(
           cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
 
-     #if keyarg and valarg:
-      #if section.name == 'envvars':
-
-
      if keyarg and valarg:              
        if parentSection is not None and section.name == parentSection:
-         #print ' saving new value... ', keyarg , valarg, section.name
+         dbgprint('saving new value key=(%s) val=(%s) section=(%s)'
+                  % (keyarg, valarg, section.name))
          section[keyarg] = valarg
          self.enqueue_fn(
           cEvent(evtPayload_fn=self.hTool.envConfig.commit_conf_to_file))
@@ -641,9 +642,7 @@ class cToolWorker(cToolBase):
                                      keepheadKeyword=True)
         tmplst = tmpstr.split()
         print tmplst[0]
-        #print ("".join(tmplst[1])).split('=')
-        #if "=" in "".join(tmplst[1]) : 
-        #  print "true"
+
         return    
     def test_mailme(self, eventObj=None):
         #cmdstr = 'echo subject | mail -s "`date`" trigger@recipe.ifttt.com  -f fgdswcfc@sharklasers.com'
@@ -849,31 +848,66 @@ class cToolWorker(cToolBase):
           return
 
         return
+    def redis_load_testdata(self, eventObj=None):
+        tmpList = self.getArgPhrase(eventObj=eventObj)
+        if tmpList[0] != 'testdata':
+          return        
+        tmpList.pop(0)
+
+        url = 'http://www.usconstitution.net/const.txt'
+        import requests
+        #import HTMLParser
+        import html2text
+        #from HTMLParser import HTMLParser
+        #from bs4 import BeautifulSoup
+        #url = "http://search.yahoo.com/search?p=%s"
+        #query = "python"
+        r = requests.get(url)        
+        textStream =  str(html2text.html2text(r.text))
+        testList = textStream.split()
+        wordTable = {}
+        for item in testList:
+           wordTable[item] = 0
+        for item in testList:
+           wordTable[item] = wordTable[item] + 1
+
+        r = self.getRedisInstance(dbNum=5)
+        if r is not None:          
+         for key in wordTable.keys():          
+            r.set(key, wordTable[key])
+        return    
     def redis_testdb(self, eventObj=None):
         tmpList = self.getArgPhrase(eventObj=eventObj)
         if tmpList[0] != 'testdb':
           return
         tmpList.pop(0)
         
-        import redis
-        #r = redis.Redis(host='192.168.59.103',port=6500)
-        redisurl = self.hTool.envConfig.get_value_from_conf(key='redisserverurl')
-        if redisurl:
-          r = redis.from_url("".join(redisurl))
-
-          for key in r.keys():
-           if int(r.get(key)) > 80:
-            print " from redis : ", key, r.get(key)
+        r = self.getRedisInstance(dbNum=5)
+        if r is not None:     
+          print ' ** Word : Count ** '     
+          for key in r.keys():           
+           if type(r.get(key)) is str:
+            dbgprint('value - %s  type %s' % (r.get(key),type(r.get(key))))            
+            if int(r.get(key)) > 80:
+              print " ",key, " : ", r.get(key)
             
-
         return
     def redis_ops(self, eventObj=None):
-        tmpList = self.getArgPhrase(eventObj=eventObj, keepheadKeyword=False)
+        tmpList = self.getArgPhrase(eventObj=eventObj,
+                                    keepheadKeyword=False)
         if tmpList[0] == 'testdb':
-            self.enqueue_fn(
+          self.enqueue_fn(
               cEvent(
                 evtPayload=cToolPayload(payloadArgPhrase=tmpList),
                 evtPayload_fn=self.redis_testdb))
+          return
+
+        if tmpList[0] == 'testdata':
+          self.enqueue_fn(
+              cEvent(
+                evtPayload=cToolPayload(payloadArgPhrase=tmpList),
+                evtPayload_fn=self.redis_load_testdata))
+          return
 
         return    
     def dump_handytool_config(self, eventObj=None):
