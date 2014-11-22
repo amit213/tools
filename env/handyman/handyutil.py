@@ -610,8 +610,7 @@ class cToolWorker(cToolBase):
         import feedparser
         searchKey = u'local'
         searchKey = self.getPhrase(eventObj=eventObj, filler='+')
-        #url = 'http://www.google.com/search?q=' + searchKey
-        url = 'http://www.google.com/search?q=akshar'
+        url = 'http://www.google.com/search?q=' + searchKey        
         import requests
         #from bs4 import BeautifulSoup
         url = "http://search.yahoo.com/search?p=%s"
@@ -674,9 +673,6 @@ class cToolWorker(cToolBase):
         searchKey=self.getPhrase(eventObj=eventObj,
                                  filler='+')        
         url = 'http://www.google.com/search?q=' + searchKey
-        #url = 'https://www.google.com/search?num=100&q=site:lifehacker.com&site:amazon.com&q=%s' % searchKey
-        #url = 'https://www.google.com/search?num=100&q=site:lifehacker.com&site:amazon.com&q=' + searchKey
-        #url = 'https://www.google.com/search?num=100&q=site:lifehacker.com&site:amazon.com&q=iphone6'        
         
         self.enqueue_fn(cEvent(evtName='spawn browser tab',
              evtPayload=cToolPayload(payloadArgPhrase=url),
@@ -745,8 +741,7 @@ class cToolWorker(cToolBase):
         tmpList.append(u'">')
         tmpList.append(lineList[1])
         tmpList.append(u'</a>')
-        tmpList.append(u'</p>')
-        #print tmpList
+        tmpList.append(u'</p>')        
         fp.write(u" ".join(tmpList))
         tmpList = []
 
@@ -764,7 +759,7 @@ class cToolWorker(cToolBase):
               argIsconsumed=True
 
         if not argIsconsumed:
-          #print "**", eventObj.event_name, eventObj.event_type
+          dbgprint("unconsumed event: %s %s" % (eventObj.event_name, eventObj.event_type))
           eventObj.raise_error(event=eventObj, 
                  errmsg='invalid ' + eventObj.event_type + ' option')
 
@@ -778,11 +773,8 @@ class cToolWorker(cToolBase):
         print isinstance(eventObj.event_payload, sshBookmark)
         return
     def test_callbackfn(self, arg=None): 
-        self.enqueue_fn(cEvent(evtName="homeland",evtPayload_fn=
-                    #self.generic_actionfn))
-                    #self.hTool.envConfig.dump_sample_data))
+        self.enqueue_fn(cEvent(evtName="",evtPayload_fn=
                     self.getfn('dump_sample_data')))
-                    #cEnvConfigVar().dump_sample_data))
         print self.getfn('dump_sample_data').im_class
         return
     def list_actionfn(self, eventObj=None):
@@ -797,8 +789,7 @@ class cToolWorker(cToolBase):
     def bm_callbackfn(self, eventObj=None):
         print "printing the big list of bookmarks", eventObj.event_name, eventObj.event_payload.getPhrase()
         if type(eventObj) is cEvent:        
-          if type(eventObj.event_payload) is cToolPayload:
-            #print 'proper payload --> ', eventObj.event_payload.getPhrase()
+          if type(eventObj.event_payload) is cToolPayload:            
             pass
         return
     def handysleep_callbackfn(self, eventObj=None):
