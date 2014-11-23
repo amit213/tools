@@ -20,9 +20,13 @@ class cTryRun(object):
 def dbgprint(arg=None,):
   hToolObj = handyman_main.handyMantool.getToolInstance() 
   hToolObj.toolUtil.logger.debug(arg)
-  #hToolObj.toolUtil.logger.error(arg)  
+  """hToolObj.toolUtil.logger.error(arg)"""
   return
 
+class cToolException(Exception):
+        pass
+class cToolUnknownError(cToolException):
+        pass
 
 class cToolBase(object):
       def __init__(self, arg=None):          
@@ -313,6 +317,7 @@ class cHandyUtil(cToolBase):
                      paramKeywordMap={
                             'sleep'   : 'handysleep_callbackfn',
                             'd'       : 'dump_sample_data',
+                            'plugin'  : 'invoke_plugin'
                                      }
                      ))
         self.enqueue_fn(cToolParam(paramShort='-dump',
@@ -374,7 +379,7 @@ class cHandyUtil(cToolBase):
         return selfVer
 
     def gen_event_for_argPhrase(self, argSwitch=None, 
-                                switchValueList=None):        
+                                switchValueList=None):      
         if switchValueList is not None:
           listOflists = list(switchValueList)
           while listOflists:              
@@ -574,7 +579,7 @@ class cEnvConfigVar(cToolBase):
      
      return
 
-    def print_conf_entries(self, confObj=None):     
+    def print_conf_entries(self, confObj=None):
      if confObj is not ConfigObj:
         confObj = self.hTool.envConfig.conf
 
@@ -587,6 +592,7 @@ class cEnvConfigVar(cToolBase):
           print ' ',list(confObj[level1][level2])
           for data in confObj[level1][level2]:
             print '   ',confObj[level1][level2][data]
+
     def parse_conf(self, arg=None):
 
      return
@@ -681,8 +687,6 @@ class cToolWorker(cToolBase):
     def process_feeds(self, eventObj=None):        
         import feedparser
         searchKey=u''
-        #searchKey=self.getPhrase(eventObj=eventObj,
-        #                         filler='+')
         feedArgs =  eventObj.event_payload.getPayloadPhrase(
                                      keepheadKeyword=False)
 
@@ -747,7 +751,8 @@ class cToolWorker(cToolBase):
 
         return
     def generic_actionfn(self, eventObj=None):        
-        argIsconsumed=False        
+        argIsconsumed=False
+
         if type(eventObj.event_payload) is cToolPayload:
           tmpparam = eventObj.event_payload.payload[0]
           if hasattr(tmpparam, 'paramKeywordMap'):
@@ -904,6 +909,12 @@ class cToolWorker(cToolBase):
     def dump_handytool_config(self, eventObj=None):
         self.enqueue_fn(
           cEvent(evtPayload_fn=self.hTool.envConfig.print_conf_entries))
+        return
+    def invoke_plugin(self, eventObj=None):
+        """ entry hook for the plugin architecture """
+        from toolplugin_main import cPluginLab
+        tmp1 = cPluginLab()
+        tmp1.entry_point()        
         return
     def opentunnel_actionfn(self, eventObj=None):
 

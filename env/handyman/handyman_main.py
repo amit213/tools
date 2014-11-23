@@ -13,6 +13,11 @@ class cTryRun2(object):
         pass
 
 class handyMantool(object):
+      """
+        Handyman tool class wrapper around entire app.
+        Composite class that houses rest of the necessary 
+        invocation objects within itself.
+      """
       _toolObj = None
       def __init__(self):
        self._toolBase = cToolBase()       
@@ -225,14 +230,19 @@ def create_ssh_bookmark():
   return
 
 def main():  
-    
-  h1 = handyMantool()
-  
-  h1.setToolInstance(h1)  
 
-  h1.init_tool()
+  try:    
+    raise cToolUnknownError
+    h1 = handyMantool()
+   
+    h1.setToolInstance(h1)  
 
-  h1.process_all_events()
+    h1.init_tool()
+
+    h1.process_all_events()
+
+  except (cToolUnknownError) as error:
+    print('Handyman is not working today. %s' %(error))
 
   return
 
