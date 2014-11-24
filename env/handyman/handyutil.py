@@ -11,7 +11,8 @@ import ConfigParser
 from configobj import ConfigObj
 import feedparser
 import logging
-
+import inspect
+from inspect import currentframe, getframeinfo
 
 class cTryRun(object):
       def __init__(self):
@@ -29,6 +30,11 @@ class cToolUnknownError(cToolException):
         pass
 
 class cToolBase(object):
+      """
+      core base class to expose basic functions like
+      enqueue and arg processing.
+      Most new classes should have this as parent.
+      """
       def __init__(self, arg=None):          
        super(cToolBase, self).__init__()
        return
@@ -158,7 +164,11 @@ class cEvent(cToolBase):
           self._event_payload_fn = value
 
 class cToolParam(object):
-     """docstring for cToolParam"""
+     """ class that wraps around all the tool 
+         parameters exposed to the end user. 
+         It can be dynamically manipulated to 
+         support the plugin architecture.
+     """
      def __init__(self, arg=None, paramShort=None,
                   paramHelp=None, paramAction=None,
                   paramDest=None, paramNargs=None,
@@ -281,6 +291,9 @@ class sshBookmark(cToolBase):
        return
       
 class cHandyUtil(cToolBase):
+    """
+    util interface class for basic util capabilities.
+    """
     def __init__(self):
         self._logger = logging.getLogger()
         return
@@ -379,28 +392,33 @@ class cHandyUtil(cToolBase):
         return selfVer
 
     def gen_event_for_argPhrase(self, argSwitch=None, 
-                                switchValueList=None):      
-        if switchValueList is not None:
-          listOflists = list(switchValueList)
-          while listOflists:              
-              phrase = listOflists.pop(0)              
-              headKeyword = phrase[0]              
-              if (phrase.count(None) == len(phrase)):
-                # the arg was directly consumed by the callback fn
-                # specified with the param. So no further events required.
-                pass
-              else:
-                dbgprint('argSwitch is (%s) phrase is (%s)' % (argSwitch, phrase))
-                pyld = cToolPayload(
-                            payloadToolParamObj=self.getParamfromArgSwitch(argSwitch),
-                            payloadArgPhrase=phrase)  
+                                switchValueList=None):
+        try:                                
+          if switchValueList is not None:
+            listOflists = list(switchValueList)
+            while listOflists:              
+                phrase = listOflists.pop(0)              
+                headKeyword = phrase[0]              
+                if (phrase.count(None) == len(phrase)):
+                  # the arg was directly consumed by the callback fn
+                  # specified with the param. So no further events required.
+                  pass
+                else:
+                  dbgprint('argSwitch is (%s) phrase is (%s)' % (argSwitch, phrase))
+                  pyld = cToolPayload(
+                              payloadToolParamObj=self.getParamfromArgSwitch(argSwitch),
+                              payloadArgPhrase=phrase)  
 
-                self.enqueue_fn(cEvent(evtType=argSwitch, 
-                            evtName=headKeyword,
-                            evtPayload=pyld,
-                            evtPayload_fn=self.getfn(argSwitch=argSwitch, 
-                                                     headKeyword=headKeyword)),
-                            tags=None)
+                  self.enqueue_fn(cEvent(evtType=argSwitch, 
+                              evtName=headKeyword,
+                              evtPayload=pyld,
+                              evtPayload_fn=self.getfn(argSwitch=argSwitch, 
+                                                       headKeyword=headKeyword)),
+                              tags=None)
+        except Exception, err:
+           print "error : ",inspect.currentframe().f_back.f_code.co_name,": Line no.",inspect.currentframe().f_back.f_lineno, Exception, err
+        finally:
+           pass
         return
 
 class cEnvConfigVar(cToolBase):
@@ -912,9 +930,13 @@ class cToolWorker(cToolBase):
         return
     def invoke_plugin(self, eventObj=None):
         """ entry hook for the plugin architecture """
-        from toolplugin_main import cPluginLab
-        tmp1 = cPluginLab()
-        tmp1.entry_point()        
+        try:
+            from toolplugin_main import cPluginLab
+            tmp1 = cPluginLab()
+            tmp1.entry_point(eventObj)
+        except:
+            dbgprint("could not invoke plugin.")
+
         return
     def opentunnel_actionfn(self, eventObj=None):
 

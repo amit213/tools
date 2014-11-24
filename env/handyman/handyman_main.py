@@ -35,11 +35,11 @@ class handyMantool(object):
        return
        
       def init_tool(self, arg=None):
-       #self.toolUtil.init_tool_params()
-       #from handyutil import cToolBase
-       #cToolBase.base_echo("mangle box 123")
-       #print callable()
-
+       """
+       init section. It fires up several housekeeping
+       events to load the tool data and set up the 
+       tool actions.
+       """
        #self.enqueue_new_event(cEvent("preshut", 
        #           "shutdown",
        #           evtPayload_fn=self.toolWorker.hola),
@@ -202,12 +202,19 @@ class handyMantool(object):
        return
 
       def process_all_events(self):        
-       for evt in self.eventList:
-        func = evt.event_payload_fn
-        eventObj = evt
-        func(eventObj)
-        #evt.event_payload_fn(evt)
-        pass
+       """
+       event processing loop.
+       """
+       try:
+         for evt in self.eventList:
+          func = evt.event_payload_fn
+          eventObj = evt
+          func(eventObj)        
+          pass
+       except:
+          pass
+       finally:
+          pass                
        return 
       def get_callback_fn(self, name=None):
        return getattr(self.toolWorker,name)       
@@ -219,11 +226,6 @@ class handyMantool(object):
         return lst1
 
 
-def printVer():
-  print "handyman version :", selfVer
-  utilVer()
-  return
-
 def create_ssh_bookmark():
   s1 = sshBookmark()
   s1.list_bookmark()
@@ -232,7 +234,7 @@ def create_ssh_bookmark():
 def main():  
 
   try:    
-    raise cToolUnknownError
+
     h1 = handyMantool()
    
     h1.setToolInstance(h1)  
