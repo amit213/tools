@@ -334,6 +334,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias capture_screen='screencapture -x /tmp/"screen-shot-`date`".jpg'
      serialnum=`ioreg -c "IOPlatformExpertDevice" | awk 'BEGIN{FS="\""}; /IOPlatformSerialNumber/ {print $4}'`
      notebookSerialNum="Serial Num : $serialnum"
+     alias jsr='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
    }
 
    function myip {

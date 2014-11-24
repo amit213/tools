@@ -28,7 +28,7 @@ class handyMantool(object):
        self._toolArgs = None
        self._toolUtil = cHandyUtil()
        self._toolWorker = cToolWorker()
-       self._envConfig = cEnvConfigVar(r'/tmp/gaboo.conf')
+       self._envConfig = cEnvConfigVar(r'.envprofile.conf')       
        self._membObjList = []
        self.compileMemberObjList()
        #self.q = cTryRun()
@@ -40,11 +40,6 @@ class handyMantool(object):
        events to load the tool data and set up the 
        tool actions.
        """
-       #self.enqueue_new_event(cEvent("preshut", 
-       #           "shutdown",
-       #           evtPayload_fn=self.toolWorker.hola),
-       #           tags='at end')
-
        self.enqueue_new_event(cEvent("housekeeping", 
                   "setupparamtable",
                   evtPayload_fn=self.toolUtil.init_tool_params))
@@ -157,28 +152,33 @@ class handyMantool(object):
 
        return
       def gen_events_from_parsed_args(self, eventObj=None):
-       for argSwitch in self.getmembListForObj(self.toolArgs):
-          if getattr(self.toolArgs, argSwitch) is not None:
-            switchValueList = getattr(self.toolArgs, argSwitch)
-            if switchValueList is not None:             
-             self.toolUtil.gen_event_for_argPhrase(argSwitch=argSwitch,
-                                     switchValueList=switchValueList)
+       try:     
+         for argSwitch in self.getmembListForObj(self.toolArgs):
+            if getattr(self.toolArgs, argSwitch) is not None:
+              switchValueList = getattr(self.toolArgs, argSwitch)
+              if switchValueList is not None:             
+               self.toolUtil.gen_event_for_argPhrase(argSwitch=argSwitch,
+                                       switchValueList=switchValueList)
 
-            #self.gen_event_for_argSwitch(
-            #         argSwitch=argSwitch,  # -list, -task etc.
-            #         switchValueList=switchValueList)  # -list <one two three>
+              #self.gen_event_for_argSwitch(
+              #         argSwitch=argSwitch,  # -list, -task etc.
+              #         switchValueList=switchValueList)  # -list <one two three>
 
 
-       """
-       if self.toolArgs.task is not None :
-         for itr in sum(self.toolArgs.task, []):
-            if hasattr(self.toolWorker, itr.lower() + '_actionfn'):
-              fn = getattr(self.toolWorker, itr.lower() + '_actionfn')
-            else:
-              fn = getattr(self.toolWorker, 'generic' + '_actionfn')
-            self.enqueue_new_event(cEvent('task', itr.lower(), None, fn),
-                                   tags=None)
-       """
+         """
+         if self.toolArgs.task is not None :
+           for itr in sum(self.toolArgs.task, []):
+              if hasattr(self.toolWorker, itr.lower() + '_actionfn'):
+                fn = getattr(self.toolWorker, itr.lower() + '_actionfn')
+              else:
+                fn = getattr(self.toolWorker, 'generic' + '_actionfn')
+              self.enqueue_new_event(cEvent('task', itr.lower(), None, fn),
+                                     tags=None)
+         """
+       except Exception, err:
+         print Exception, err
+       finally:  
+         pass
        return
 
       #def tool_parse_params(self):

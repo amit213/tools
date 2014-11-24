@@ -874,7 +874,7 @@ class cToolWorker(cToolBase):
         import html2text
         #from HTMLParser import HTMLParser
         #from bs4 import BeautifulSoup
-        #url = "http://search.yahoo.com/search?p=%s"
+        #url = "http://search.yahoo.com/search?p=%s" 
         #query = "python"
         r = requests.get(url)        
         textStream =  str(html2text.html2text(r.text))
