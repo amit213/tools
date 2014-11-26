@@ -122,6 +122,7 @@ class cToolBase(object):
           r = redis.from_url("".join(redisurl), db=dbNum)
           retval = r
         return retval
+
       @property
       def hTool(self):
           self._hTool = handyman_main.handyMantool.getToolInstance() 
@@ -461,10 +462,6 @@ class cEnvConfigVar(cToolBase):
      #url = 'http://www.google.com/search?q=' + searchKey
      #url = 'https://en.wikipedia.org/wiki/Usa'
      #-----------------------
-     #eventObj = arg     
-     #if type(eventObj.event_payload) is cToolPayload:
-     # print eventObj.event_payload.getPayloadPhrase(keepheadKeyword=True)
-
      return
      #-------------------------
 
@@ -598,6 +595,7 @@ class cEnvConfigVar(cToolBase):
      return
 
     def print_conf_entries(self, confObj=None):
+     """ Prints the config entries """
      if confObj is not ConfigObj:
         confObj = self.hTool.envConfig.conf
 
@@ -630,7 +628,8 @@ class cToolWorker(cToolBase):
         pass
         return
 
-    def generate_search_result(self, eventObj=None):        
+    def generate_search_result(self, eventObj=None):
+
         import feedparser
         searchKey = u'local'
         searchKey = self.getPhrase(eventObj=eventObj, filler='+')
@@ -925,6 +924,7 @@ class cToolWorker(cToolBase):
 
         return    
     def dump_handytool_config(self, eventObj=None):
+        """ Prints the config entries """
         self.enqueue_fn(
           cEvent(evtPayload_fn=self.hTool.envConfig.print_conf_entries))
         return
