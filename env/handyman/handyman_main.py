@@ -8,10 +8,6 @@ import handyutil
 from time import sleep
 
 
-class cTryRun2(object):
-      def __init__(self):
-        pass
-
 class handyMantool(object):
       """
         Handyman tool class wrapper around entire app.

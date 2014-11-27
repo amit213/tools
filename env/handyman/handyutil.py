@@ -14,15 +14,7 @@ import logging
 import inspect
 from inspect import currentframe, getframeinfo
 
-class cTryRun(object):
-      def __init__(self):
-        pass
 
-def dbgprint(arg=None,):
-  hToolObj = handyman_main.handyMantool.getToolInstance() 
-  hToolObj.toolUtil.logger.debug(arg)
-  """hToolObj.toolUtil.logger.error(arg)"""
-  return
 
 class cToolException(Exception):
         pass
@@ -596,18 +588,21 @@ class cEnvConfigVar(cToolBase):
 
     def print_conf_entries(self, confObj=None):
      """ Prints the config entries """
-     if confObj is not ConfigObj:
-        confObj = self.hTool.envConfig.conf
+     try:
+      if confObj is not ConfigObj:
+         confObj = self.hTool.envConfig.conf
 
-     if confObj is not None and type(confObj) is ConfigObj: 
-       for itr in confObj.iterkeys():
-         print '* ', itr, ' *'
-       for level1 in confObj.sections:
-        for level2 in confObj[level1]:
-          print 'Section : ',level2
-          print ' ',list(confObj[level1][level2])
-          for data in confObj[level1][level2]:
-            print '   ',confObj[level1][level2][data]
+      if confObj is not None and type(confObj) is ConfigObj: 
+        for itr in confObj.iterkeys():
+          print '* ', itr, ' *'
+        for level1 in confObj.sections:
+         for level2 in confObj[level1]:
+           print 'Section : ',level2
+           print ' ',list(confObj[level1][level2])
+           for data in confObj[level1][level2]:
+             print '   ',confObj[level1][level2][data]
+     except Exception, err:
+       print Exception, err       
 
     def parse_conf(self, arg=None):
 
@@ -660,7 +655,9 @@ class cToolWorker(cToolBase):
         return 
 
     def process_shell_var(self, eventObj=None):
-        tmpstr =  eventObj.event_payload.getPayloadPhrase(outType=str,
+
+        tmpstr =  eventObj.event_payload.getPayloadPhrase(
+                                     outType=str,
                                      keepheadKeyword=True)
         tmplst = tmpstr.split()
         print tmplst[0]
@@ -936,7 +933,6 @@ class cToolWorker(cToolBase):
             tmp1.entry_point(eventObj)
         except:
             dbgprint("could not invoke plugin.")
-
         return
     def opentunnel_actionfn(self, eventObj=None):
 
@@ -955,6 +951,11 @@ def myprint(args):
   print args
   return
 
+def dbgprint(arg=None,):
+  hToolObj = handyman_main.handyMantool.getToolInstance() 
+  hToolObj.toolUtil.logger.debug(arg)
+  """hToolObj.toolUtil.logger.error(arg)"""
+  return
 
 
 
