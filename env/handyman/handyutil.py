@@ -115,6 +115,11 @@ class cToolBase(object):
           retval = r
         return retval
 
+      def get_filtered_data(eventObj=None):
+        retval = []
+        retval = eventObj.hTool.toolWorker.redis_get_filtered_data(eventObj)
+        return retval
+
       @property
       def hTool(self):
           self._hTool = handyman_main.handyMantool.getToolInstance() 
@@ -885,7 +890,25 @@ class cToolWorker(cToolBase):
         if r is not None:          
          for key in wordTable.keys():          
             r.set(key, wordTable[key])
-        return    
+        return
+
+    def redis_get_filtered_data(self, eventObj=None):
+
+        tmpList = self.getArgPhrase(eventObj=eventObj)
+
+        retval = []
+        if len(tmpList) < 1:
+         return retval
+
+        r = self.getRedisInstance(dbNum=5)
+        if r is not None:             
+          for key in r.keys():           
+           if type(r.get(key)) is str:
+            dbgprint('value - %s  type %s' % (r.get(key),type(r.get(key))))
+            if (tmpList[0] == key[0]):
+             retval.append(key)        
+        return retval
+
     def redis_testdb(self, eventObj=None):
         tmpList = self.getArgPhrase(eventObj=eventObj)
         if tmpList[0] != 'testdb':
@@ -952,9 +975,10 @@ def myprint(args):
   return
 
 def dbgprint(arg=None,):
+
   hToolObj = handyman_main.handyMantool.getToolInstance() 
   hToolObj.toolUtil.logger.debug(arg)
-  """hToolObj.toolUtil.logger.error(arg)"""
+  #hToolObj.toolUtil.logger.error(arg)
   return
 
 
