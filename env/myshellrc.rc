@@ -375,6 +375,14 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
       fi
    }
 
+   bulk_rename() {
+    for i in *; 
+    do 
+        name="${i%.*}"; ext="${i##*.}"; 
+        newname="${name//[._-]/ }"; mv "$i" "$newname.$ext" ; 
+    done;
+   }
+
    geoip() {
     curl -s http://www.geoiptool.com/en/?IP=$(myip) | 
     textutil -convert txt -stdin -stdout -format html | sed -n '/Hostname/,/Hostname/p'
