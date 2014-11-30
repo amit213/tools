@@ -155,8 +155,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    set_docker_alias() {
      #alias drmi='docker images --no-trunc | grep none | awk '{print $3}' | xargs docker rmi'
      alias dimg='docker images'
-     alias dps='docker ps'
-
+     alias dps='docker ps; docker ps -a'     
+     alias dcleancontainer='docker rm $(docker ps -a | awk '\''{print $1}'\'' | grep [0-9,a-f])'
+     alias dcleanimg='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
+     alias dclean='dcleancontainer;'
    }
 
    function hg () { 
