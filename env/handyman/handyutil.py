@@ -349,6 +349,7 @@ class cHandyUtil(cToolBase):
                        'shellvar': 'process_shell_var',
                        'conf'    : 'update_config_file',
                        'redis'   : 'redis_ops',
+                       'i'       : 'dump_tool_info'
                                      }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
@@ -693,6 +694,16 @@ class cToolWorker(cToolBase):
           new = 2          
           webbrowser.open(url,new=new)
         return 
+
+    def dump_tool_info(self, eventObj=None):
+        """ this generates tool info / env info """
+        try:
+           userid = os.environ['USER']
+           print 'user : ', userid, ' '
+        except:
+           pass
+        return
+
     def launch_browser_tab(self, eventObj=None):              
         searchKey=""
         searchKey=self.getPhrase(eventObj=eventObj,
