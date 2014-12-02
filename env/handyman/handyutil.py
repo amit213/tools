@@ -63,8 +63,6 @@ class cToolBase(object):
           if headKeyword is not None:
             if hasattr(self.hTool.toolWorker, headKeyword.lower() + '_actionfn'):
               fn = getattr(self.hTool.toolWorker, headKeyword.lower() + '_actionfn')
-            #if hasattr(self.hTool.toolWorker, argSwitch.lower() + '_actionfn'):
-            #  fn = getattr(self.hTool.toolWorker, argSwitch.lower() + '_actionfn')
 
         if fn is None:
           fn = getattr(self.hTool.toolWorker, 'generic' + '_actionfn')        
@@ -349,7 +347,8 @@ class cHandyUtil(cToolBase):
                        'shellvar': 'process_shell_var',
                        'conf'    : 'update_config_file',
                        'redis'   : 'redis_ops',
-                       'i'       : 'dump_tool_info'
+                       'i'       : 'dump_tool_info',
+                       'words'   : 'generate_word_list',
                                      }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
@@ -874,6 +873,33 @@ class cToolWorker(cToolBase):
           return
 
         return
+
+    def generate_word_list(self, eventObj=None):
+        match = 'a'
+        tmpList = self.getArgPhrase(eventObj=eventObj)
+        if tmpList[0] != 'words':
+          return        
+        tmpList.pop(0)
+        if len(tmpList) >= 1:
+          match = tmpList[0]
+
+        url = 'http://www.usconstitution.net/const.txt'
+        import requests
+        import html2text
+        r = requests.get(url)        
+        textStream =  str(html2text.html2text(r.text))
+        textasList =  textStream.split()
+        filter = lambda x: x[0]==match
+        aSet =  ([x for x in textasList if x[0].lower()==match])
+        uniq_aSet = list(set(aSet))
+        import bisect
+        sortList = []
+        for item in uniq_aSet:                 
+         bisect.insort(sortList, item)
+        
+        print sortList
+
+        return    
     def redis_load_testdata(self, eventObj=None):
         tmpList = self.getArgPhrase(eventObj=eventObj)
         if tmpList[0] != 'testdata':
