@@ -713,7 +713,10 @@ class cToolWorker(cToolBase):
              evtPayload=cToolPayload(payloadArgPhrase=url),
              evtPayload_fn=self.spawn_browser_tab))
         return
-    def process_feeds(self, eventObj=None):        
+    def process_feeds(self, eventObj=None):
+        """ read feeds / save feed source url bookmarks,
+            other feeds related operations.
+        """         
         import feedparser
         searchKey=u''
         feedArgs =  eventObj.event_payload.getPayloadPhrase(
@@ -765,6 +768,7 @@ class cToolWorker(cToolBase):
         
         return
     def save_to_temp_file(self, lineList=None):
+        """ template generator code. """
         fp = open("/tmp/testpad.html","a+")
         tmpList = []
         fp.write(u"\n\n")
