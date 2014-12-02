@@ -448,16 +448,6 @@ class cEnvConfigVar(cToolBase):
      """
 
 
-     #print self.get_value_from_conf(key='feedbookmarks')
-     #import tempfile
-     #fp = tempfile.NamedTemporaryFile()
-     #fp = tempfile.mktemp()
-     #print fp.name
-     #fp.write(u'Hello world!')
-     #fp.seek(0)
-     #print fp.read()
-     #url = 'http://www.google.com/search?q=' + searchKey
-     #url = 'https://en.wikipedia.org/wiki/Usa'
      #-----------------------
      return
      #-------------------------
@@ -911,8 +901,7 @@ class cToolWorker(cToolBase):
         tmpList.pop(0)
 
         url = 'http://www.usconstitution.net/const.txt'
-        import requests
-        #import HTMLParser
+        import requests        
         import html2text
         #from HTMLParser import HTMLParser
         #from bs4 import BeautifulSoup
