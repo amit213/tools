@@ -35,7 +35,6 @@ class cToolBase(object):
        print arg
        return
       def enqueue_fn(self, arg=None, tags=None):
-       #import handyman_main
        hToolObj = handyman_main.handyMantool.getToolInstance() 
        if isinstance(arg, cEvent):
         hToolObj.enqueue_new_event(arg)
@@ -689,6 +688,7 @@ class cToolWorker(cToolBase):
         try:
            userid = os.environ['USER']
            print 'user : ', userid, ' '
+           print 'shellvar : ', os.environ['SHELL'], ' '
         except:
            pass
         return
@@ -702,7 +702,7 @@ class cToolWorker(cToolBase):
         self.enqueue_fn(cEvent(evtName='spawn browser tab',
              evtPayload=cToolPayload(payloadArgPhrase=url),
              evtPayload_fn=self.spawn_browser_tab))
-        return
+        return        
     def process_feeds(self, eventObj=None):
         """ read feeds / save feed source url bookmarks,
             other feeds related operations.
@@ -771,11 +771,9 @@ class cToolWorker(cToolBase):
         tmpList.append(u'</p>')        
         fp.write(u" ".join(tmpList))
         tmpList = []
-
         return
     def generic_actionfn(self, eventObj=None):        
         argIsconsumed=False
-
         if type(eventObj.event_payload) is cToolPayload:
           tmpparam = eventObj.event_payload.payload[0]
           if hasattr(tmpparam, 'paramKeywordMap'):
@@ -790,7 +788,6 @@ class cToolWorker(cToolBase):
           dbgprint("unconsumed event: %s %s" % (eventObj.event_name, eventObj.event_type))
           eventObj.raise_error(event=eventObj, 
                  errmsg='invalid ' + eventObj.event_type + ' option')
-
         return
     def scanwifi_actionfn(self, eventObj=None):
         print os.system("/System/Library/"
@@ -806,7 +803,6 @@ class cToolWorker(cToolBase):
         print self.getfn('dump_sample_data').im_class
         return
     def list_actionfn(self, eventObj=None):
-
         if type(eventObj) is cEvent:
          self.raise_error(event=eventObj, errmsg='invalid list option')
         elif type(eventObj) is str:
