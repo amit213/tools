@@ -177,10 +177,6 @@ class handyMantool(object):
          pass
        return
 
-      #def tool_parse_params(self):
-      # self.toolUtil.utilParseParams()       
-      # self.gen_events_from_parsed_args()
-      # return
       def enqueue_new_event(self, eventObj=None,
                             tags=None):
        if tags == 'insertBeforeLast':

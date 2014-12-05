@@ -446,7 +446,6 @@ class cEnvConfigVar(cToolBase):
                                   }
      """
 
-
      #-----------------------
      return
      #-------------------------
