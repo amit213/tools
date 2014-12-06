@@ -339,15 +339,16 @@ class cHandyUtil(cToolBase):
                      paramNargs ='+',                     
                      paramDest='task',
                      paramKeywordMap={
-                       'feeds'   : 'process_feeds',
-                       'search'  : 'generate_search_result',
-                       'chro'    : 'launch_browser_tab',
-                       'mailme'  : 'test_mailme',
-                       'shellvar': 'process_shell_var',
-                       'conf'    : 'update_config_file',
-                       'redis'   : 'redis_ops',
-                       'i'       : 'dump_tool_info',
-                       'words'   : 'generate_word_list',
+                       'feeds'     : 'process_feeds',
+                       'search'    : 'generate_search_result',
+                       'chro'      : 'launch_browser_tab',
+                       'mailme'    : 'test_mailme',
+                       'shellvar'  : 'process_shell_var',
+                       'conf'      : 'update_config_file',
+                       'redis'     : 'redis_ops',
+                       'i'         : 'dump_tool_info',
+                       'words'     : 'generate_word_list',
+                       'getlinks'  : 'list_all_links',
                                      }                                     
                      ))
         self.enqueue_fn(cToolParam(paramShort='-greet',
@@ -934,6 +935,26 @@ class cToolWorker(cToolBase):
              retval.append(key)        
         return retval
 
+    def list_all_links(self, eventObj=None):
+        tmpList = self.getArgPhrase(eventObj=eventObj,
+                                    keepheadKeyword=False)
+        if (len(tmpList) <=0):
+         return         
+        try:
+           url = tmpList[0]
+           import urllib
+           res = urllib.urlopen(url)
+           data = res.read()
+           import re           
+           listofURLs = re.findall(r'href=[\'"]?([^\'" >]+)', data)
+           count = 1;
+           for i in listofURLs:
+            print "(",count,")",i
+            count += 1
+           pass
+        except Exception,err:
+           dbgprint("failure : %s" % err)            
+        return
     def redis_testdb(self, eventObj=None):
         tmpList = self.getArgPhrase(eventObj=eventObj)
         if tmpList[0] != 'testdb':
