@@ -182,7 +182,7 @@ class handyMantool(object):
       # self.gen_events_from_parsed_args()
       # return
       def enqueue_new_event(self, eventObj=None,
-                            tags=None):
+                            tags=None):      
        if tags == 'insertBeforeLast':
          self.eventList.insert(len(self.eventList)-1, eventObj) 
        else:
@@ -238,7 +238,7 @@ def main():
     h1.init_tool()
 
     h1.process_all_events()
-
+    
   except (cToolUnknownError) as error:
     print('Handyman is not working today. %s' %(error))
 
