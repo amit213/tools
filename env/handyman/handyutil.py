@@ -688,7 +688,9 @@ class cToolWorker(cToolBase):
         try:
            userid = os.environ['USER']
            print 'user : ', userid, ' '
-           print 'shellvar : ', os.environ['SHELL'], ' '
+           print 'shell : ', os.environ['SHELL'], ' '
+           print 'home : ', os.environ['HOME'], ' '
+           print 'term : ', os.environ['TERM'], ' '
         except:
            pass
         return
