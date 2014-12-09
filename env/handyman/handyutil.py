@@ -691,6 +691,8 @@ class cToolWorker(cToolBase):
            print 'shell : ', os.environ['SHELL'], ' '
            print 'home : ', os.environ['HOME'], ' '
            print 'term : ', os.environ['TERM'], ' '
+           print 'pwd : ', os.environ['PWD'], ' '
+           
         except:
            pass
         return
