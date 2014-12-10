@@ -35,6 +35,11 @@ class cToolBase(object):
        print arg
        return
       def enqueue_fn(self, arg=None, tags=None):
+       """
+       generic wrapper for enqueing objects. 
+       it will accept events, params type of objects.
+       todo: accept unknownobjects to put it to unknown queue
+       """
        hToolObj = handyman_main.handyMantool.getToolInstance() 
        if isinstance(arg, cEvent):
         hToolObj.enqueue_new_event(arg)
@@ -42,6 +47,10 @@ class cToolBase(object):
         hToolObj.paramList.append(arg)
        return
       def raise_error(self, event=None, errmsg=None):
+       """
+       raises exceptions and attaches them to the event 
+       and post those events to get processed.
+       """
        if type(event) is cEvent:
          if type(errmsg) is str:          
           event.event_payload = event.event_name + ' : ' + errmsg
@@ -51,7 +60,11 @@ class cToolBase(object):
       def getfn(self, fnName=None, 
                 argSwitch=None,
                 headKeyword=None):
-        fn = None        
+        """
+        function Library interface to obtain handle to
+        appropriate handler based on the arg object.
+        """
+        fn = None
         if fnName:      
          for memberobj in self.hTool.membObjList:
            for method in dir(getattr(self.hTool, memberobj)):
@@ -681,7 +694,7 @@ class cToolWorker(cToolBase):
           import webbrowser
           new = 2          
           webbrowser.open(url,new=new)
-        return 
+        return  
 
     def dump_tool_info(self, eventObj=None):
         """ this generates tool info / env info """
@@ -702,7 +715,7 @@ class cToolWorker(cToolBase):
         searchKey=self.getPhrase(eventObj=eventObj,
                                  filler='+')        
         url = 'http://www.google.com/search?q=' + searchKey
-        
+
         self.enqueue_fn(cEvent(evtName='spawn browser tab',
              evtPayload=cToolPayload(payloadArgPhrase=url),
              evtPayload_fn=self.spawn_browser_tab))
@@ -907,6 +920,7 @@ class cToolWorker(cToolBase):
         #from bs4 import BeautifulSoup
         #url = "http://search.yahoo.com/search?p=%s" 
         #query = "python"
+        dbgprint('url - %s ' % (url))
         r = requests.get(url)        
         textStream =  str(html2text.html2text(r.text))
         testList = textStream.split()
