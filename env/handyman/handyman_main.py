@@ -148,6 +148,10 @@ class handyMantool(object):
 
        return
       def gen_events_from_parsed_args(self, eventObj=None):
+       """
+       auto generation of events from the list of parsed args
+       as fed in by the user.
+       """
        try:     
          for argSwitch in self.getmembListForObj(self.toolArgs):
             if getattr(self.toolArgs, argSwitch) is not None:
@@ -182,7 +186,10 @@ class handyMantool(object):
       # self.gen_events_from_parsed_args()
       # return
       def enqueue_new_event(self, eventObj=None,
-                            tags=None):      
+                            tags=None):
+       """
+       default enqueue action is append.
+       """  
        if tags == 'insertBeforeLast':
          self.eventList.insert(len(self.eventList)-1, eventObj) 
        else:
