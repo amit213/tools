@@ -137,6 +137,10 @@ class cToolBase(object):
        
      
 class cEvent(cToolBase):
+      """
+      core event class driving this app. 
+      payload gets attached to the event wrapper.
+      """
       def __init__(self, evtType=None,
                    evtName=None,
                    evtPayload=None,
@@ -328,6 +332,9 @@ class cHandyUtil(cToolBase):
 
       return
     def init_tool_params(self, eventObj=None, arg=None):
+        """
+        api to init the handyman parameters.
+        """
         self.init_tool_logger()
         self.enqueue_fn(cToolParam(paramShort='-test',
                      paramHelp='calling testfn',
