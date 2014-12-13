@@ -441,6 +441,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      fi
    }
 
+   # save dir bookmarks. go to bookmark dir.
    push_and_pop_dir() {
      if [[ "$1" == "push" ]]
      then
@@ -552,6 +553,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      done|cat -t|column -c120
    }
 
+   # set common env stuff.
    set_common_env_conf() {
      dbg_print "setting generic env config for all OS."
      export PATH=$PATH:/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
