@@ -337,7 +337,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      notebookSerialNum="Serial Num : $serialnum"
      alias jsr='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
    }
-
+   #get the public ip
    function myip {
      wget --no-check-certificate -q checkip.dyndns.org -O ~/.index.html && 
      cat ~/.index.html|cut -d ' ' -f 6 | cut -d '<' -f 1
@@ -375,7 +375,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
         unset allparams
       fi
    }
-
+   #rename all files in current folder to remove tokens
    bulk_rename() {
     for i in *; 
     do 
