@@ -541,7 +541,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
     fi
 
    }
-
+   # query google via command line.
    function askg() {   
      Q="$@"; 
      GOOG_URL='https://www.google.com/search?q=';  
@@ -572,7 +572,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      create_dir_bookmarks
 
    }
-
+   # entry point for respective platforms.
    set_os_specific_conf() {
      set_common_env_conf
      if [ "$osname_lowercase" == "linux" ] 
