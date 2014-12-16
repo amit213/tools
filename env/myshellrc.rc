@@ -141,7 +141,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
         return $_FALSE
      fi
    }
-
+   #detech if this is osx platform
    if_this_is_osx() {     
      if [ "$osname_lowercase" == "darwin" ] 
      then
@@ -182,6 +182,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    mm() {
      top -l 1 | head -n 10 | grep PhysMem
    }
+   # build and update cscope db files.
+   # todo : add file extension support
    build_run_cscope() {
      tmpstr="*.$1"   
      #find . -name "$tmpstr" > cscope.files
@@ -193,6 +195,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      wget -q -U Mozilla -O $(tr ' ' _ <<< "$1"| 
      cut -b 1-15).mp3 "http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=$(tr ' ' + <<< "$1")"; 
    }
+   #add this app to trusted app list for osx
    bless_this_app() {
      if if_this_is_osx     
       then
