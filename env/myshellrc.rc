@@ -202,6 +202,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
         echo "xattr -d -r com.apple.quarantine /Applications/yourApp.app"
      fi      
    }
+   #invokes the favorite editor.
    myedit() {
      if if_this_is_osx     
       then
@@ -217,6 +218,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    chsm() {
      openssl dgst -md5 $1
    }
+
    xkcd() {
      curl -s 'http://xkcd.com/rss.xml' | xpath '//item[1]/description/text()' 2>&1 | 
      sed -n 's/.*title="\([^"]*\)".*/\1/p' | fold -s
@@ -232,10 +234,11 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      wget -O /tmp/.xkcd_$(date +%y-%m-%d).png `lynx --dump dynamic.xkcd.com/comic/random/ |
      grep png` > /dev/null 2>&1 ; open /tmp/.xkcd_$(date +%y-%m-%d).png
    }
+   #speed check on console.
    speed_check() { 
      wget -O /dev/null http://download.fedoraproject.org/pub/fedora/linux/releases/20/Live/x86_64/Fedora-Live-Desktop-x86_64-20-1.iso
    }
-
+   #text based weather.
    weather() {
     curl -s "http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query=${@:-<YOURZIPORLOCATION>}" |
     perl -ne '/<title>([^<]+)/&&printf "%s: ",$1;/<fcttext>([^<]+)/&&print $1,"\n"';
