@@ -393,7 +393,8 @@ class cHandyUtil(cToolBase):
 
 
     def utilParseParams(self, tmpObj=None):        
-
+        """ parse util params as given by the users
+        """
         for entries in self.hTool.paramList:
           self.hTool.toolParser.add_argument(entries.paramShort, 
                                help=entries.paramHelp,
@@ -411,6 +412,8 @@ class cHandyUtil(cToolBase):
 
     def gen_event_for_argPhrase(self, argSwitch=None, 
                                 switchValueList=None):
+        """ generating events for the cli param option.
+        """
         try:                                
           if switchValueList is not None:
             listOflists = list(switchValueList)
@@ -715,7 +718,7 @@ class cToolWorker(cToolBase):
            print 'lang : ', os.environ['LANG'], ' '
            print 'terminal : ', os.environ['TERM_PROGRAM'], ' '
            print 'home : ', os.environ['HOME'], ' '
-                      
+
         except:
            pass
         return
