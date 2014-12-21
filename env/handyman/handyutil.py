@@ -385,6 +385,7 @@ class cHandyUtil(cToolBase):
                      paramKeywordMap={
                        'bm'     :  'bm_callbackfn',
                        'conf'   :  'dump_handytool_config',
+                       'dir'    :  'list_dir_content',
                                       }                     
                      #paramType=self.getfn(fnName='list_actionfn')                     
                      ))                             
@@ -1033,6 +1034,16 @@ class cToolWorker(cToolBase):
             tmp1.entry_point(eventObj)
         except:
             dbgprint("could not invoke plugin.")
+        return
+
+    def list_dir_content(self, eventObj=None):
+        """ listing the content for the dir arg"""
+        try:
+
+         print os.listdir(".")
+        except:
+         dbgprint("could not list the content.")
+
         return
     def opentunnel_actionfn(self, eventObj=None):
 
