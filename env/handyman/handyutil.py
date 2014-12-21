@@ -1039,8 +1039,12 @@ class cToolWorker(cToolBase):
     def list_dir_content(self, eventObj=None):
         """ listing the content for the dir arg"""
         try:
-
-         print os.listdir(".")
+         inArg = self.getArgPhrase(eventObj=eventObj,
+                                    keepheadKeyword=False)
+         if inArg is None:
+          inArg = "."         
+         for item in os.listdir(inArg[0]):
+          print item
         except:
          dbgprint("could not list the content.")
 
