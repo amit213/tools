@@ -726,7 +726,9 @@ class cToolWorker(cToolBase):
            pass
         return
 
-    def launch_browser_tab(self, eventObj=None):              
+    def launch_browser_tab(self, eventObj=None):
+        """ browser event
+        """         
         searchKey=""
         searchKey=self.getPhrase(eventObj=eventObj,
                                  filler='+')        
