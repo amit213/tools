@@ -458,7 +458,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
           cd "`cat /tmp/.$2-tmp`"
      fi     
    }
-
+   #create dynamic alias entries.
    create_dir_bookmarks() {
      for i in {1..8}
      do
