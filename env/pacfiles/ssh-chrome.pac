@@ -7,7 +7,8 @@
 var direct = "DIRECT";
 
 // Proxy Server
-var proxy = "SOCKS5 127.0.0.1:2015;";
+//var proxy = "SOCKS5 127.0.0.1:2015;";
+var proxy = "SOCKS5 127.0.0.1:15015;";
 
 // Default localhost for denied connections
 var deny = "SOCKS5 127.0.0.1:65535";
