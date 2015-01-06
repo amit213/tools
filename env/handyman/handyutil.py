@@ -727,7 +727,7 @@ class cToolWorker(cToolBase):
         return
 
     def launch_browser_tab(self, eventObj=None):
-        """ browser event
+        """ browser tabs
         """         
         searchKey=""
         searchKey=self.getPhrase(eventObj=eventObj,
@@ -870,6 +870,8 @@ class cToolWorker(cToolBase):
                 evtPayload_fn=self.handysleep_callbackfn))
         return
     def update_config_file(self, eventObj=None):
+        """ update the config file """
+        
         if type(eventObj.event_payload) is cToolPayload:
            tmpPhrase = eventObj.event_payload.getPayloadPhrase(keepheadKeyword=True)
         if (len(tmpPhrase) >= 2) and tmpPhrase[0] == 'conf':
