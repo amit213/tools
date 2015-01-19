@@ -80,6 +80,7 @@ class cToolBase(object):
           fn = getattr(self.hTool.toolWorker, 'generic' + '_actionfn')        
         return fn
       def getParamfromArgSwitch(self,argSwitch=None):
+        """ get parameters from arg switch """
         tmpParamobj=None
         for param in self.hTool.paramList:
           if argSwitch == param.paramDest:
