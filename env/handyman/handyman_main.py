@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#wrapper tool for automation and env config.
+#wrapper tool for automation, env config and system tooling.
 #
 from handyutil import *
 import argparse

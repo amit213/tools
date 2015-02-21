@@ -119,6 +119,7 @@ class cToolBase(object):
         import redis
         # param as non-url redis.Redis(host='192.168.59.103',port=6500)
         redisurl = self.hTool.envConfig.get_value_from_conf(key='redisserverurl')
+        redisurl = "redis://192.168.59.103:6379"
         dbgprint('connecting to redis server at (%s)'
                   % (redisurl))
         if redisurl:
@@ -941,6 +942,7 @@ class cToolWorker(cToolBase):
         #from bs4 import BeautifulSoup
         #url = "http://search.yahoo.com/search?p=%s" 
         #query = "python"
+
         dbgprint('url - %s ' % (url))
         r = requests.get(url)        
         textStream =  str(html2text.html2text(r.text))
@@ -955,6 +957,8 @@ class cToolWorker(cToolBase):
         if r is not None:          
          for key in wordTable.keys():          
             r.set(key, wordTable[key])
+        else:
+            print " redis failed. "                
         return
 
     def redis_get_filtered_data(self, eventObj=None):

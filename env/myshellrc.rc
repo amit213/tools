@@ -188,7 +188,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    build_run_cscope() {
      tmpstr="*.$1"   
      #find . -name "$tmpstr" > cscope.files
-     find . -name "*.py" -o -name "*.c" -o -name "*.h" > cscope.files
+     #find . -name "*.py" -o -name "*.js" -o -name "*.c" -o -name "*.h" > cscope.files
+     #find . -name "*.js" -o -name "*.json" -o name "*.feature" > cscope.files
+     #find . -name "*.js" -name "*.json" -name "*.feature" > cscope.files
+     find . -name "*.js" -o -name "*.json" -o -name "*.feature" > cscope.files
      $ctagsbin -R .     
      cscope -uR
    }
