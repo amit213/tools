@@ -410,7 +410,7 @@ class cHandyUtil(cToolBase):
         return
 
     def utilVer():
-        selfVer = "0.0.1u"      
+        selfVer = "0.0.3u"      
         return selfVer
 
     def gen_event_for_argPhrase(self, argSwitch=None, 
