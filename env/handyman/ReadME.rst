@@ -7,4 +7,4 @@ Event driven python-based library + tool wrapper to peform various backend and l
 - auto web crawling of feeds based on the reading preference score. (auto-learning yet to be added.)
 - misc. security tasks
 - network operation
-
+- plugin based design
