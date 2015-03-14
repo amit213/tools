@@ -4,7 +4,7 @@
 
 #### this is prep work for running docker on fresh containers.
 
-#install docker.
+#install latest version of docker.
 
 echo  "This script needs sudo access"
 
