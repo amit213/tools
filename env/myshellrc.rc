@@ -346,6 +346,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      serialnum=`ioreg -c "IOPlatformExpertDevice" | awk 'BEGIN{FS="\""}; /IOPlatformSerialNumber/ {print $4}'`
      notebookSerialNum="Serial Num : $serialnum"
      alias jsr='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
+     EDITOR=vim
+     
    }
    #get the public ip
    function myip {

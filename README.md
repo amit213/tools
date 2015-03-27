@@ -8,6 +8,7 @@ Event driven python-based library + tool wrapper to perform various backend and 
  - misc. security tasks
  - network operation
  - plugins support.
+ - vagrant configs
 
 housekeeping. tools. scripts
 
