@@ -347,7 +347,9 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      notebookSerialNum="Serial Num : $serialnum"
      alias jsr='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
      EDITOR=vim
-     
+     alias vagupdigi='vagrant up --provider=digital_ocean'
+     alias vag='vagrant status'
+
    }
    #get the public ip
    function myip {
@@ -574,7 +576,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias h='history'
      alias pg='ping google.com'
      alias seta=set_alias
-     alias gg=load_run_tmp_aliasmaplist
+     alias gg='load_run_tmp_aliasmaplist; load_customized_shellrc;'
      func1=(show_shell_summary)
      alias i="$func1 help"
      alias ii="$func1 help ex"
