@@ -347,8 +347,6 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      notebookSerialNum="Serial Num : $serialnum"
      alias jsr='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
      EDITOR=vim
-     alias vagupdigi='vagrant up --provider=digital_ocean'
-     alias vag='vagrant status'
 
    }
    #get the public ip
@@ -585,6 +583,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias csc="build_run_cscope $1"  #runs cscope and ctags on source file tree.
      alias hdump="history >> $HOME/$historydumpfile"
      create_dir_bookmarks
+     alias vagupdigi='vagrant up --provider=digital_ocean'
+     alias vag='vagrant status'
 
    }
    # entry point for respective platforms.
