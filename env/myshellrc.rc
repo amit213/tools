@@ -23,6 +23,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
   quoteofthedayfilename=".quote-of-the-day"
   mycustomshellrcfilename=".customshellrc"
   historydumpfile="last.txt"
+  issueFile="/etc/issue"
   _TRUE=0
   _FALSE=1
   shellrc_dbg=0
@@ -281,6 +282,15 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    set_ssh_alias() {
      alias target-user-ip-port=set_target_ssh_user_ip_port
      alias tsh=ssh_to_target_ip_port
+   }
+   set_distro_name() {
+    if file_present $issueFile
+    then
+      distroName=`cat /etc/issue | grep [a-z] | awk '{ print $1 }' | tr '[:upper:]' '[:lower:]'` 
+      dbg_print "setting distroName : $distroName"
+    else
+      distroName=$osname_lowercase
+    fi
    }
 
    #load up custom configuration
@@ -585,7 +595,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      create_dir_bookmarks
      alias vagupdigi='vagrant up --provider=digital_ocean'
      alias vag='vagrant status'
-
+     set_distro_name
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
