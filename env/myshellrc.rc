@@ -251,7 +251,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    #print all local IPs for osx
    get_all_local_ip_for_osx() {
      listoflocalIPs=`ifconfig | grep inet | grep netmask | awk '{print $2}'`
-     tmplist=""     
+     tmplist=""
      for i in $listoflocalIPs
      do
         tmplist="$i  |  $tmplist  "
