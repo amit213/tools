@@ -325,6 +325,11 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
       echo ""
    }
 
+   toggle_mac_wifi() {
+      networksetup -setairportpower airport off
+      sleep 1.5
+      networksetup -setairportpower airport on
+   }
 
    ## Use this for OSX specific env config.
    set_osx_conf() {
@@ -357,7 +362,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      notebookSerialNum="Serial Num : $serialnum"
      alias jsr='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
      EDITOR=vim
-
+     alias wifitog=toggle_mac_wifi
    }
    #get the public ip
    function myip {
@@ -388,7 +393,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
       then
         echo "you forgot to pass user@email and msg."
       else
-        allparams=$@      
+        allparams=$@
         emailstr=$(echo $allparams | awk '{print $1}')
         pRest=$(echo $allparams | awk '{$1="";print $0}')
         dbg_print "echo $emailstr $pRest"
