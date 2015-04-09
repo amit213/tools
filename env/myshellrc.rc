@@ -349,7 +349,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      cpustring=`sysctl -n machdep.cpu.brand_string`
      hostfirstname=`scutil --get ComputerName`
      osverstring=`sw_vers | awk -F':\t' '{print $2}' | paste -d ' ' - - -`
-     #macvram=`system_profiler SPDisplaysDataType | grep VRAM`
+     macvram=`system_profiler SPDisplaysDataType | grep VRAM`
      #macresolution=`system_profiler SPDisplaysDataType | grep Resolution`
      #macmodelname=`system_profiler SPHardwareDataType | grep "Model Name"`
      batterycyclecount=`system_profiler SPPowerDataType | grep "Cycle Count"`
@@ -539,7 +539,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
    
    #show summary. todo: include more platform specific stuff.
-   show_shell_summary() {     
+   show_shell_summary() {
+
      dbg_print "summary type [$1]"
      if [ "$1" == "help" ]
      then
@@ -617,4 +618,3 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 ## ==========
  
 set_os_specific_conf $osname_lowercase
-
