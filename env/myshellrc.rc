@@ -600,6 +600,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias hdump="history >> $HOME/$historydumpfile"
      create_dir_bookmarks
      alias vagupdigi='vagrant up --provider=digital_ocean'
+     alias vaguprack='vagrant up --provider=rackspace'
+     alias vagupaws='vagrant up --provider=aws'
      alias vag='vagrant status'
      set_distro_name
    }
