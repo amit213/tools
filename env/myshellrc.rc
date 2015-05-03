@@ -168,7 +168,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      then
         :
      else
-        history | grep $* ;
+        history | grep -i $* ;
      fi
    }
    are_we_online() {
@@ -604,6 +604,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias vagupaws='vagrant up --provider=aws'
      alias vag='vagrant status'
      set_distro_name
+     alias hs=hg
+     alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
