@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+#wrapper around the tool repo
 
 #global vars
 shellrcfile=.myshellrc.rc
