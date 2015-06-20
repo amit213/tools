@@ -446,6 +446,15 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      echo "$aliasstr" >> $filename1        
    }
 
+   #save ref commands
+   set_ref() {
+     echo "set ref"
+   }
+   #generate tmp pass 
+   gen_tmp_pass() {
+     date | sha256sum | base64 | head -c 14; echo
+   }
+
    #test run for the set alias.
    set_alias() {
      dbg_print "param: $@"
@@ -603,6 +612,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      alias vaguprack='vagrant up --provider=rackspace'
      alias vagupaws='vagrant up --provider=aws'
      alias vag='vagrant status'
+     alias tpass='gen_tmp_pass'
      set_distro_name
      alias hs=hg
      alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
