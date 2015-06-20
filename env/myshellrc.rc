@@ -452,7 +452,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
    #generate tmp pass 
    gen_tmp_pass() {
-     date | sha256sum | base64 | head -c 14; echo
+     dd if=/dev/urandom bs=1 count=16 2>/dev/null | base64
    }
 
    #test run for the set alias.
