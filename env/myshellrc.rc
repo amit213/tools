@@ -491,7 +491,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    #create dynamic alias entries.
    # 8 bookmarks.
    create_dir_bookmarks() {
-     for i in {1..8}
+     for i in {1..9}
      do
        itr="$i"
        save="s$itr"       
