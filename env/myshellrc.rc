@@ -241,7 +241,8 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
    }
    #speed check on console.
    speed_check() { 
-     wget -O /dev/null http://download.fedoraproject.org/pub/fedora/linux/releases/20/Live/x86_64/Fedora-Live-Desktop-x86_64-20-1.iso
+     #wget -O /dev/null http://download.fedoraproject.org/pub/fedora/linux/releases/20/Live/x86_64/Fedora-Live-Desktop-x86_64-20-1.iso
+     wget -O /dev/null http://uec-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
    }
    #text based weather.
    weather() {

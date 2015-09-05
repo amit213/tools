@@ -151,6 +151,7 @@ class cEvent(cToolBase):
        self._event_name = evtName
        self._event_payload = evtPayload
        self._event_payload_fn = evtPayload_fn
+       
        return
       @property
       def event_type(self):
