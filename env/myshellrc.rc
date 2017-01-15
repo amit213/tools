@@ -12,7 +12,8 @@ echo "Mr. Anderson, Welcome Home."
 #shell prompt facelift
 #export PS1="\u@\h:[\W]$ "
 PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
-
+export SHELL=bash
+export EDITOR=vim
 
 ## global variables. platform agnostic.
   osname=`uname`
@@ -341,6 +342,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      export LSCOLORS=GxFxCxDxBxegedabagaced
      export GREP_OPTIONS='--color=auto'
 
+     alias reloaddns='sudo killall -HUP mDNSResponder'
      alias listdns='scutil --dns | grep nameserver'
      alias bat='ioreg -l | grep Capacity'        
      get_all_local_ip_for_osx
@@ -362,8 +364,10 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      serialnum=`ioreg -c "IOPlatformExpertDevice" | awk 'BEGIN{FS="\""}; /IOPlatformSerialNumber/ {print $4}'`
      notebookSerialNum="Serial Num : $serialnum"
      alias jsr='/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Resources/jsc'
+
      EDITOR=vim
      alias wifitog=toggle_mac_wifi
+     export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
    }
    #get the public ip
    function myip {
@@ -371,6 +375,13 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
      cat ~/.index.html|cut -d ' ' -f 6 | cut -d '<' -f 1
    }
    
+   #find ip for kvm vms
+   function find_vm_ips {
+    #for i in `v | awk '{if(NR>2)print}' | awk '{print $2}' | grep [a-z,0-9]`; do echo "[ $i ] has ip [ `arp -n | grep "$(virsh domiflist $i | grep virtio | awk '{print$5}')" | awk '{print$1}'` ]"; done
+    #for i in `virsh list --all | awk '{if(NR>2)print}' | awk '{print $2}' | grep [a-z,0-9]`; do echo "[ $i ] has ip [ `arp -n | grep "$(virsh domiflist $i | grep virtio | awk '{print$5}')" | awk '{print$1}'` ]"; done
+    echo "find vm ip for kvm"
+   }
+
    function myip2 {
     curl -s ip.telize.com
     #curl -s icanhazip.com
@@ -385,7 +396,7 @@ PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\][\W]\[\e[m\]$ '
 
    #shred the file / dir
    shred() {
-    echo "Are you sure? It can't be undone."
+    echo "This can't be undone. Are you sure?"
     echo "Usage: gshred -v -z -n 5 -u --random-source=/dev/random <input file>"
     echo "gshred -v -z -n 5 -u --random-source=/dev/random\"\" " | pbcopy
    }
