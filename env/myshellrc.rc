@@ -650,7 +650,7 @@ export EDITOR=vim
     onlineclipboardname="clip1"
     declare localParam=${*:-$(</dev/stdin)};
     dbg_print "input parameters are: \n $localParam \n"
-    termbinurl=$(printf $localParam | nc termbin.com 9999)
+    termbinurl=$(printf "$localParam" | nc termbin.com 9999)
     termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
     dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
     curl -s -X POST https://api.keyvalue.xyz/d1b3e4de/clip1/$termbintoken;
