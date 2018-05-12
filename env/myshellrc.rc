@@ -645,7 +645,8 @@ export EDITOR=vim
    }
 
    saveclip1() {
-    printf "\n\n\n\n *** $@"
+    localParam="$@"; 
+    printf "\n\n\n\n *** $(localParam) ** \n"
    }
 
    catenvfile() {
