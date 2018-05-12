@@ -630,7 +630,7 @@ export EDITOR=vim
      alias hs=hg
      alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
      #alias reloadenv='curl -s termbin.com/n2bc | bash'
-     alias reloadenv='source <(curl -s -L bit.ly/sh213)'
+     alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
