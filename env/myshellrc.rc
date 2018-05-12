@@ -647,10 +647,20 @@ export EDITOR=vim
 
    function saveclip1() {
     #declare localParam="$@"; 
+    onlineclipboardname="clip1"
     declare localParam=${*:-$(</dev/stdin)};
-    printf "\n\n\n\n ***\n $localParam \n** \n"
+    dbg_print "input parameters are: \n $localParam \n"
+    termbinurl=$(echo $localParam | nc termbin.com 9999)
+    termbintoken=$(echo termbinurl | awk -F/ '{print $4}')
+    `curl -X POST https://api.keyvalue.xyz/d1b3e4de/clip1/$termbintoken`
    }
    
+   function c1() {
+    onlineclipboardname="clip1"
+    clipboardtoken=$(curl https://api.keyvalue.xyz/d1b3e4de/clip1)
+    clipboardcontent=$(curl termbin.com/$clipboardtoken)
+    printf "$clipboardcontent\n"
+   }
 
    function catenvfile() {
     #printf "$(curl -s -L bit.ly/sh213) \n Current Env."
