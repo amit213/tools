@@ -172,6 +172,7 @@ export EDITOR=vim
         history | grep -i $* ;
      fi
    }
+
    are_we_online() {
     wget -q --tries=2 --timeout=1 --spider http://google.com
     if [[ $? -eq 0 ]]; then
@@ -639,6 +640,9 @@ export EDITOR=vim
      then
       set_osx_conf
      fi
+   }
+   pingcheck() {
+    printf "\nPingCheck is a PASS."
    }
 
 ## ==========
