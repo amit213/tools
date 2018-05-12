@@ -657,9 +657,10 @@ export EDITOR=vim
    
    function c1() {
     onlineclipboardname="clip1"
-    clipboardtoken=$(curl https://api.keyvalue.xyz/d1b3e4de/$onlineclipboardname)
-    clipboardcontent=$(curl termbin.com/$clipboardtoken)
-    printf "$clipboardcontent\n"
+    clipboardtoken=$(curl -s https://api.keyvalue.xyz/d1b3e4de/$onlineclipboardname)
+    #clipboardcontent=$(curl termbin.com/$clipboardtoken)
+    curl termbin.com/$clipboardtoken
+    #printf "$clipboardcontent\n"
    }
 
    function catenvfile() {
