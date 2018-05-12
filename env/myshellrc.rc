@@ -646,20 +646,43 @@ export EDITOR=vim
    }
 
    function saveclip1() {
-    #declare localParam="$@"; 
     onlineclipboardname="clip1"
+    keyvaluebucket="d1b3e4de"
     declare localParam=${*:-$(</dev/stdin)};
     dbg_print "input parameters are: \n $localParam \n"
     termbinurl=$(printf "$localParam" | nc termbin.com 9999)
     termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
     dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
-    curl -s -X POST https://api.keyvalue.xyz/d1b3e4de/clip1/$termbintoken;
+    curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
    }
    
    ## using the termbin service and keyvalue.xyz cloud service
    function c1() {
     onlineclipboardname="clip1"
-    clipboardtoken=$(curl -s https://api.keyvalue.xyz/d1b3e4de/$onlineclipboardname)
+    keyvaluebucket="d1b3e4de"
+    clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
+    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)
+    #curl termbin.com/$clipboardtoken
+    printf "$clipboardcontent\n"
+   }
+
+
+   function saveclip2() {
+    onlineclipboardname="clip2"
+    keyvaluebucket="850b2d62"
+    declare localParam=${*:-$(</dev/stdin)};
+    dbg_print "input parameters are: \n $localParam \n"
+    termbinurl=$(printf "$localParam" | nc termbin.com 9999)
+    termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
+    dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
+    curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
+   }
+   
+   ## using the termbin service and keyvalue.xyz cloud service
+   function c2() {
+    onlineclipboardname="clip2"
+    keyvaluebucket="850b2d62"
+    clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)
     #curl termbin.com/$clipboardtoken
     printf "$clipboardcontent\n"
