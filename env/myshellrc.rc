@@ -655,6 +655,7 @@ export EDITOR=vim
     curl -s -X POST https://api.keyvalue.xyz/d1b3e4de/clip1/$termbintoken;
    }
    
+   ## using the termbin service and keyvalue.xyz cloud service
    function c1() {
     onlineclipboardname="clip1"
     clipboardtoken=$(curl -s https://api.keyvalue.xyz/d1b3e4de/$onlineclipboardname)
