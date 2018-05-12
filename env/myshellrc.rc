@@ -566,6 +566,7 @@ export EDITOR=vim
      dbg_print "summary type [$1]"
      if [ "$1" == "help" ]
      then
+         printf "Environment version v1.1"
          echo "total number of alias :"`alias | wc -l`""
          #dns
          echo "external ip:" `myip2`
@@ -645,9 +646,11 @@ export EDITOR=vim
    }
 
    function saveclip1() {
-    localParam="$@"; 
-    printf "\n\n\n\n *** $localParam ** \n"
+    #declare localParam="$@"; 
+    declare localParam=${*:-$(</dev/stdin)};
+    printf "\n\n\n\n ***\n $localParam \n** \n"
    }
+   function testfoo() { declare MY_INPUT=${*:-$(</dev/stdin)}; printf "$MY_INPUT"; }
 
    function catenvfile() {
     #printf "$(curl -s -L bit.ly/sh213) \n Current Env."
@@ -655,7 +658,7 @@ export EDITOR=vim
 
    }
    function pingcheck() {
-    printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.6 six \n"
+    printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.7 seven \n"
    }
 
 ## ==========
