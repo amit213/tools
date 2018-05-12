@@ -644,17 +644,17 @@ export EDITOR=vim
      fi
    }
 
-   saveclip1() {
+   function saveclip1() {
     localParam="$@"; 
     printf "\n\n\n\n *** $localParam ** \n"
    }
 
-   catenvfile() {
+   function catenvfile() {
     #printf "$(curl -s -L bit.ly/sh213) \n Current Env."
     curl -s -L bit.ly/sh213;
 
    }
-   pingcheck() {
+   function pingcheck() {
     printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.6 six \n"
    }
 
