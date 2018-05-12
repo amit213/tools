@@ -644,7 +644,7 @@ export EDITOR=vim
      fi
    }
    pingcheck() {
-    printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.2 two \n"
+    printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.3 three \n"
    }
 
 ## ==========
