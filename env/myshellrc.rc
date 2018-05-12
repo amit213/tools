@@ -650,7 +650,7 @@ export EDITOR=vim
     declare localParam=${*:-$(</dev/stdin)};
     printf "\n\n\n\n ***\n $localParam \n** \n"
    }
-   function testfoo() { declare MY_INPUT=${*:-$(</dev/stdin)}; printf "$MY_INPUT"; }
+   
 
    function catenvfile() {
     #printf "$(curl -s -L bit.ly/sh213) \n Current Env."
