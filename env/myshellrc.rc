@@ -651,7 +651,7 @@ export EDITOR=vim
     declare localParam=${*:-$(</dev/stdin)};
     dbg_print "input parameters are: \n $localParam \n"
     termbinurl=$(echo $localParam | nc termbin.com 9999)
-    termbintoken=$(echo termbinurl | awk -F/ '{print $4}')
+    termbintoken=$(echo $termbinurl | awk -F/ '{print $4}')
     curl -s -X POST https://api.keyvalue.xyz/d1b3e4de/clip1/$termbintoken;
    }
    
