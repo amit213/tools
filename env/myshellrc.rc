@@ -643,6 +643,11 @@ export EDITOR=vim
       set_osx_conf
      fi
    }
+
+   saveclip1() {
+    printf "\n\n\n\n *** $@"
+   }
+
    catenvfile() {
     #printf "$(curl -s -L bit.ly/sh213) \n Current Env."
     curl -s -L bit.ly/sh213;
