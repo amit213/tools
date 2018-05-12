@@ -661,8 +661,7 @@ export EDITOR=vim
     onlineclipboardname="clip1"
     keyvaluebucket="d1b3e4de"
     clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
-    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)
-    #curl termbin.com/$clipboardtoken
+    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
     printf "$clipboardcontent\n"
    }
 
@@ -684,7 +683,6 @@ export EDITOR=vim
     keyvaluebucket="850b2d62"
     clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)
-    #curl termbin.com/$clipboardtoken
     printf "$clipboardcontent\n"
    }
 
