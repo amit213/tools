@@ -646,10 +646,10 @@ export EDITOR=vim
    catenvfile() {
     #printf "$(curl -s -L bit.ly/sh213) \n Current Env."
     curl -s -L bit.ly/sh213;
-    
+
    }
    pingcheck() {
-    printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.4 four \n"
+    printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.5 five \n"
    }
 
 ## ==========
