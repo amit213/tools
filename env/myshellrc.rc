@@ -726,7 +726,8 @@ export EDITOR=vim
        go="c$itr"       
        tag="tmp$itr"
        clipboardname="clip$itr"
-       aliasstr="alias '$save=save_to_clip $clipboardname ${bucketArray[3-$itr]}'"
+       #aliasstr="alias '$save=save_to_clip $clipboardname ${bucketArray[3-$itr]}'"
+       aliasstr="alias '$save=save_to_clip $clipboardname ${bucketArray[0]}'"
        dbg_print $aliasstr
        alias $save="save_to_clip $clipboardname ${bucketArray[3-$itr]}"
        alias $go="print_clip $clipboardname ${bucketArray[3-$itr]}"
