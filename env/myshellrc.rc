@@ -695,6 +695,45 @@ export EDITOR=vim
     printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.7 seven \n"
    }
 
+   function save_to_clip() {
+    onlineclipboardname=$1
+    keyvaluebucket=$2
+    declare localParam=${*:-$(</dev/stdin)};
+    dbg_print "input parameters are: \n $localParam \n"
+    termbinurl=$(printf "$localParam" | nc termbin.com 9999)
+    termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
+    dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
+    curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
+   }
+
+   function print_clip() {
+    onlineclipboardname=$1
+    keyvaluebucket=$2
+    clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
+    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
+    printf "$clipboardcontent\n"
+
+   }
+
+   #create dynamic alias entries.
+   # 8 bookmarks.
+   function create_clipboard_bookmarks() {
+     bucketArray=(e5a69500 eb08b43a 78325b8b)
+     for i in {3..5}
+     do
+       itr="$i"
+       save="saveclip$itr"       
+       go="c$itr"       
+       tag="tmp$itr"
+       clipboardname="clip$itr"
+       aliasstr="alias '$save=save_to_clip $clipboardname ${bucketArray[3-$itr]}'"
+       dbg_print $aliasstr
+       alias $save="save_to_clip $clipboardname ${bucketArray[3-$itr]}"
+       alias $go="print_clip $clipboardname ${bucketArray[3-$itr]}"
+     done     
+   }
+
+
 ## ==========
  
 set_os_specific_conf $osname_lowercase
