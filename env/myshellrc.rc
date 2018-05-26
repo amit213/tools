@@ -632,6 +632,7 @@ export EDITOR=vim
      alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
      #alias reloadenv='curl -s termbin.com/n2bc | bash'
      alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
+     
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
@@ -735,6 +736,16 @@ export EDITOR=vim
        alias $go="print_clip $clipboardname ${bucketArray[0]}"
      done     
    }
+
+   ## prep-newvm-without-docker
+   function prep_newVM_without_docker() {
+       printf " sudo apt-get update -y; sudo apt install curl ntpdate python-pip vim -y; sudo pip install docker-compose; sudo echo \"vmuser ALL=(ALL) NOPASSWD:ALL\" > /etc/sudoers.d/50-vmuser;  sudo groupadd -g 1050 vmuser; sudo useradd -u 1050 -g 1050 -ms /bin/bash vmuser; runuser -l vmuser -c 'cd; mkdir -p ~/.ssh; cd ~/.ssh; echo \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP9kAi3cjkrdA3uMI5DglxRsRfcBq02i5/lRVup2E/ndOBBfbkl6USVpl+QWxxnTMsKxu2MXcOAHwTUY5b53n8AzXtV/VPatndQms5IgP11VsTsiU5mudwPf/s81eQfutYn9haD67wF4Azngdv/vUrFO2a4VMwZjSqJ+RAO1Hbkm4tWqeXjZo3QaErQg411zG6pvWdxLsGzvTc+SzY+Igft1Wx4NCTEgDv+HyEFSDYcPx9SGc9iBk2tOxALpS/htVpmSF+MKnu8ToIRn0ngunE2bi8cDpBPFO30JCa+V+eb4zEh6VbUXB97qBLjX6gUHycAM2sBWoKCR8e61tnsC27 mbuser@bigrock.local\" >> authorized_keys; curl icanhazip.com ';   \n"
+   }
+   ## prepnode execution
+   function prepnode() {
+    sudo apt-get update -y; sudo apt install curl ntpdate python-pip vim -y; sudo pip install docker-compose; sudo echo "vmuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50-vmuser;  sudo groupadd -g 1050 vmuser; sudo useradd -u 1050 -g 1050 -ms /bin/bash vmuser; runuser -l vmuser -c 'cd; mkdir -p ~/.ssh; cd ~/.ssh; echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP9kAi3cjkrdA3uMI5DglxRsRfcBq02i5/lRVup2E/ndOBBfbkl6USVpl+QWxxnTMsKxu2MXcOAHwTUY5b53n8AzXtV/VPatndQms5IgP11VsTsiU5mudwPf/s81eQfutYn9haD67wF4Azngdv/vUrFO2a4VMwZjSqJ+RAO1Hbkm4tWqeXjZo3QaErQg411zG6pvWdxLsGzvTc+SzY+Igft1Wx4NCTEgDv+HyEFSDYcPx9SGc9iBk2tOxALpS/htVpmSF+MKnu8ToIRn0ngunE2bi8cDpBPFO30JCa+V+eb4zEh6VbUXB97qBLjX6gUHycAM2sBWoKCR8e61tnsC27 mbuser@bigrock.local" >> authorized_keys; curl icanhazip.com ';   
+   }
+
 
 
 ## ==========
