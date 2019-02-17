@@ -648,7 +648,7 @@ export EDITOR=vim
 
    function saveclip1() {
     onlineclipboardname="clip1"
-    keyvaluebucket="d1b3e4de"
+    keyvaluebucket="656a8789"
     declare localParam=${*:-$(</dev/stdin)};
     dbg_print "input parameters are: \n $localParam \n"
     termbinurl=$(printf "$localParam" | nc termbin.com 9999)
@@ -660,7 +660,7 @@ export EDITOR=vim
    ## using the termbin service and keyvalue.xyz cloud service
    function c1() {
     onlineclipboardname="clip1"
-    keyvaluebucket="d1b3e4de"
+    keyvaluebucket="656a8789"
     clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
     printf "$clipboardcontent\n"
@@ -669,7 +669,7 @@ export EDITOR=vim
 
    function saveclip2() {
     onlineclipboardname="clip2"
-    keyvaluebucket="850b2d62"
+    keyvaluebucket="5afaf94e"
     declare localParam=${*:-$(</dev/stdin)};
     dbg_print "input parameters are: \n $localParam \n"
     termbinurl=$(printf "$localParam" | nc termbin.com 9999)
@@ -681,7 +681,7 @@ export EDITOR=vim
    ## using the termbin service and keyvalue.xyz cloud service
    function c2() {
     onlineclipboardname="clip2"
-    keyvaluebucket="850b2d62"
+    keyvaluebucket="5afaf94e"
     clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)
     printf "$clipboardcontent\n"
