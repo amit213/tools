@@ -627,6 +627,7 @@ export EDITOR=vim
      alias vagupaws='vagrant up --provider=aws'
      alias vag='vagrant status'
      alias tpass='gen_tmp_pass'
+     alias dbox-uploader-install='install_dbox_uploader_tool'
      set_distro_name
      alias hs=hg
      alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
@@ -749,6 +750,16 @@ export EDITOR=vim
    ## add_ffmpeg_tools()
    function add_ffmpeg_tools() {
     sudo apt install chromium-codecs-ffmpeg ffmpeg ffmpeg-doc ffmpegthumbs libffmpegthumbnailer-dev libffms2-4 libxine2-ffmpeg moc-ffmpeg-plugin -y;
+   }
+
+   ## add dbox-uploader
+   function install_dbox_uploader_tool() {
+    dbox_uploader_dirname=".dbox-uploader"
+    dbox_uploader_script_linkname=".dbox-uploader.sh"
+    dbox_token_filename=".tokenfile"
+    git clone https://github.com/andreafabrizi/Dropbox-Uploader.git $HOME/$dbox_uploader_dirname
+    ln -s -f $HOME/$dbox_uploader_dirname/dropbox_uploader.sh $HOME/$dbox_uploader_script_linkname
+    alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
    }
 
 
