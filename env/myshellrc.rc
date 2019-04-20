@@ -758,7 +758,12 @@ export EDITOR=vim
     dbox_uploader_dirname=".dbox-uploader"
     dbox_uploader_script_linkname=".dbox-uploader.sh"
     dbox_token_filename=".tokenfile"
-    git clone https://github.com/andreafabrizi/Dropbox-Uploader.git $HOME/$dbox_uploader_dirname
+    if file_present $HOME/$dbox_uploader_dirname
+     then
+        dbg_print "dropbox upload already installed"
+     else
+        git clone https://github.com/andreafabrizi/Dropbox-Uploader.git $HOME/$dbox_uploader_dirname
+    fi
     ln -s -f $HOME/$dbox_uploader_dirname/dropbox_uploader.sh $HOME/$dbox_uploader_script_linkname
     alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
    }
