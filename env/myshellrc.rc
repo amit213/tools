@@ -754,6 +754,7 @@ export EDITOR=vim
 
    ## add dbox-uploader
    function install_dbox_uploader_tool() {
+    sudo apt install git -y;
     dbox_uploader_dirname=".dbox-uploader"
     dbox_uploader_script_linkname=".dbox-uploader.sh"
     dbox_token_filename=".tokenfile"
