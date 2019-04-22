@@ -785,7 +785,7 @@ export EDITOR=vim
 
      if file_present $inputfile
       then
-         cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P`         
+         cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P &> /tmp/.ffsend_log.txt`         
          uploaded_fileurl=$(echo $cmdoutput | awk '{print $3}')
          uploaded_file_passphrase=$(echo $cmdoutput | cut -d ' ' -f 5-50)
 
@@ -810,16 +810,15 @@ export EDITOR=vim
      #z2=`curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key`
      z1="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
      z2="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)"
-     printf "\nFILEURL - $z1\n"
-     printf "\nPHRASE - $z2\n"
+     dbg_print "\nFILEURL - $z1\n"
+     dbg_print "\nPHRASE - $z2\n"
 
    }
 
    function ffsend_grab_the_file() {
     ffsend_set_stash_grab_params
     _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
-    ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y
-    
+    ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y &> /tmp/.ffsend_log.txt 
    }
 
 
