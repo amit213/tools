@@ -784,6 +784,7 @@ export EDITOR=vim
      keyvalue_urlholder_key="urlholder1"
      keyvalue_phraseholder_key="mangoberlinparis"
      ffsend_clipboard_param='--copy'
+     ffsend_install_tool
 
      if file_present $inputfile
       then
@@ -828,6 +829,7 @@ export EDITOR=vim
      keyvalue_phraseholder_key="$phraseholder_token$tagStr"
 
      ffsend_clipboard_param='--copy'
+     ffsend_install_tool
 
      if file_present $inputfile
       then
@@ -889,6 +891,7 @@ export EDITOR=vim
    }
 
    function ffsend_grab_the_file_for_itr() {
+    ffsend_install_tool
     ffsend_set_stash_grab_params_for_itr $1
     _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
     ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
@@ -896,6 +899,7 @@ export EDITOR=vim
    }
 
    function ffsend_grab_the_file() {
+    ffsend_install_tool
     ffsend_set_stash_grab_params
     _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
     ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
