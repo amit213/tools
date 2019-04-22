@@ -790,8 +790,8 @@ export EDITOR=vim
          #    echo ""
          #fi
 
-         curl -d $uploaded_fileurl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key
-         curl -d $uploaded_file_passphrase $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key
+         curl -d "$uploaded_fileurl $keyvalue"_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key
+         curl -d "$uploaded_file_passphrase" $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key
       else
          echo "Missing input file name. Or file not found."
      fi
