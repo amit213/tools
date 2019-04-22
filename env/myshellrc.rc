@@ -861,7 +861,6 @@ export EDITOR=vim
      dbg_print "\nPHRASE - $z2\n"
    }
 
-
    function create_file_stash_grab_bookmarks() {
      for i in {1..9}
      do
@@ -901,6 +900,19 @@ export EDITOR=vim
     _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
     ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
     printf "\n"
+   }
+   function ffsend_install_tool() {
+     ffsend_util="ffsend"
+     which $ffsend_util
+     retval=$?
+     if [ $retval -eq 0 ];
+       then
+          dbg_print "ffsend found installed. No action necessary."
+       else
+          echo ""
+          sudo apt install snapd -y;
+          sudo snap install $ffsend_util;
+     fi
    }
 
 
