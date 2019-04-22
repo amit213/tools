@@ -633,6 +633,8 @@ export EDITOR=vim
      alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
      #alias reloadenv='curl -s termbin.com/n2bc | bash'
      alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
+     alias gst='ffsend_stash_the_file'
+     alias grab='ffsend_grab_the_file'
      
    }
    # entry point for respective platforms.
