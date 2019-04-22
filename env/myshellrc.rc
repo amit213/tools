@@ -772,9 +772,9 @@ export EDITOR=vim
      inputfile=$1
      if file_present $inputfile
       then
-         cmdoutput=`ffsend upload $inputfile --copy -f --downloads 1 -y -P`
-         uploaded_fileurl = "echo $cmdoutput | awk '{print $3}'"
-         uploaded_file_passphrase = "echo $cmdoutput | cut -d ' ' -f 5-50"
+         cmdoutput=`ffsend upload $inputfile --copy -f --downloads 1 -y -P`         
+         uploaded_fileurl=$(printf $cmdoutput | awk '{print $3}')
+         uploaded_file_passphrase=$(echo $cmdoutput | cut -d ' ' -f 5-50)
 
          #openssl enc -d -aes-256-cbc -a -salt -in $inputfile -out plain.$filefrontname
          #retval=$?
