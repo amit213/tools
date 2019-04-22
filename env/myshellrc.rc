@@ -770,6 +770,11 @@ export EDITOR=vim
 
    function ffsend_stash_the_file() {
      inputfile=$1
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     keyvalue_urlholder_key="urlholder1"
+     keyvalue_phraseholder_key="mangoberlinparis"
+
      if file_present $inputfile
       then
          cmdoutput=`ffsend upload $inputfile --copy -f --downloads 1 -y -P`         
@@ -784,12 +789,17 @@ export EDITOR=vim
          # else
          #    echo ""
          #fi
+
+         curl -d '$uploaded_fileurl' $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key
+         curl -d '$uploaded_file_passphrase' $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key
       else
          echo "Missing input file name. Or file not found."
      fi
 
-     printf "$uploaded_fileurl\n"
-     printf "$uploaded_file_passphrase\n"
+     z1=$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)
+     z2=$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)
+     printf "\nFILEURL - $z1\n"
+     printf "\nPHRASE - $z2\n"
 
    }
 
