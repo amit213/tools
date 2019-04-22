@@ -796,8 +796,8 @@ export EDITOR=vim
          echo "Missing input file name. Or file not found."
      fi
 
-     z1=$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)
-     z2=$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)
+     z1=`curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key`
+     z2=`curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key`
      printf "\nFILEURL - $z1\n"
      printf "\nPHRASE - $z2\n"
 
