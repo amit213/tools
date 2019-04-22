@@ -768,6 +768,13 @@ export EDITOR=vim
     alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
    }
 
+   function ffsend_set_stash_grab_params() {
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     keyvalue_urlholder_key="urlholder1"
+     keyvalue_phraseholder_key="mangoberlinparis"
+   }
+
    function ffsend_stash_the_file() {
      inputfile=$1
      keyvalue_wwwservice="https://kvdb.io"
@@ -806,6 +813,13 @@ export EDITOR=vim
      printf "\nFILEURL - $z1\n"
      printf "\nPHRASE - $z2\n"
 
+   }
+
+   function ffsend_grab_the_file() {
+    ffsend_set_stash_grab_params
+    _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
+    ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y
+    
    }
 
 
