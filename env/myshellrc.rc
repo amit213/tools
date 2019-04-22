@@ -774,10 +774,11 @@ export EDITOR=vim
      keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
      keyvalue_urlholder_key="urlholder1"
      keyvalue_phraseholder_key="mangoberlinparis"
+     ffsend_clipboard_param='--copy'
 
      if file_present $inputfile
       then
-         cmdoutput=`ffsend upload $inputfile --copy -f --downloads 1 -y -P`         
+         cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P`         
          uploaded_fileurl=$(echo $cmdoutput | awk '{print $3}')
          uploaded_file_passphrase=$(echo $cmdoutput | cut -d ' ' -f 5-50)
 
