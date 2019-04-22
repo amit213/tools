@@ -815,7 +815,85 @@ export EDITOR=vim
      z2="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)"
      dbg_print "\nFILEURL - $z1\n"
      dbg_print "\nPHRASE - $z2\n"
+   }
 
+   function ffsend_stash_the_file_for_itr() {
+     inputfile=$2
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     tagStr=$1
+     urlholder_token="urlholder"
+     keyvalue_urlholder_key="$urlholder_token$tagStr"
+     phraseholder_token="mangoberlinparis"
+     keyvalue_phraseholder_key="$phraseholder_token$tagStr"
+
+     ffsend_clipboard_param='--copy'
+
+     if file_present $inputfile
+      then
+         #cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P >> /tmp/.ffsend_log.txt`         
+         cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P`
+         uploaded_fileurl=$(echo $cmdoutput | awk '{print $3}')
+         uploaded_file_passphrase=$(echo $cmdoutput | cut -d ' ' -f 5-50)
+
+         #openssl enc -d -aes-256-cbc -a -salt -in $inputfile -out plain.$filefrontname
+         #retval=$?
+         #if [ $retval -eq 0 ];
+         # then
+         #    echo "plain.$filefrontname created."
+         # else
+         #    echo ""
+         #fi
+
+         curl -d "$uploaded_fileurl" $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key
+         curl -d "$uploaded_file_passphrase" $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key
+         ##
+         ## checking
+      else
+         echo "Missing input file name. Or file not found."
+     fi
+
+     #z1=`curl "$keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key"`
+     #z2=`curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key`
+     z1="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
+     z2="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)"
+     dbg_print "\nFILEURL - $z1\n"
+     dbg_print "\nPHRASE - $z2\n"
+   }
+
+
+   function create_file_stash_grab_bookmarks() {
+     for i in {1..9}
+     do
+       itr="$i"
+       gstash="gst$itr"
+       grab="g$itr"       
+       tag="tmp$itr"
+       aliasstr="alias '$gstash=ffsend_stash_the_file_for_itr $tag'"
+       dbg_print $aliasstr
+       alias $gstash="ffsend_stash_the_file_for_itr $tag"
+       alias $grab="ffsend_grab_the_file_for_itr $tag"
+     done
+   }
+
+   function ffsend_set_stash_grab_params_for_itr() {
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     #keyvalue_urlholder_key="urlholder1"
+     #keyvalue_phraseholder_key="mangoberlinparis"
+     tagStr=$1
+     urlholder_token="urlholder"
+     keyvalue_urlholder_key="$urlholder_token$tagStr"
+     phraseholder_token="mangoberlinparis"
+     keyvalue_phraseholder_key="$phraseholder_token$tagStr"
+
+   }
+
+   function ffsend_grab_the_file_for_itr() {
+    ffsend_set_stash_grab_params_for_itr $1
+    _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
+    ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
+    printf "\n"
    }
 
    function ffsend_grab_the_file() {
