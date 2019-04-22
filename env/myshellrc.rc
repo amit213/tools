@@ -622,6 +622,7 @@ export EDITOR=vim
      alias csc="build_run_cscope $1"  #runs cscope and ctags on source file tree.
      alias hdump="history >> $HOME/$historydumpfile"
      create_dir_bookmarks
+     create_file_stash_grab_bookmarks
      alias vagupdigi='vagrant up --provider=digital_ocean'
      alias vaguprack='vagrant up --provider=rackspace'
      alias vagupaws='vagrant up --provider=aws'
@@ -716,7 +717,6 @@ export EDITOR=vim
     clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
     printf "$clipboardcontent\n"
-
    }
 
    #create dynamic alias entries.
@@ -918,8 +918,6 @@ export EDITOR=vim
           sudo snap install $ffsend_util;
      fi
    }
-
-
 
 ## ==========
  
