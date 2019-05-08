@@ -894,7 +894,7 @@ export EDITOR=vim
     ffsend_install_tool
     ffsend_set_stash_grab_params_for_itr $1
     _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
-    ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
+    sudo ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
     printf "\n"
    }
 
@@ -914,8 +914,10 @@ export EDITOR=vim
           dbg_print "ffsend found installed. No action necessary."
        else
           echo ""
-          sudo apt install snapd -y;
-          sudo snap install $ffsend_util;
+          #sudo apt install snapd -y;
+          #sudo snap install $ffsend_util;
+          sudo wget "https://github.com/timvisee/ffsend/releases/download/v0.2.46/ffsend-v0.2.46-linux-x64-static" -O /usr/local/bin/ffsend
+          sudo chmod +x /usr/local/bin/ffsend
      fi
    }
    function bootstrap_ubuntu_with_vmuser() {
