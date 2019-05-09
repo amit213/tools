@@ -927,6 +927,7 @@ export EDITOR=vim
 
    function prep_ubuntu_system_with_basic_tools() {
      sudo apt-get update -y; sudo apt install git screen wget curl finger nload -y;
+     sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y;
      sudo pip install glances;
    }
 
