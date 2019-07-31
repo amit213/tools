@@ -631,7 +631,8 @@ export EDITOR=vim
      alias dbox-uploader-install='install_dbox_uploader_tool'
      set_distro_name
      alias hs=hg
-     alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+     #alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+     alias myssh='timeout 4 ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
      #alias reloadenv='curl -s termbin.com/n2bc | bash'
      alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
      alias gst='ffsend_stash_the_file'
