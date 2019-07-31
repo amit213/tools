@@ -632,7 +632,9 @@ export EDITOR=vim
      set_distro_name
      alias hs=hg
      #alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-     alias myssh='timeout 4 ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
+     alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
+     alias mysshtout='timeout 4 ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
+    
      #alias reloadenv='curl -s termbin.com/n2bc | bash'
      alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
      alias gst='ffsend_stash_the_file'
