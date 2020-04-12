@@ -637,6 +637,7 @@ export EDITOR=vim
     
      #alias reloadenv='curl -s termbin.com/n2bc | bash'
      alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
+     alias reloadenvz='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
      alias gst='ffsend_stash_the_file'
      alias grab='ffsend_grab_the_file'
      
