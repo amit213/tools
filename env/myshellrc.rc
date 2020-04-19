@@ -642,6 +642,8 @@ export EDITOR=vim
      alias reloadenvz='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
      alias gst='ffsend_stash_the_file'
      alias grab='ffsend_grab_the_file'
+     alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
+     
      
    }
    # entry point for respective platforms.
