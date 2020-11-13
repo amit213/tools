@@ -628,6 +628,7 @@ export EDITOR=vim
      set_distro_name
      alias hs=hg
      alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+     alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
