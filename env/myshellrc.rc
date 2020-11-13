@@ -172,6 +172,7 @@ export EDITOR=vim
         history | grep -i $* ;
      fi
    }
+
    are_we_online() {
     wget -q --tries=2 --timeout=1 --spider http://google.com
     if [[ $? -eq 0 ]]; then
@@ -565,6 +566,7 @@ export EDITOR=vim
      dbg_print "summary type [$1]"
      if [ "$1" == "help" ]
      then
+         printf "Environment version v1.1"
          echo "total number of alias :"`alias | wc -l`""
          #dns
          echo "external ip:" `myip2`
@@ -620,15 +622,34 @@ export EDITOR=vim
      alias csc="build_run_cscope $1"  #runs cscope and ctags on source file tree.
      alias hdump="history >> $HOME/$historydumpfile"
      create_dir_bookmarks
+     create_file_stash_grab_bookmarks
      alias vagupdigi='vagrant up --provider=digital_ocean'
      alias vaguprack='vagrant up --provider=rackspace'
      alias vagupaws='vagrant up --provider=aws'
      alias vag='vagrant status'
      alias tpass='gen_tmp_pass'
+     alias dbox-uploader-install='install_dbox_uploader_tool'
      set_distro_name
      alias hs=hg
+
      alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
      alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
+
+     #alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+     alias myssh='ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
+     alias mysshtout='timeout 4 ssh -C -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
+     alias dlmp3music='youtube-dl  --audio-quality 0 --prefer-ffmpeg --extract-audio --audio-format mp3 --audio-quality 320k'
+     alias dlmp4="youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4"
+     alias dlmp3book='youtube-dl  --audio-quality 0 --prefer-ffmpeg --extract-audio --audio-format mp3 --audio-quality 100k'
+    
+     #alias reloadenv='curl -s termbin.com/n2bc | bash'
+     alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
+     alias reloadenvz='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
+     alias gst='ffsend_stash_the_file'
+     alias grab='ffsend_grab_the_file'
+     alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
+     
+     
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
@@ -640,6 +661,287 @@ export EDITOR=vim
      then
       set_osx_conf
      fi
+   }
+
+   function saveclip1() {
+    onlineclipboardname="clip1"
+    keyvaluebucket="a796f459"
+    declare localParam=${*:-$(</dev/stdin)};
+    dbg_print "input parameters are: \n $localParam \n"
+    termbinurl=$(printf "$localParam" | nc termbin.com 9999)
+    termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
+    dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
+    curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
+   }
+   
+   ## using the termbin service and keyvalue.xyz cloud service
+   function c1() {
+    onlineclipboardname="clip1"
+    keyvaluebucket="a796f459"
+    clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
+    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
+    printf "$clipboardcontent\n"
+   }
+
+
+   function saveclip2() {
+    onlineclipboardname="clip2"
+    keyvaluebucket="02fbc09c"
+    declare localParam=${*:-$(</dev/stdin)};
+    dbg_print "input parameters are: \n $localParam \n"
+    termbinurl=$(printf "$localParam" | nc termbin.com 9999)
+    termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
+    dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
+    curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
+   }
+   
+   ## using the termbin service and keyvalue.xyz cloud service
+   function c2() {
+    onlineclipboardname="clip2"
+    keyvaluebucket="02fbc09c"
+    clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
+    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)
+    printf "$clipboardcontent\n"
+   }
+
+   function catenvfile() {
+    #printf "$(curl -s -L bit.ly/sh213) \n Current Env."
+    curl -s -L bit.ly/sh213;
+
+   }
+   function pingcheck() {
+    printf "\nPingCheck is a PASS. @@@ *** VERY PASS v1.7 seven \n"
+   }
+
+   function save_to_clip() {
+    onlineclipboardname=$1
+    keyvaluebucket=$2
+    declare localParam=${*:-$(</dev/stdin)};
+    dbg_print "input parameters are: \n $localParam \n"
+    termbinurl=$(printf "$localParam" | nc termbin.com 9999)
+    termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
+    dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
+    curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
+   }
+
+   function print_clip() {
+    onlineclipboardname=$1
+    keyvaluebucket=$2
+    clipboardtoken=$(curl -s https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname)
+    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
+    printf "$clipboardcontent\n"
+   }
+
+   #create dynamic alias entries.
+   # 8 bookmarks.
+   function create_clipboard_bookmarks() {
+     bucketArray=(e5a69500 eb08b43a 78325b8b)
+     for i in {3..5}
+     do
+       itr="$i"
+       save="saveclip$itr"       
+       go="c$itr"       
+       tag="tmp$itr"
+       clipboardname="clip$itr"
+       #aliasstr="alias '$save=save_to_clip $clipboardname ${bucketArray[3-$itr]}'"
+       aliasstr="alias '$save=save_to_clip $clipboardname ${bucketArray[0]}'"
+       dbg_print $aliasstr
+       #alias $save="save_to_clip $clipboardname ${bucketArray[3-$itr]}"
+       #alias $go="print_clip $clipboardname ${bucketArray[3-$itr]}"
+       alias $save="save_to_clip $clipboardname ${bucketArray[0]}"
+       alias $go="print_clip $clipboardname ${bucketArray[0]}"
+     done     
+   }
+
+   ## prep-newvm-without-docker
+   function prep_newVM_without_docker() {
+       printf " sudo apt-get update -y; sudo apt install curl ntpdate python-pip vim -y; sudo pip install docker-compose; sudo echo \"vmuser ALL=(ALL) NOPASSWD:ALL\" > /etc/sudoers.d/50-vmuser;  sudo groupadd -g 1050 vmuser; sudo useradd -u 1050 -g 1050 -ms /bin/bash vmuser; runuser -l vmuser -c 'cd; mkdir -p ~/.ssh; cd ~/.ssh; echo \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP9kAi3cjkrdA3uMI5DglxRsRfcBq02i5/lRVup2E/ndOBBfbkl6USVpl+QWxxnTMsKxu2MXcOAHwTUY5b53n8AzXtV/VPatndQms5IgP11VsTsiU5mudwPf/s81eQfutYn9haD67wF4Azngdv/vUrFO2a4VMwZjSqJ+RAO1Hbkm4tWqeXjZo3QaErQg411zG6pvWdxLsGzvTc+SzY+Igft1Wx4NCTEgDv+HyEFSDYcPx9SGc9iBk2tOxALpS/htVpmSF+MKnu8ToIRn0ngunE2bi8cDpBPFO30JCa+V+eb4zEh6VbUXB97qBLjX6gUHycAM2sBWoKCR8e61tnsC27 mbuser@bigrock.local\" >> authorized_keys; curl icanhazip.com ';   \n"
+   }
+   ## prepnode execution
+   function prepnode() {
+    sudo apt-get update -y; sudo apt install curl ntpdate python-pip vim -y; sudo pip install docker-compose; sudo echo "vmuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50-vmuser;  sudo groupadd -g 1050 vmuser; sudo useradd -u 1050 -g 1050 -ms /bin/bash vmuser; runuser -l vmuser -c 'cd; mkdir -p ~/.ssh; cd ~/.ssh; echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP9kAi3cjkrdA3uMI5DglxRsRfcBq02i5/lRVup2E/ndOBBfbkl6USVpl+QWxxnTMsKxu2MXcOAHwTUY5b53n8AzXtV/VPatndQms5IgP11VsTsiU5mudwPf/s81eQfutYn9haD67wF4Azngdv/vUrFO2a4VMwZjSqJ+RAO1Hbkm4tWqeXjZo3QaErQg411zG6pvWdxLsGzvTc+SzY+Igft1Wx4NCTEgDv+HyEFSDYcPx9SGc9iBk2tOxALpS/htVpmSF+MKnu8ToIRn0ngunE2bi8cDpBPFO30JCa+V+eb4zEh6VbUXB97qBLjX6gUHycAM2sBWoKCR8e61tnsC27 mbuser@bigrock.local" >> authorized_keys; curl icanhazip.com ';   
+   }
+
+   ## add_ffmpeg_tools()
+   function add_ffmpeg_tools() {
+    sudo apt install chromium-codecs-ffmpeg ffmpeg ffmpeg-doc ffmpegthumbs libffmpegthumbnailer-dev libffms2-4 libxine2-ffmpeg moc-ffmpeg-plugin -y;
+   }
+
+   ## add dbox-uploader
+   function install_dbox_uploader_tool() {
+    sudo apt install git -y;
+    dbox_uploader_dirname=".dbox-uploader"
+    dbox_uploader_script_linkname=".dbox-uploader.sh"
+    dbox_token_filename=".tokenfile"
+    if file_present $HOME/$dbox_uploader_dirname
+     then
+        dbg_print "dropbox upload already installed"
+     else
+        git clone https://github.com/andreafabrizi/Dropbox-Uploader.git $HOME/$dbox_uploader_dirname
+    fi
+    ln -s -f $HOME/$dbox_uploader_dirname/dropbox_uploader.sh $HOME/$dbox_uploader_script_linkname
+    alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
+   }
+
+   function ffsend_set_stash_grab_params() {
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     keyvalue_urlholder_key="urlholder1"
+     keyvalue_phraseholder_key="mangoberlinparis"
+   }
+
+   function ffsend_stash_the_file() {
+     inputfile=$1
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     keyvalue_urlholder_key="urlholder1"
+     keyvalue_phraseholder_key="mangoberlinparis"
+     ffsend_clipboard_param='--copy'
+     ffsend_install_tool
+
+     if file_present $inputfile
+      then
+         #cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P >> /tmp/.ffsend_log.txt`         
+         cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P`
+         uploaded_fileurl=$(echo $cmdoutput | awk '{print $3}')
+         uploaded_file_passphrase=$(echo $cmdoutput | cut -d ' ' -f 5-50)
+
+         #openssl enc -d -aes-256-cbc -a -salt -in $inputfile -out plain.$filefrontname
+         #retval=$?
+         #if [ $retval -eq 0 ];
+         # then
+         #    echo "plain.$filefrontname created."
+         # else
+         #    echo ""
+         #fi
+
+         curl -d "$uploaded_fileurl" $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key
+         curl -d "$uploaded_file_passphrase" $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key
+         ##
+         ## checking
+      else
+         echo "Missing input file name. Or file not found."
+     fi
+
+     #z1=`curl "$keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key"`
+     #z2=`curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key`
+     z1="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
+     z2="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)"
+     dbg_print "\nFILEURL - $z1\n"
+     dbg_print "\nPHRASE - $z2\n"
+   }
+
+   function ffsend_stash_the_file_for_itr() {
+     inputfile=$2
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     tagStr=$1
+     urlholder_token="urlholder"
+     keyvalue_urlholder_key="$urlholder_token$tagStr"
+     phraseholder_token="mangoberlinparis"
+     keyvalue_phraseholder_key="$phraseholder_token$tagStr"
+
+     ffsend_clipboard_param='--copy'
+     ffsend_install_tool
+
+     if file_present $inputfile
+      then
+         #cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P >> /tmp/.ffsend_log.txt`         
+         cmdoutput=`ffsend upload $inputfile -f --downloads 1 -y -P`
+         uploaded_fileurl=$(echo $cmdoutput | awk '{print $3}')
+         uploaded_file_passphrase=$(echo $cmdoutput | cut -d ' ' -f 5-50)
+
+         #openssl enc -d -aes-256-cbc -a -salt -in $inputfile -out plain.$filefrontname
+         #retval=$?
+         #if [ $retval -eq 0 ];
+         # then
+         #    echo "plain.$filefrontname created."
+         # else
+         #    echo ""
+         #fi
+
+         curl -d "$uploaded_fileurl" $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key
+         curl -d "$uploaded_file_passphrase" $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key
+         ##
+         ## checking
+      else
+         echo "Missing input file name. Or file not found."
+     fi
+
+     #z1=`curl "$keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key"`
+     #z2=`curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key`
+     z1="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
+     z2="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)"
+     dbg_print "\nFILEURL - $z1\n"
+     dbg_print "\nPHRASE - $z2\n"
+   }
+
+   function create_file_stash_grab_bookmarks() {
+     for i in {1..9}
+     do
+       itr="$i"
+       gstash="gst$itr"
+       grab="grab$itr"       
+       tag="tmp$itr"
+       aliasstr="alias '$gstash=ffsend_stash_the_file_for_itr $tag'"
+       dbg_print $aliasstr
+       alias $gstash="ffsend_stash_the_file_for_itr $tag"
+       alias $grab="ffsend_grab_the_file_for_itr $tag"
+     done
+   }
+
+   function ffsend_set_stash_grab_params_for_itr() {
+     keyvalue_wwwservice="https://kvdb.io"
+     keyvalue_bucket_id="UmWKVKBU1GyKwT4iThRKtP"
+     #keyvalue_urlholder_key="urlholder1"
+     #keyvalue_phraseholder_key="mangoberlinparis"
+     tagStr=$1
+     urlholder_token="urlholder"
+     keyvalue_urlholder_key="$urlholder_token$tagStr"
+     phraseholder_token="mangoberlinparis"
+     keyvalue_phraseholder_key="$phraseholder_token$tagStr"
+
+   }
+
+   function ffsend_grab_the_file_for_itr() {
+    ffsend_install_tool
+    ffsend_set_stash_grab_params_for_itr $1
+    _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
+    sudo ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
+    printf "\n"
+   }
+
+   function ffsend_grab_the_file() {
+    ffsend_install_tool
+    ffsend_set_stash_grab_params
+    _tmp_ffsend_grab_url="$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_urlholder_key)"
+    ffsend download $_tmp_ffsend_grab_url -p "$(curl $keyvalue_wwwservice/$keyvalue_bucket_id/$keyvalue_phraseholder_key)" -y >> /tmp/.ffsend_log.txt
+    printf "\n"
+   }
+   function ffsend_install_tool() {
+     ffsend_util="ffsend"
+     which $ffsend_util
+     retval=$?
+     if [ $retval -eq 0 ];
+       then
+          dbg_print "ffsend found installed. No action necessary."
+       else
+          echo ""
+          #sudo apt install snapd -y;
+          #sudo snap install $ffsend_util;
+          sudo wget "https://github.com/timvisee/ffsend/releases/download/v0.2.46/ffsend-v0.2.46-linux-x64-static" -O /usr/local/bin/ffsend
+          sudo chmod +x /usr/local/bin/ffsend
+     fi
+   }
+
+   function bootstrap_ubuntu_with_vmuser() {
+    sudo apt-get update -y; sudo apt-get install iputils-ping curl ntpdate python-pip vim --fix-missing -y; sudo pip install docker-compose; sudo echo "vmuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/50-vmuser;  sudo groupadd -g 1050 vmuser; sudo useradd -u 1050 -g 1050 -ms /bin/bash vmuser; sudo /sbin/runuser -l vmuser -c 'cd; mkdir -p ~/.ssh; cd ~/.ssh; echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP9kAi3cjkrdA3uMI5DglxRsRfcBq02i5/lRVup2E/ndOBBfbkl6USVpl+QWxxnTMsKxu2MXcOAHwTUY5b53n8AzXtV/VPatndQms5IgP11VsTsiU5mudwPf/s81eQfutYn9haD67wF4Azngdv/vUrFO2a4VMwZjSqJ+RAO1Hbkm4tWqeXjZo3QaErQg411zG6pvWdxLsGzvTc+SzY+Igft1Wx4NCTEgDv+HyEFSDYcPx9SGc9iBk2tOxALpS/htVpmSF+MKnu8ToIRn0ngunE2bi8cDpBPFO30JCa+V+eb4zEh6VbUXB97qBLjX6gUHycAM2sBWoKCR8e61tnsC27 vmuser@vmuser.local" >> authorized_keys; echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC77XmKj31MSBlZIWSDEiRmoZyd0q78AIbm2Xw3f7x3ZGBT+HtNrFVu42XeC8BhfUAmd54LaBZBMcM4Hav/Nuhb9XnWs4MfdRRcSIwsCjf9+1OQnmXt2o3ACYXS4wL86ypY7OPMNJWUjGtkh/798jk8LNi9zl0qRK88O7HrG3i88w== vmuser@dhcp-10-26-113-56" >> ~/.ssh/authorized_keys; curl icanhazip.com ';
+   }
+
+   function prep_ubuntu_system_with_basic_tools() {
+     sudo apt-get update -y; sudo apt install git screen wget curl finger nload -y;
+     sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y;
+     sudo pip install glances;
    }
 
 ## ==========
