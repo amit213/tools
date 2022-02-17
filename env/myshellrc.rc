@@ -673,6 +673,28 @@ export EDITOR=vim
     dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
     curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
    }
+
+   function saveclip9() {
+    onlineclipboardname="clip9"
+    keyvaluebucket="a796f459"
+    declare localParam=${*:-$(</dev/stdin)};
+    dbg_print "input parameters are: \n $localParam \n"
+    termbinurl=$(printf "$localParam" | nc termbin.com 9999)
+    termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
+    dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
+    ##curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
+    curl -s -X PUT https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket --data "$termbintoken"
+   }
+
+
+   function c9() {
+    onlineclipboardname="clip9"
+    keyvaluebucket="a796f459"
+    clipboardtoken=$(curl -s https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d)
+    clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
+    printf "$clipboardcontent\n"
+   }
+
    
    ## using the termbin service and keyvalue.xyz cloud service
    function c1() {
