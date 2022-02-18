@@ -11,5 +11,5 @@ sudo apt-get update -y;
 sudo ntpdate -s time.nist.gov;
 sudo timedatectl set-timezone America/Los_Angeles;
 # - sudo sed -i "2i`hostname -I | awk '{print $1}'` `cat /etc/hostname`" /etc/hosts
-#curl -fsSL get.docker.com | sh;
+curl -fsSL get.docker.com | sh;
 
