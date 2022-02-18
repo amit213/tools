@@ -16,3 +16,4 @@ sudo sed -i "2i`hostname -I | awk '{print $1}'` `cat /etc/hostname`" /etc/hosts
 echo ""alias reloadenv=\''source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'\'"" >> /home/vmuser/.bashrc
 echo "disable_vmware_customization: false" >> /etc/cloud/cloud.cfg
 echo "custom cloud config v0.501 `date`" >> /tmp/foopack.txt
+vmtoolsd --cmd "info-get guestinfo.foo" >> /tmp/foopack.txt
