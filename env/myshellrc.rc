@@ -369,6 +369,7 @@ export EDITOR=vim
      EDITOR=vim
      alias wifitog=toggle_mac_wifi
      export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
+
    }
    #get the public ip
    function myip {
@@ -648,6 +649,7 @@ export EDITOR=vim
      alias gst='ffsend_stash_the_file'
      alias grab='ffsend_grab_the_file'
      alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
+     alias gssh='goto_ssh_connect_to_local_vms'
      
      
    }
@@ -964,6 +966,11 @@ export EDITOR=vim
      sudo apt-get update -y; sudo apt install git screen wget curl finger nload -y;
      sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y;
      sudo pip install glances;
+   }
+
+   function goto_ssh_connect_to_local_vms() {
+     vm_hostname=$1
+     myssh -i /Users/mbuser/codebase/mytools/vagrantConfigs/common/keypairs/node11-service.key "vmuser@$vm_hostname.dns.block51.net";
    }
 
 ## ==========
