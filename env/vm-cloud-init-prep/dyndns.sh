@@ -43,7 +43,7 @@ while ( true ); do
         continue
     fi
 
-    echo "Found IP address $ip"
+    echo "Found IP address v0.2 $ip"
 
     if [[ -n $ip ]]; then
         # disable glob expansion
