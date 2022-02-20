@@ -37,13 +37,13 @@ while ( true ); do
         test -n "$ip" && break
     done
 
-    echo "Found IP address $ip"
-
     if [[ "${use_internal_private_ip}" == "true" ]]; then :
-        ip="5.6.7.8"
+        ip=$(hostname -I | awk '{print $1}')
     else :
         continue
     fi
+
+    echo "Found IP address $ip"
 
     if [[ -n $ip ]]; then
         # disable glob expansion
