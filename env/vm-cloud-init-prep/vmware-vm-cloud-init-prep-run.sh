@@ -11,6 +11,7 @@ function update_digiocean_dns() {
     NAME=$(cat /etc/hostname)
     SLEEP_INTERVAL=2
     REMOVE_DUPLICATES="true"
+    USE_INTERNAL_PRIVATE_IP="true"
     curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/dyndns.sh | DIGITALOCEAN_TOKEN= \
                                     $(curl -s https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket \
                                     | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d) \
