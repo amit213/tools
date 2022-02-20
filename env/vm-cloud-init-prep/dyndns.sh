@@ -3,7 +3,8 @@
 api_host="https://api.digitalocean.com/v2"
 sleep_interval=${SLEEP_INTERVAL:-300}
 remove_duplicates=${REMOVE_DUPLICATES:-"false"}
-use_internal_private_ip=${USE_INTERNAL_PRIVATE_IP:-"false"}
+
+#use_internal_private_ip=${USE_INTERNAL_PRIVATE_IP:-"false"}
 
 
 services=(
@@ -38,7 +39,7 @@ while ( true ); do
     done
 
     echo "Found IP address $ip"
-    
+
     # if [[ "${use_internal_private_ip}" == "true" ]]; then :
     #     ip="5.6.7.8"
     # else :
