@@ -38,11 +38,12 @@ while ( true ); do
     done
 
     echo "Found IP address $ip"
-    if [[ "${use_internal_private_ip}" == "true" ]]; then :
-        ip="5.6.7.8"
-    else :
-        continue
-    fi
+    
+    # if [[ "${use_internal_private_ip}" == "true" ]]; then :
+    #     ip="5.6.7.8"
+    # else :
+    #     continue
+    # fi
 
     if [[ -n $ip ]]; then
         # disable glob expansion
