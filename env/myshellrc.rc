@@ -650,6 +650,7 @@ export EDITOR=vim
      alias grab='ffsend_grab_the_file'
      alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
      alias gssh='goto_ssh_connect_to_local_vms'
+     alias dnsselfip='dns_selfregister_ip_with_digi'
      
      
    }
