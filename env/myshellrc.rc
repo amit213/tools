@@ -983,7 +983,12 @@ export EDITOR=vim
                                     NAME=$(cat /etc/hostname) SLEEP_INTERVAL=2 REMOVE_DUPLICATES="true" USE_INTERNAL_PRIVATE_IP="true" \
                                     bash
    }
-
+   function install_microk8s_ubuntu() {
+    sudo snap install microk8s --classic;
+    sudo usermod -a -G microk8s $USER;
+    sudo chown -f -R $USER ~/.kube
+    newgrp microk8s
+   }
 ## ==========
  
 set_os_specific_conf $osname_lowercase
