@@ -989,6 +989,20 @@ export EDITOR=vim
     sudo chown -f -R $USER ~/.kube
     newgrp microk8s
    }
+
+   function install_webmin_ubuntu() {
+    sudo apt update -y;
+    sudo apt upgrade -y;
+    sudo apt install software-properties-common apt-transport-https -y;
+    sudo wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -;
+    sudo add-apt-repository "deb [arch=amd64] http://download.webmin.com/download/repository sarge contrib";
+    sudo apt-get update -y;
+    sudo apt install webmin -y;
+    sudo systemctl status webmin;
+    sudo dpkg -l | grep webmin;
+
+   }
+
 ## ==========
  
 set_os_specific_conf $osname_lowercase
