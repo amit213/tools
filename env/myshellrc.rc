@@ -653,6 +653,7 @@ export EDITOR=vim
      alias dboxcli=' $HOME/$dbox_uploader_script_linkname -f $HOME/$dbox_token_filename -s -p -k -h'
      alias gssh='goto_ssh_connect_to_local_vms'
      alias dnsselfip='dns_selfregister_ip_with_digi'
+     alias gssh-user='goto_ssh_connect_to_vms_with_customuserid'
      
      
    }
@@ -975,6 +976,13 @@ export EDITOR=vim
      vm_hostname=$1
      myssh -i /Users/mbuser/codebase/mytools/vagrantConfigs/common/keypairs/node11-service.key "vmuser@$vm_hostname.dns.block51.net";
    }
+
+   function goto_ssh_connect_to_vms_with_customuserid() {
+     vm_hostname=$1
+     vm_userid=$2
+     myssh -i /Users/mbuser/codebase/mytools/vagrantConfigs/common/keypairs/node11-service.key "$vm_userid@$vm_hostname.dns.block51.net";
+   }
+
 
    function dns_selfregister_ip_with_digi() {
     sudo apt install jq -y; keyvaluebucket="YmVzdHRva2VuMzkzOTJ4d3d3"; 
