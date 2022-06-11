@@ -1017,6 +1017,14 @@ export EDITOR=vim
 
    }
 
+   function install_wpcli_ubuntu() {
+    sudo apt-get update -y;
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar;
+    chmod +x wp-cli.phar;
+    sudo mv wp-cli.phar /usr/local/bin/wp;
+
+   }
+
 ## ==========
  
 set_os_specific_conf $osname_lowercase
