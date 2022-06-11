@@ -654,7 +654,7 @@ export EDITOR=vim
      alias gssh='goto_ssh_connect_to_local_vms'
      alias dnsselfip='dns_selfregister_ip_with_digi'
      alias gssh-user='goto_ssh_connect_to_vms_with_customuserid'
-     alias gssh-runcloud='goto_ssh_connect_to_vms_with_customuserid $1 runcloud'
+     alias gssh-runcloud='goto_ssh_connect_to_vms_with_customuserid $1  runcloud'
      
      
    }
