@@ -1030,7 +1030,9 @@ export EDITOR=vim
    }
 
    function install_guacamole_ubuntu() {
+
      printf "git clone https://github.com/boschkundendienst/guacamole-docker-compose.git";
+     
    }
 
 
