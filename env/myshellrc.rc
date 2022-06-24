@@ -446,6 +446,9 @@ export EDITOR=vim
      python -m SimpleHTTPServer ${1:-16000} 
    }
 
+   function run_web_server3() {
+     python3 -m http.server 2020
+   }
 
    ## generates a pdf copy of the the man page and loads 
    #  it in a preview app.
@@ -1027,7 +1030,7 @@ export EDITOR=vim
    }
 
    function install_guacamole_ubuntu() {
-     printf "git clone https://github.com/boschkundendienst/guacamole-docker-compose.git
+     printf "git clone https://github.com/boschkundendienst/guacamole-docker-compose.git";
    }
 
 
