@@ -442,13 +442,10 @@ export EDITOR=vim
       echo "previous installation detected."
      fi
    }
-   run_web_server() {      
+   function run_web_server() {      
      python -m SimpleHTTPServer ${1:-16000} 
    }
 
-   function run_web_server3() {
-     python3 -m http.server 2020
-   }
 
    ## generates a pdf copy of the the man page and loads 
    #  it in a preview app.
@@ -1032,6 +1029,7 @@ export EDITOR=vim
    function install_guacamole_ubuntu() {
      printf "git clone https://github.com/boschkundendienst/guacamole-docker-compose.git
    }
+
 
 
 
