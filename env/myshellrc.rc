@@ -446,6 +446,10 @@ export EDITOR=vim
      python -m SimpleHTTPServer ${1:-16000} 
    }
 
+   function run_web_server3() {
+     python3 -m http.server 2020
+   }
+
    ## generates a pdf copy of the the man page and loads 
    #  it in a preview app.
    xman() {
@@ -1024,6 +1028,12 @@ export EDITOR=vim
     sudo mv wp-cli.phar /usr/local/bin/wp;
     wp --info;
    }
+
+   function install_guacamole_ubuntu() {
+     printf "git clone https://github.com/boschkundendienst/guacamole-docker-compose.git
+   }
+
+
 
 ## ==========
  
