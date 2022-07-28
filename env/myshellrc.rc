@@ -1043,6 +1043,10 @@ export EDITOR=vim
     curl -fsSL https://tailscale.com/install.sh | sh;
    }
 
+   function install_docker_engine() {
+    curl -fsSL get.docker.com | sh;
+   }
+
 
 ## ==========
  
