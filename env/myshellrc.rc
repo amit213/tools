@@ -1047,6 +1047,11 @@ export EDITOR=vim
     curl -fsSL get.docker.com | sh;
    }
 
+   function git_set_commit_env() {
+    git config --global user.email "amit.regular@outlook.com";
+    git config --global user.name "amit213";
+   }
+
 
 ## ==========
  
