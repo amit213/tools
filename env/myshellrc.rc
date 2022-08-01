@@ -681,7 +681,7 @@ export EDITOR=vim
     termbinurl=$(printf "$localParam" | nc termbin.com 9999)
     termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
     dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
-    curl -s -X PUT https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket --data "$termbintoken"
+    curl -s -X PUT -u "keyvaluedbuser:nj,u*u77-p*K:P3z2-yRLCTC+1b6161S" https://keyvaluedb-publicapp.gcnode02.dns.block51.net/v1/kv/$keyvaluebucket --data "$termbintoken"
    }
 
    function saveclip9() {
