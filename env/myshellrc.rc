@@ -693,14 +693,14 @@ export EDITOR=vim
     termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
     dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
     ##curl -s -X POST https://api.keyvalue.xyz/$keyvaluebucket/$onlineclipboardname/$termbintoken;
-    curl -s -X PUT https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket --data "$termbintoken"
+    curl -s -X PUT -u "keyvaluedbuser:nj,u*u77-p*K:P3z2-yRLCTC+1b6161S" https://keyvaluedb-publicapp.gcnode02.dns.block51.net/v1/kv/$keyvaluebucket --data "$termbintoken"
    }
 
 
    function c9() {
     onlineclipboardname="clip9"
     keyvaluebucket="6bGi6UncEf6L"
-    clipboardtoken=$(curl -s https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d)
+    clipboardtoken=$(curl -s -u "keyvaluedbuser:nj,u*u77-p*K:P3z2-yRLCTC+1b6161S" https://keyvaluedb-publicapp.gcnode02.dns.block51.net/v1/kv/$keyvaluebucket | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
     printf "$clipboardcontent\n"
    }
@@ -724,14 +724,14 @@ export EDITOR=vim
     termbinurl=$(printf "$localParam" | nc termbin.com 9999)
     termbintoken=$(printf $termbinurl | awk -F/ '{print $4}')
     dbg_print "\n termbinurl=$termbinurl \n termbintoken=$termbintoken"
-    curl -s -X PUT https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket --data "$termbintoken"
+    curl -s -X PUT -u "keyvaluedbuser:nj,u*u77-p*K:P3z2-yRLCTC+1b6161S" https://keyvaluedb-publicapp.gcnode02.dns.block51.net/v1/kv/$keyvaluebucket --data "$termbintoken"
    }
    
    ## using the termbin service and keyvalue.xyz cloud service
    function c2() {
     onlineclipboardname="clip2"
     keyvaluebucket="02fbc09c"
-    clipboardtoken=$(curl -s https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d)
+    clipboardtoken=$(curl -s -u "keyvaluedbuser:nj,u*u77-p*K:P3z2-yRLCTC+1b6161S" https://keyvaluedb-publicapp.gcnode02.dns.block51.net/v1/kv/$keyvaluebucket | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)
     printf "$clipboardcontent\n"
    }
