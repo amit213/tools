@@ -710,7 +710,7 @@ export EDITOR=vim
    function c1() {
     onlineclipboardname="clip1"
     keyvaluebucket="a796f459"
-    clipboardtoken=$(curl -s https://test-consul.dir.block51.net/v1/kv/$keyvaluebucket | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d)
+    clipboardtoken=$(curl -s -u "keyvaluedbuser:nj,u*u77-p*K:P3z2-yRLCTC+1b6161S" https://keyvaluedb-publicapp.gcnode02.dns.block51.net/v1/kv/$keyvaluebucket | sed 's/[][]//g' | python3 -c "import sys, json; print(json.load(sys.stdin)['Value'])" | base64 -d)
     clipboardcontent=$(curl -s termbin.com/$clipboardtoken)    
     printf "$clipboardcontent\n"
    }
