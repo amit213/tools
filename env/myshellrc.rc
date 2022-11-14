@@ -1051,6 +1051,14 @@ export EDITOR=vim
     git config --global user.email "amit.regular@outlook.com";
     git config --global user.name "amit213";
    }
+   function reset_file_perms() {
+    find . -type f -exec chmod 644 {} \;
+   }
+   function reset_dir_perms() {
+    find . -type d -exec chmod 755 {} \;
+   }
+
+
 
 
 ## ==========
