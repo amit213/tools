@@ -17,6 +17,12 @@ function install_system_apps() {
 
 }
 
+function install_cronicle_app() {
+	sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+	source ~/.bashrc
+	nvm install v18.12.1
+	curl -s https://raw.githubusercontent.com/jhuckaby/Cronicle/master/bin/install.js | node
+}
 
 
 function add_general_apps() {
