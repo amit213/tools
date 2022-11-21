@@ -17,10 +17,16 @@ function install_system_apps() {
 
 }
 
+
+function install_nodejs() {
+	sudo apt install nodejs -y;
+	sudo apt install npm -y;
+}
+
 function install_cronicle_app() {
-	sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+	#sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 	#source ~/.bashrc
-	nvm install v18.12.1
+	#nvm install v18.12.1
 	curl -s https://raw.githubusercontent.com/jhuckaby/Cronicle/master/bin/install.js | node
 }
 
@@ -30,6 +36,7 @@ function add_general_apps() {
 	#echo "howdy zebra 321" >> /tmp/rambozebra321.txt;
 	install_telegram_utils
 	install_system_apps
+	install_nodejs
 	install_cronicle_app
 }
 
