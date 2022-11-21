@@ -30,6 +30,7 @@ function add_general_apps() {
 	#echo "howdy zebra 321" >> /tmp/rambozebra321.txt;
 	install_telegram_utils
 	install_system_apps
+	install_cronicle_app
 }
 
 
