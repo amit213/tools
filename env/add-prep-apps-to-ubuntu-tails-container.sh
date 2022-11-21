@@ -10,6 +10,9 @@ function install_telegram_utils() {
 
 function install_system_apps() {
 	sudo apt install -y ncdu; 
+
+	sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb;
+	sudo dpkg -i google-chrome-stable_current_amd64.deb;
 }
 
 
