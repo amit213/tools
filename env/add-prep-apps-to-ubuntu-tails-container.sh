@@ -8,11 +8,17 @@ function install_telegram_utils() {
 	sudo ln -s -f /home/vmuser/scratch/tools-utils/telegram.sh/test.sh /usr/local/bin/test.sh
 }
 
+function install_system_apps() {
+	sudo apt install -y ncdu; 
+}
+
+
 
 function add_general_apps() {
 	#touch /tmp/rambozebra321.txt;
 	#echo "howdy zebra 321" >> /tmp/rambozebra321.txt;
 	install_telegram_utils
+	install_system_apps
 }
 
 
