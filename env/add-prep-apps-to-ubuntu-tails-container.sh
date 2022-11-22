@@ -20,6 +20,13 @@ function install_google_chrome_browser() {
     sudo apt -f install -y;	
 }
 
+function install_chromium_app() {
+	sudo apt install software-properties-common -y; 
+	sudo add-apt-repository ppa:phd/chromium-browser -y; 
+	sudo apt update -y; sudo add-apt-repository ppa:system76/pop -y; 
+	sudo apt-get update -y; sudo apt install chromium -y;
+}
+
 function install_nodejs() {
 	sudo apt install nodejs -y;
 	sudo apt install npm -y;
@@ -38,6 +45,7 @@ function add_general_apps() {
 	#echo "howdy zebra 321" >> /tmp/rambozebra321.txt;
 	install_telegram_utils
 	install_system_apps
+	install_chromium_app
 	install_nodejs
 	install_cronicle_app
 }
