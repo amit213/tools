@@ -1071,6 +1071,6 @@ export EDITOR=vim
 
 
 
-## ==========
+## ========== quick
  
 set_os_specific_conf $osname_lowercase
