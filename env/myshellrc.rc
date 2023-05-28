@@ -1070,10 +1070,10 @@ export EDITOR=vim
     csvgrep -c 1 -i -m "Alphabeticals" *suggestions* -K 1  | csvcut -c 1-6 -l | sed -e 's/line_number/No./g' | csvlook;
    }
 
-   function report_prep_answerpub_csv() {
-    ## csvgrep -c 1 -i -m "Alphabeticals" *suggestions* -K 1  | csvcut -c 1-6 -l | sed -e 's/line_number/No./g' | csvlook
 
-   }
+   #function report_prep_answerpub_csv() {
+    # csvgrep -c 1 -i -m "Alphabeticals" *suggestions* -K 1  | csvcut -c 1-6 -l | sed -e 's/line_number/No./g' | csvlook;
+   #}
 
 
 
