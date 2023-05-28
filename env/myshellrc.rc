@@ -1101,6 +1101,13 @@ export EDITOR=vim
    }
 
 
+   function reportgen_go() {
+     reportgen_set_target_vars;
+     report_prep_answerpub_csv;
+     report_prep_corecontent_csv;
+   }
+
+
 
 
 
