@@ -1118,7 +1118,7 @@ export EDITOR=vim
      for i in {1..45}; do name=`csvgrep  -c 1 -r "(?:^|\W)$i(?:$|\W)" \
       $dirforprep/$srcfile01competitoranalysis | sed 1d | csvcut -c 8 | awk -F/ '{print $3}'`; \
       csvcut -c $i -x $dirforprep/$srcfile02competitorcontentoutline -l \
-      | sed -e 's/line_number/No./g' -e "s/COMPETITOR/ COMPETITOR     ------   $name   ------ /g" \
+      | sed -e 's/line_number/No./g' -e "s/COMPETITOR/ COMPETITOR     -------   $name   ------- /g" \
        >> $targetdir_csvforpdf/$targetfile_competitorcontentoutline; \
         printf "\n, \n\n, \n" >> $targetdir_csvforpdf/$targetfile_competitorcontentoutline; done;
 
