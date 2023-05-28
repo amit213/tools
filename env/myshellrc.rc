@@ -1084,7 +1084,7 @@ export EDITOR=vim
      mkdir -p $targetdir_csvforpdf;
      #csvgrep -c 1 -i -m "Alphabeticals" *suggestions* -K 1  | csvcut -c 1-6 -l | sed -e 's/line_number/No./g' > 3-related-content-ideas.csv;
      csvgrep -c 1 -i -m "Alphabeticals" *suggestions* -K 1  | csvcut -c 1-6 -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$relatedcontentfile;
-     csvlook $relatedcontentfile;
+     csvlook $targetdir_csvforpdf/$relatedcontentfile;
    }
 
    function report_prep_corecontent_csv() {
