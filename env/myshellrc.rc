@@ -1145,6 +1145,7 @@ export EDITOR=vim
 
       #06
       cp *keywords*.pdf $targetdir_csvforpdf/$targetfile_kwvolumecpc;
+      pdfscale -r A3 $targetdir_csvforpdf/$targetfile_kwvolumecpc;
 
       ##7 PAA data
       report_prep_paa_csv;
