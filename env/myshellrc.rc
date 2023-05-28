@@ -1107,7 +1107,7 @@ export EDITOR=vim
 
      targetfile_kwvolumecpc="6-kw-cpc-volume-data.pdf"
 
-     srcfilePAAfile="*paa*.csv"
+     srcfilePAAfile="*paa*"
      targetfile_paanewtitlebank="7-new-title-topic-bank.csv"
 
      mkdir -p $targetdir_csvforpdf;
