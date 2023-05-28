@@ -1080,7 +1080,7 @@ export EDITOR=vim
 
    function report_prep_answerpub_csv() {
      relatedcontentfile="3-related-content-ideas.csv";
-     report_set_target_vars;
+     reportgen_set_target_vars;
      mkdir -p $targetdir_csvforpdf;
      #csvgrep -c 1 -i -m "Alphabeticals" *suggestions* -K 1  | csvcut -c 1-6 -l | sed -e 's/line_number/No./g' > 3-related-content-ideas.csv;
      csvgrep -c 1 -i -m "Alphabeticals" *suggestions* -K 1  | csvcut -c 1-6 -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$relatedcontentfile;
@@ -1090,14 +1090,24 @@ export EDITOR=vim
    function report_prep_corecontent_csv() {
      dirforprep="csvfilesforprep";
      
+     srcfile01competitoranalysis="01-Competitive-Analysis.csv"
+     targetfile_competitoranalysis="1-competitor-analysis.csv"
+
      srcfile03relatedquestions="03-Related-Questions.csv"
      targetfile_relatedquestions="2-related-questions.csv"
+
+     srcfile04impterms="04-Important-Terms.csv"
+     targetfile_impterms="4-important-terms.csv"
 
      mkdir -p $targetdir_csvforpdf;
      unzip -q -n -d $dirforprep *.zip;
 
+
+     copy $dirforprep/$srcfile01competitoranalysis $targetdir_csvforpdf/$targetfile_competitoranalysis;
      csvcut $dirforprep/$srcfile03relatedquestions -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$targetfile_relatedquestions;
 
+     csvcut $dirforprep/$srcfile04impterms -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$targetfile_impterms;
+     
    }
 
 
