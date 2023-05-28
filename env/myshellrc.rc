@@ -1103,11 +1103,11 @@ export EDITOR=vim
      unzip -q -n -d $dirforprep *.zip;
 
 
-     copy $dirforprep/$srcfile01competitoranalysis $targetdir_csvforpdf/$targetfile_competitoranalysis;
+     cp $dirforprep/$srcfile01competitoranalysis $targetdir_csvforpdf/$targetfile_competitoranalysis;
      csvcut $dirforprep/$srcfile03relatedquestions -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$targetfile_relatedquestions;
 
      csvcut $dirforprep/$srcfile04impterms -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$targetfile_impterms;
-     
+
    }
 
 
