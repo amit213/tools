@@ -1097,7 +1097,10 @@ export EDITOR=vim
      targetfile_relatedquestions="2-related-questions.csv"
 
      srcfile04impterms="04-Important-Terms.csv"
-     targetfile_impterms="3-2-important-terms.csv"
+     targetfile_impterms="3-z-important-terms.csv"
+
+     srcfile02competitorcontentoutline="02-Competitors-Outlines.csv"
+     targetfile_competitorcontentoutline="4-Competitor-Outlines.csv"
 
      mkdir -p $targetdir_csvforpdf;
      unzip -q -n -d $dirforprep *.zip;
@@ -1110,6 +1113,9 @@ export EDITOR=vim
      csvcut $dirforprep/$srcfile04impterms -l \
      | sed -e 's/line_number/No./g' -e 's/KEYWORD/ *Keyword Cloud* Top Ranking Valuable Keywords People Also Search For/g'  \
      > $targetdir_csvforpdf/$targetfile_impterms;
+
+
+     
    }
 
 
