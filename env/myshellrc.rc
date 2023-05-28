@@ -1129,7 +1129,7 @@ export EDITOR=vim
 
       # 05-Alt-Texts-Used-in-Top-Ranking-Contents.csv
       csvcut $dirforprep/$srcfile05alttext -l \
-      | sed -e 's/line_number/No./g' -e "s/ALT text/ ALT Text used by Top Ranking (Page 1 Page 2) content on Google/g"  \
+      | sed -e 's/line_number/No./g' -e "s/ALT text/ ALT Text used by Top Ranking (Page 1 Page 2) content for your KeyWords on Google/g"  \
       > $targetdir_csvforpdf/$targetfile_alttext;
    }
 
