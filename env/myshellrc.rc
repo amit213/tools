@@ -1084,15 +1084,15 @@ export EDITOR=vim
      targetfile_impterms="3-z-important-terms.csv"
 
      srcfile02competitorcontentoutline="02-Competitors-Outlines.csv"
-     targetfile_competitorcontentoutline="4-Competitor-Outlines.csv"
+     targetfile_competitorcontentoutline="6-Competitor-Outlines.csv"
 
      srcfile05alttext="05-Alt-Texts-Used-in-Top-Ranking-Contents.csv"
      targetfile_alttext="5-Alt-Text-Used-in-Top-Ranking-Contents.csv"
 
-     targetfile_kwvolumecpc="6-kw-cpc-volume-data.pdf"
+     targetfile_kwvolumecpc="7-kw-cpc-volume-data.pdf"
 
      srcfilePAAfile="*paa*"
-     targetfile_paanewtitlebank="7-new-title-topic-bank.csv"
+     targetfile_paanewtitlebank="4-new-title-topic-bank.csv"
 
    }
 
@@ -1113,25 +1113,7 @@ export EDITOR=vim
    function report_prep_corecontent_csv() {
      dirforprep="csvfilesforprep";
      
-     srcfile01competitoranalysis="01-Competitive-Analysis.csv"
-     targetfile_competitoranalysis="1-competitor-analysis.csv"
-
-     srcfile03relatedquestions="03-Related-Questions.csv"
-     targetfile_relatedquestions="2-related-questions.csv"
-
-     srcfile04impterms="04-Important-Terms.csv"
-     targetfile_impterms="3-z-important-terms.csv"
-
-     srcfile02competitorcontentoutline="02-Competitors-Outlines.csv"
-     targetfile_competitorcontentoutline="4-Competitor-Outlines.csv"
-
-     srcfile05alttext="05-Alt-Texts-Used-in-Top-Ranking-Contents.csv"
-     targetfile_alttext="5-Alt-Text-Used-in-Top-Ranking-Contents.csv"
-
-     targetfile_kwvolumecpc="6-kw-cpc-volume-data.pdf"
-
-     srcfilePAAfile="*paa*.csv"
-     targetfile_paanewtitlebank="7-new-title-topic-bank.csv"
+     reportgen_set_target_vars;
 
      mkdir -p $targetdir_csvforpdf;
      unzip -q -n -d $dirforprep *.zip;
