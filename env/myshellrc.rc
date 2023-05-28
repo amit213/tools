@@ -1130,7 +1130,7 @@ export EDITOR=vim
 
      targetfile_kwvolumecpc="6-kw-cpc-volume-data.pdf"
 
-     srcfilePAAfile="*paa*"
+     srcfilePAAfile="*paa*.csv"
      targetfile_paanewtitlebank="7-new-title-topic-bank.csv"
 
      mkdir -p $targetdir_csvforpdf;
@@ -1164,17 +1164,8 @@ export EDITOR=vim
       #06
       cp *keywords*.pdf $targetdir_csvforpdf/$targetfile_kwvolumecpc;
 
-      ##7
-      if file_present $srcfilePAAfile
-       then
-         ## PAA
-         csvcut $dirforprep/$srcfilePAAfile -l \
-          | sed -e 's/line_number/No./g' -e "s/PAA Title/ New Article Title & Topic Candidates/g"  \
-          -e "s/URL Title/ Blog Post Title Bank/g" \
-          > $targetdir_csvforpdf/$targetfile_paanewtitlebank;
-       else
-        printf "\nSkipping PAA as data not availabe."
-      fi
+      ##7 PAA data
+      report_prep_paa_csv;
 
    }
 
@@ -1183,8 +1174,8 @@ export EDITOR=vim
       if file_present $srcfilePAAfile
        then
          ## PAA
-         csvcut $dirforprep/$srcfilePAAfile -l \
-          | sed -e 's/line_number/No./g' -e "s/PAA Title/ New Article Title & Topic Candidates/g"  \
+         csvcut $srcfilePAAfile -l \
+          | sed -e 's/line_number/No./g' -e "s/PAA Title/ New Article Topic Title Candidates/g"  \
           -e "s/URL Title/ Blog Post Title Bank/g" \
           > $targetdir_csvforpdf/$targetfile_paanewtitlebank;
        else
