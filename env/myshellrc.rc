@@ -1097,7 +1097,7 @@ export EDITOR=vim
      targetfile_relatedquestions="2-related-questions.csv"
 
      srcfile04impterms="04-Important-Terms.csv"
-     targetfile_impterms="4-important-terms.csv"
+     targetfile_impterms="3-2-important-terms.csv"
 
      mkdir -p $targetdir_csvforpdf;
      unzip -q -n -d $dirforprep *.zip;
