@@ -1147,7 +1147,7 @@ export EDITOR=vim
          ## PAA
          csvcut $dirforprep/$srcfilePAAfile -l \
           | sed -e 's/line_number/No./g' -e "s/PAA Title/ New Article Title & Topic Candidates/g"  \
-          -e "s/URL Title/ Blog Post Title Bank"
+          -e "s/URL Title/ Blog Post Title Bank/g" \
           > $targetdir_csvforpdf/$targetfile_paanewtitlebank;
        else
         printf "\nSkipping PAA as data not availabe."
