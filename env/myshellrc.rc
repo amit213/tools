@@ -1179,7 +1179,7 @@ export EDITOR=vim
           -e "s/URL Title/ Blog Post Title Bank/g" \
           > $targetdir_csvforpdf/$targetfile_paanewtitlebank;
        else
-        printf "\nSkipping PAA as data not availabe."
+        printf "\nSkipping PAA as data not availabe.\n"
       fi
    }
 
