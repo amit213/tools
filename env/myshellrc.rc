@@ -1106,8 +1106,10 @@ export EDITOR=vim
      cp $dirforprep/$srcfile01competitoranalysis $targetdir_csvforpdf/$targetfile_competitoranalysis;
      csvcut $dirforprep/$srcfile03relatedquestions -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$targetfile_relatedquestions;
 
-     csvcut $dirforprep/$srcfile04impterms -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$targetfile_impterms;
-
+     #csvcut $dirforprep/$srcfile04impterms -l | sed -e 's/line_number/No./g' > $targetdir_csvforpdf/$targetfile_impterms;
+     csvcut $dirforprep/$srcfile04impterms -l \
+     | sed -e 's/line_number/No./g' -e 's/KEYWORD/ *Keyword Cloud* Top Ranking Valuable Keywords People Also Search For/g'  \
+     > $targetdir_csvforpdf/$targetfile_impterms;
    }
 
 
