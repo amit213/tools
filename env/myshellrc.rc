@@ -1102,6 +1102,9 @@ export EDITOR=vim
      srcfile02competitorcontentoutline="02-Competitors-Outlines.csv"
      targetfile_competitorcontentoutline="4-Competitor-Outlines.csv"
 
+     srcfile05alttext="05-Alt-Texts-Used-in-Top-Ranking-Contents.csv"
+     targetfile_alttext="5-Alt-Text-Used-in-Top-Ranking-Contents.csv"
+
      mkdir -p $targetdir_csvforpdf;
      unzip -q -n -d $dirforprep *.zip;
 
@@ -1124,6 +1127,10 @@ export EDITOR=vim
         printf "\n, \n\n, \n" >> $targetdir_csvforpdf/$targetfile_competitorcontentoutline; done;
 
 
+      # 05-Alt-Texts-Used-in-Top-Ranking-Contents.csv
+      csvcut $dirforprep/$srcfile05alttext -l \
+      | sed -e 's/line_number/No./g' -e "s/ALT text/ ALT Text used by Top Ranking (Page 1,2) content on Google/g"  \
+      > $targetdir_csvforpdf/$targetfile_alttext;
    }
 
 
