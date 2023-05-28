@@ -1105,6 +1105,11 @@ export EDITOR=vim
      srcfile05alttext="05-Alt-Texts-Used-in-Top-Ranking-Contents.csv"
      targetfile_alttext="5-Alt-Text-Used-in-Top-Ranking-Contents.csv"
 
+     targetfile_kwvolumecpc="6-kw-cpc-volume-data.pdf"
+
+     srcfilePAAfile="*paa*.csv"
+     targetfile_paanewtitlebank="7-new-title-topic-bank.csv"
+
      mkdir -p $targetdir_csvforpdf;
      unzip -q -n -d $dirforprep *.zip;
 
@@ -1131,6 +1136,23 @@ export EDITOR=vim
       csvcut $dirforprep/$srcfile05alttext -l \
       | sed -e 's/line_number/No./g' -e "s/ALT text/ ALT Text used by Top Ranking (Page 1 Page 2) content for your KeyWords on Google/g"  \
       > $targetdir_csvforpdf/$targetfile_alttext;
+
+
+      #06
+      cp *keywords*.pdf $targetdir_csvforpdf/$targetfile_kwvolumecpc;
+
+      ##7
+      if file_present $srcfilePAAfile
+       then
+         ## PAA
+         csvcut $dirforprep/$srcfilePAAfile -l \
+          | sed -e 's/line_number/No./g' -e "s/PAA Title/ New Article Title & Topic Candidates/g"  \
+          -e "s/URL Title/ Blog Post Title Bank"
+          > $targetdir_csvforpdf/$targetfile_paanewtitlebank;
+       else
+        printf "\nSkipping PAA as data not availabe."
+      fi
+
    }
 
 
