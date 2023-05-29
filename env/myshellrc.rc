@@ -1166,6 +1166,19 @@ export EDITOR=vim
       fi
    }
 
+   function reportgen_set_pdf_meta_info() {
+      IFS=$'\n';
+      #for i in `ls SEO-Content*.pdf`; 
+      for i in `find . -type f -name '*SEO-Content*.pdf'`
+        do printf "$i"; 
+           pdfinfo -meta $i;
+           exiftool -Title="SEO-Content-Competitor-SERP-Audit-Report by Brandwise" \
+           -Author="reports@brandwiseglobal.com" -Subject="PDF Metadata" -overwrite_original $i;
+           printf "\n --------- \n";
+           pdfinfo -meta $i;
+           printf "\n"; 
+        done;
+   }
 
    function reportgen_go() {
      reportgen_set_target_vars;
