@@ -1207,7 +1207,7 @@ export EDITOR=vim
       targetdirincontainer="/opt/temp-ubuntu-datadir"
       mkdir -p $targettmpdatadir;
       docker run --privileged -it -d \
-      -v ./$targettmpdatadir:$targetdirincontainer \
+      -v `pwd`/$targettmpdatadir:$targetdirincontainer \
       --name=temp-ubuntu-node-with-ts $srcdockerimage
 
    }
