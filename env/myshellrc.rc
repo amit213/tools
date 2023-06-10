@@ -1210,7 +1210,8 @@ export EDITOR=vim
       mkdir -p $targettmpdatadir;
       docker run --privileged -it -d \
       -v `pwd`/$targettmpdatadir:$targetdirincontainer \
-      --name=$targetcontanername $srcdockerimage
+      --name=$targetcontanername $srcdockerimage;
+      docker logs $targetcontanername;
 
    }
 
