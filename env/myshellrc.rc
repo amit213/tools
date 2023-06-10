@@ -1011,6 +1011,12 @@ export EDITOR=vim
    }
 
 
+   function install_basic_ubuntu_startertools() {
+    sudo apt update -y;
+    sudo apt install screen iputils-ping -y;
+
+
+   }
 
    function install_microk8s_ubuntu() {
     sudo snap install microk8s --classic;
