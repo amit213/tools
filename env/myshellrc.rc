@@ -1207,7 +1207,7 @@ export EDITOR=vim
       srcdockerimage="amit213sf/ubuntu-tailscale-ssh-app:v1.9"
       targetdirincontainer="/opt/temp-ubuntu-datadir"
       targetcontanername="temp-ubuntu-node-with-ts"
-      targetcontainerhostname="tempworkernode-on-$hostname"
+      targetcontainerhostname="node-on-$hostname"
       mkdir -p $targettmpdatadir;
       docker run --privileged -it -d \
       -v `pwd`/$targettmpdatadir:$targetdirincontainer \
