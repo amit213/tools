@@ -1202,13 +1202,15 @@ export EDITOR=vim
 
 
    function run-temp-ubuntu_docker_node_with_ts() {
+
       targettmpdatadir="datadir";
       srcdockerimage="amit213sf/ubuntu-tailscale-ssh-app:v1.9"
       targetdirincontainer="/opt/temp-ubuntu-datadir"
+      targetcontanername="temp-ubuntu-node-with-ts"
       mkdir -p $targettmpdatadir;
       docker run --privileged -it -d \
       -v `pwd`/$targettmpdatadir:$targetdirincontainer \
-      --name=temp-ubuntu-node-with-ts $srcdockerimage
+      --name=$targetcontanername $srcdockerimage
 
    }
 
