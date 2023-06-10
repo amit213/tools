@@ -1166,7 +1166,7 @@ export EDITOR=vim
       fi
    }
 
-   function reportgen_set_pdf_meta_info() {
+   function reportgen_pdf_set_meta_info() {
       IFS=$'\n';
       #for i in `ls SEO-Content*.pdf`; 
       for i in `find . -type f -name '*SEO-Content*.pdf'`
@@ -1186,9 +1186,35 @@ export EDITOR=vim
      report_prep_corecontent_csv;
    }
 
+   function reportgen_pdf_set_restrictions() {
+      IFS=$'\n';
+      targetdir_securefiles="secure-files";
+      mkdir -p $targetdir_securefiles;
+      for i in `find . -type f -name '*SEO-Content*.pdf'`
+        do printf "$i"; 
+           qpdf  --allow-weak-crypto  --encrypt "" "estherajewumi" 128 \
+           --print=none --extract=n --modify=none --annotate=n \
+           --accessibility=n --modify-other=n --accessibility=n \
+           --assemble=n -- "$i" ./$targetdir_securefiles/"$i"
+           printf "\n"; 
+        done;    
+   }
+
+
+   function run-temp-ubuntu_docker_node_with_ts() {
+      targettmpdatadir="datadir";
+      srcdockerimage="amit213sf/ubuntu-tailscale-ssh-app:v1.9"
+      targetdirincontainer="/opt/temp-ubuntu-datadir"
+      mkdir -p $targettmpdatadir;
+      docker run --privileged -it -d \
+      -v ./$targettmpdatadir:$targetdirincontainer \
+      --name=temp-ubuntu-node-with-ts $srcdockerimage
+
+   }
 
 
 
+##
 
 
 ## ========== quick
