@@ -1063,7 +1063,7 @@ export EDITOR=vim
 
    function install_basic_ubuntu_startertools() {
     sudo apt update -y;
-    sudo apt install screen iputils-ping jq -y;
+    sudo apt install screen iputils-ping jq xclip xsel -y;
 
 
    }
