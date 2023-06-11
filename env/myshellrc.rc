@@ -1021,7 +1021,14 @@ export EDITOR=vim
     pip3 install askGPT;
     sudo apt install jq -y;
     curl -sS https://raw.githubusercontent.com/0xacx/chatGPT-shell-cli/main/install.sh | sudo -E bash;
-    
+
+   }
+
+   function run_chatgpt_loop() {
+     for i in {1..500}; do printf "\nPrompt (hit ^D to end the prompt): "; \
+      prompt_text=$(</dev/stdin); printf "\n ============== \n"; \
+      sgpt --chat quicktry "$prompt_text"; \
+      printf "============ \n"; done;
    }
 
    function install_basic_ubuntu_startertools() {
