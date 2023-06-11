@@ -1025,9 +1025,13 @@ export EDITOR=vim
    }
 
    function run_chatgpt_loop() {
+     targetfile_gptoutputlog="chatgpt-session-log.txt";
+
      for i in {1..500}; do printf "\nPrompt (hit ^D to end the prompt): "; \
-      prompt_text=$(</dev/stdin); printf "\n ============== \n"; \
-      sgpt --chat quicktry "$prompt_text"; \
+      prompt_text=$(</dev/stdin); \
+      printf "\n Prompt: $prompt_text\n" >> $targetfile_gptoutputlog; \
+      printf "\n ============== \n"; \
+      sgpt --chat quicktry "$prompt_text" | tee -a $targetfile_gptoutputlog; \
       printf " ============ \n"; done;
    }
 
