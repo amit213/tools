@@ -1011,9 +1011,22 @@ export EDITOR=vim
    }
 
 
+   function install_basic_ubuntu_python_tools() {
+    sudo apt update -y;
+    sudo apt install python3-pip -y;
+   }
+
+   function install_basic_chatgpt_tools() {
+    sudo pip3 install shell-gpt --user;
+    pip3 install askGPT;
+    sudo apt install jq -y;
+    curl -sS https://raw.githubusercontent.com/0xacx/chatGPT-shell-cli/main/install.sh | sudo -E bash;
+    
+   }
+
    function install_basic_ubuntu_startertools() {
     sudo apt update -y;
-    sudo apt install screen iputils-ping -y;
+    sudo apt install screen iputils-ping jq -y;
 
 
    }
