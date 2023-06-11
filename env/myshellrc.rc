@@ -1028,7 +1028,7 @@ export EDITOR=vim
      for i in {1..500}; do printf "\nPrompt (hit ^D to end the prompt): "; \
       prompt_text=$(</dev/stdin); printf "\n ============== \n"; \
       sgpt --chat quicktry "$prompt_text"; \
-      printf "============ \n"; done;
+      printf " ============ \n"; done;
    }
 
    function install_basic_ubuntu_startertools() {
