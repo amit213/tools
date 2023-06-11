@@ -1022,7 +1022,33 @@ export EDITOR=vim
     sudo apt install jq -y;
     curl -sS https://raw.githubusercontent.com/0xacx/chatGPT-shell-cli/main/install.sh | sudo -E bash;
 
+
+    mkdir -p interactive-chatgpt-cli;
+    cd interactive-chatgpt-cli/;
+    git clone https://github.com/amazingpaddy/Interactive-ChatGPT-CLI.git;
+    cd Interactive-ChatGPT-CLI/;
+    pip3 install -r requirements.txt;
+    pip3 install prompt_toolkit;
+    printf "run python3 cli.py --memory-stream\n";
+
    }
+
+   function install_basic_chatgpt_python3.11() {
+    sudo add-apt-repository ppa:deadsnakes/ppa;
+    sudo apt update -y;
+    sudo apt install python3.11 -y;
+    sudo apt install python3.11 python3.11-distutils -y;
+    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
+    pip3.11 install prompt_toolkit;
+
+   }
+
+   function install_basic_chatgpt_aichat() {
+    curl https://sh.rustup.rs -sSf | sh;
+    source "$HOME/.cargo/env";
+    cargo install --force aichat;
+   }
+
 
    function run_chatgpt_loop() {
      targetfile_gptoutputlog="chatgpt-session-log.txt";
