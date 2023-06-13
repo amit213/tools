@@ -1049,6 +1049,12 @@ export EDITOR=vim
     cargo install --force aichat;
    }
 
+   function install_basic_cli_browsers() {
+    sudo apt-get update -y;
+    sudo apt install elinks lynx -y;
+    
+   }
+
 
    function run_chatgpt_loop() {
      targetfile_gptoutputlog="chatgpt-session-log.txt";
@@ -1060,6 +1066,8 @@ export EDITOR=vim
       sgpt --chat quicktry "$prompt_text" | tee -a $targetfile_gptoutputlog; \
       printf " ============ \n" | tee -a $targetfile_gptoutputlog; done;
    }
+
+   
 
    function install_basic_ubuntu_startertools() {
     sudo apt update -y;
