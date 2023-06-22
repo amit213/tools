@@ -476,6 +476,8 @@ export EDITOR=vim
      dd if=/dev/urandom bs=1 count=16 2>/dev/null | base64
    }
 
+
+
    #test run for the set alias.
    set_alias() {
      dbg_print "param: $@"
@@ -665,6 +667,7 @@ export EDITOR=vim
      alias gssh-user='goto_ssh_connect_to_vms_with_customuserid'
      alias gssh-runcloud='goto_ssh_connect_to_vms_with_runcloud'
      reportgen_set_target_vars
+     alias zz='printf `dd if=/dev/urandom bs=1 count=12 2>/dev/null | base64`$ | pbcopy'
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
