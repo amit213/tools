@@ -1052,7 +1052,12 @@ export EDITOR=vim
    function install_basic_cli_browsers() {
     sudo apt-get update -y;
     sudo apt install elinks lynx -y;
-    
+
+   }
+
+   function install_basic_macosx_utils() {
+    brew install --cask rectangle;
+
    }
 
 
@@ -1265,6 +1270,12 @@ export EDITOR=vim
    }
 
 
+
+    #1362  docker run --privileged -it -d -v \
+    # `pwd`/run-temp-ubuntu-docker-with-ts-data-dir:/opt/temp-ubuntu-datadir \
+    # --name=temp-ubuntu-node-with-ts --hostname gptnode.ts ghcr.io/amit213/ubuntu-tailscale-ssh-app:v1.10.1-gpt
+    #1363  docker ps
+    #1364  docker logs temp-ubuntu-node-with-ts
    function run-temp-ubuntu_docker_node_with_ts() {
 
       targettmpdatadir="datadir";
