@@ -500,7 +500,7 @@ export EDITOR=vim
 
    # save dir bookmarks. go to bookmark dir.
    push_and_pop_dir() {
-     dirbookmarkfilelocation="~/.dirbookmarks"
+     dirbookmarkfilelocation="$HOME/.dirbookmarks"
      mkdir -p $dirbookmarkfilelocation;
      if [[ "$1" == "push" ]]
      then
