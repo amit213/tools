@@ -500,13 +500,14 @@ export EDITOR=vim
 
    # save dir bookmarks. go to bookmark dir.
    push_and_pop_dir() {
+     dirbookmarkfilelocation="~/"
      if [[ "$1" == "push" ]]
      then
-          echo `pwd` > /tmp/.$2-tmp
+          echo `pwd` > $dirbookmarkfilelocation/.$2-tmp
      fi
      if [[ "$1" == "pop" ]]
      then         
-          cd "`cat /tmp/.$2-tmp`"
+          cd "`cat $dirbookmarkfilelocation/.$2-tmp`"
      fi     
    }
    #create dynamic alias entries.
