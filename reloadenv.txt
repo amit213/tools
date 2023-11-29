@@ -1,0 +1,1 @@
+alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
