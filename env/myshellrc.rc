@@ -1013,7 +1013,8 @@ export EDITOR=vim
    function dns_selfregister_ip_with_digi_public_cli() {
     sudo apt install jq -y;
     curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/dyndns.sh | DIGITALOCEAN_TOKEN=$(curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/digikey-rand.txt | openssl aes-256-cbc -pbkdf2 -a -salt -d) NAME=$(cat /etc/hostname) SLEEP_INTERVAL=2 REMOVE_DUPLICATES="true" USE_INTERNAL_PRIVATE_IP="true" DOMAIN="dns.block51.net" bash;
-    printf "\n\n *** $DIGITALOCEAN_TOKEN \n"
+    FOO=$(curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/digikey-rand.txt | openssl aes-256-cbc -pbkdf2 -a -salt -d) 
+    printf "\n\n *** $FOO *** \n"
    }
 
 
