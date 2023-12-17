@@ -4,7 +4,7 @@ api_host="https://api.digitalocean.com/v2"
 sleep_interval=${SLEEP_INTERVAL:-300}
 remove_duplicates=${REMOVE_DUPLICATES:-"false"}
 use_internal_private_ip=${USE_INTERNAL_PRIVATE_IP:-"false"}
-
+use_ts_ip=${USE_TS_IP:-"false"}
 
 services=(
     "ifconfig.co"
@@ -39,6 +39,13 @@ while ( true ); do
 
     if [[ "${use_internal_private_ip}" == "true" ]]; then :
         ip=$(hostname -I | awk '{print $1}')
+    else :
+        continue
+    fi
+
+    if [[ "${use_ts_ip}" == "true" ]]; then :
+        mytsip=`ifconfig tailscale0 | grep inet | awk '{print $2}' |  head -1`;
+        ip=$mytsip
     else :
         continue
     fi
