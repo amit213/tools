@@ -47,7 +47,7 @@ while ( true ); do
         mytsip=`ifconfig tailscale0 | grep inet | awk '{print $2}' |  head -1`;
         ip=$mytsip
     else :
-        continue
+        printf "";         
     fi
 
     echo "Found IP address v0.2 $ip"
