@@ -641,6 +641,7 @@ export EDITOR=vim
      alias vag='vagrant status'
      alias tpass='gen_tmp_pass'
      alias dbox-uploader-install='install_dbox_uploader_tool'
+     alias ddns='dns_selfregister_ip_with_digi_public_cli; dns_selfregister_ts_ip_with_digi_public_cli;'
      set_distro_name
      alias hs=hg
 
