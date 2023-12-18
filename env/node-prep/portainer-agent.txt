@@ -1,14 +1,8 @@
-services:
-  portainer:
-    image: portainer/portainer-ce:alpine
-    container_name: portainer
-    command: -H unix:///var/run/docker.sock
-    ports:
-      - "127.0.0.1:9443:9443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "portainer_data:/data"
-    restart: always
-
-volumes:
-  portainer_data:
+mytsip=`ifconfig tailscale0 | grep inet | awk '{print $2}' |  head -1`;
+docker run -d \
+  -p $mytsip:9001:9001 \
+  --name portainer_agent \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /var/lib/docker/volumes:/var/lib/docker/volumes \
+  portainer/agent:2.19.3
