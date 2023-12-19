@@ -39,8 +39,6 @@ while ( true ); do
 
     if [[ "${use_internal_private_ip}" == "true" ]]; then :
         ip=$(hostname -I | awk '{print $1}')
-    else :
-        continue
     fi
 
     if [[ "${use_ts_ip}" == "true" ]]; then :
