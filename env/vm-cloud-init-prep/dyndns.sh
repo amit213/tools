@@ -45,7 +45,7 @@ while ( true ); do
 
     if [[ "${use_ts_ip}" == "true" ]]; then :
         mytsip=`ifconfig tailscale0 | grep inet | awk '{print $2}' |  head -1`;
-        ip=$mytsip
+        ip=$mytsip;
     else :
         printf "";         
     fi
