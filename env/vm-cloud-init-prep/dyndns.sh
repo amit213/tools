@@ -42,7 +42,10 @@ while ( true ); do
     fi
 
     if [[ "${use_ts_ip}" == "true" ]]; then :
-        mytsip=`ifconfig tailscale0 | grep inet | awk '{print $2}' |  head -1`;
+
+        ## ip -4 addr show tailscale0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
+        ##mytsip=`ifconfig tailscale0 | grep inet | awk '{print $2}' |  head -1`;
+        mytsip=`ip -4 addr show tailscale0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'`;
         ip=$mytsip;
     else :
         printf "";         
