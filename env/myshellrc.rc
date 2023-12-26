@@ -1033,7 +1033,7 @@ export EDITOR=vim
     printf "\n Try this please $ 0 **** $0 **** \n";
     printf "\n Try this please $ 1 **** $1 **** \n";
     printf "\n Try this please $ 2 **** $2 **** \n";
-    DIGITALOCEAN_TOKEN=$(curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/digikey-rand.txt | openssl aes-256-cbc -pbkdf2 -a -salt -d -k '$secureToken')
+    DIGITALOCEAN_TOKEN=$(curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/digikey-rand.txt | openssl aes-256-cbc -pbkdf2 -a -salt -d -k $secureToken)
     printf "\n Try this please $ @ and digitoken **** $1  $DIGITALOCEAN_TOKEN **** \n";
    }
 
