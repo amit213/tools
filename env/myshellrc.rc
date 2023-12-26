@@ -1025,6 +1025,12 @@ export EDITOR=vim
    }
 
 
+   function dns_selfregister_headless_public_cli() {
+
+    printf "\n Try this please **** $@ ****";
+   }
+
+
    function dns_selfregister_ts_headless_ip_with_digi_public_cli() {
     sudo apt-get install jq -y;
     NAME="ts-$(cat /etc/hostname)"
