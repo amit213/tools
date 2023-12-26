@@ -1027,7 +1027,10 @@ export EDITOR=vim
 
    function dns_selfregister_headless_public_cli() {
 
-    printf "\n Try this please **** $@ ****\n";
+    printf "\n Try this please $ @ **** $@ **** \n";
+    printf "\n Try this please $ 1 **** $0 **** \n";
+    printf "\n Try this please $ 1 **** $1 **** \n";
+    printf "\n Try this please $ 2 **** $2 **** \n";
    }
 
 
