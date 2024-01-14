@@ -1059,7 +1059,7 @@ export EDITOR=vim
     keyfile="~/.ssh/mountkey.keys"
     inputfile=$(curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt)
 
-    echo `curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt | openssl enc -des-ede3-cbc -aes-256-cbc -aes-128-cbc -a -salt -d  -out $keyfile -iter 3`;
+    echo `curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt | openssl enc -des-ede3-cbc -aes-256-cbc -aes-128-cbc -a -salt -d -in $inputfile  -out $keyfile -iter 3`;
     sudo ln -s -f ~/.ssh/$keyfile ~/.ssh/id_rsa;
    }
 
