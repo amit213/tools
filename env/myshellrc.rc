@@ -1069,7 +1069,7 @@ export EDITOR=vim
    }
 
    function setup_sshfs_mountpoint() {
-    mirrornodemountpath="/home/vmuser/scratch/mnt10tbvol"
+    mirrornodemountpath="/home/vmuser/scratch/mnt10tbvol/mntAudioVideoData-isubmirror1"
     targetsshfsserver="vmuser@ogden.netdynamics24.com"
     mkdir -p $mirrornodemountpath
     sudo umount $mirrornodemountpath
