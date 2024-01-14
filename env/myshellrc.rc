@@ -1055,6 +1055,12 @@ export EDITOR=vim
     curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/dyndns.sh | DIGITALOCEAN_TOKEN=$(curl -fsSL https://raw.githubusercontent.com/amit213/tools/master/env/vm-cloud-init-prep/digikey-rand.txt | openssl aes-256-cbc -pbkdf2 -a -salt -d) NAME=$NAME SLEEP_INTERVAL=2 REMOVE_DUPLICATES="true" USE_TS_IP="true" USE_INTERNAL_PRIVATE_IP="true" DOMAIN="dns.block51.net" bash;
    }
 
+   function enable_sshfs_mount_keys() {
+    keyfile="~/.ssh/mountkey.keys"
+    curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt | \
+    openssl enc -des-ede3-cbc -aes-256-cbc -aes-128-cbc -a -salt -d -out $keyfile -iter 3 
+   }
+
 
    function install_basic_ubuntu_python_tools() {
     sudo apt update -y;
