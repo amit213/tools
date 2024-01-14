@@ -1067,6 +1067,17 @@ export EDITOR=vim
     sudo ln -s -f $keyfile ~/.ssh/id_rsa;
    }
 
+   function enable_sshfs_mountpoint() {
+    mirrornodemountpath="/home/vmuser/scratch/mnt10tbvol"
+    targetsshfsserver="vmuser@ogden.netdynamics24.com"
+    mkdir -p $mirrornodemountpath
+    sudo umount $mirrornodemountpath
+    sudo sshfs -o compression=yes -o cipher=arcfour  -oauto_cache,reconnect -o default_permissions  \
+     -o allow_other -o uid=1050 -o gid=1050 -o idmap=user -oIdentityFile=/home/vmuser/.ssh/id_rsa \
+      vmuser@ogden.netdynamics24.com:/home/vmuser/scratch/10tbvol/mntAudioVideoData-isubmirror1 \
+       $mirrornodemountpath
+   }
+
 
    function install_basic_ubuntu_python_tools() {
     sudo apt update -y;
