@@ -1057,10 +1057,12 @@ export EDITOR=vim
 
    function enable_sshfs_mount_keys() {
     keyfile="~/.ssh/mountkey.keys"
-    inputfile=$(`curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt`)
+    inputfile=$(curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt)
 
     ##echo `curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt | openssl enc -des-ede3-cbc -aes-256-cbc -aes-128-cbc -a -salt -d -in $inputfile  -out $keyfile -iter 3`;
-    openssl enc -des-ede3-cbc -aes-256-cbc -aes-128-cbc -a -salt -d -in $inputfile  -out $keyfile -iter 3;
+    ##openssl enc -des-ede3-cbc -aes-256-cbc -aes-128-cbc -a -salt -d -in $inputfile  -out $keyfile -iter 3;
+    curl -fsSL https://github.com/amit213/tools/raw/master/env/encoded-keys/encoded-sshkeys-keys-triple.txt | \
+    openssl enc -des-ede3-cbc -aes-256-cbc -aes-128-cbc -a -salt -d -out /home/vmuser/.ssh/zebra -iter 3;
     sudo ln -s -f ~/.ssh/$keyfile ~/.ssh/id_rsa;
    }
 
