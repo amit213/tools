@@ -794,6 +794,15 @@ export EDITOR=vim
      done     
    }
 
+   ## prep
+   function prep_vps_with_vmuser() {
+    DEBIAN_FRONTEND=noninteractive sudo apt-get update -y;
+    DEBIAN_FRONTEND=noninteractive sudo apt install fail2ban curl wget net-tools iputils-ping screen \
+    ntpdate -y;
+    wget -qO- https://raw.githubusercontent.com/amit213/tools/master/env/node-prep/prep-vmuser.txt | bash; 
+    sudo systemctl enable fail2ban; sudo systemctl start fail2ban; sudo systemctl status fail2ban;
+   }
+
    ## prep-newvm-without-docker
    function prep_newVM_without_docker() {
        printf " sudo apt-get update -y; sudo apt install curl ntpdate python-pip vim -y; sudo pip install docker-compose; sudo echo \"vmuser ALL=(ALL) NOPASSWD:ALL\" > /etc/sudoers.d/50-vmuser;  sudo groupadd -g 1050 vmuser; sudo useradd -u 1050 -g 1050 -ms /bin/bash vmuser; runuser -l vmuser -c 'cd; mkdir -p ~/.ssh; cd ~/.ssh; echo \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP9kAi3cjkrdA3uMI5DglxRsRfcBq02i5/lRVup2E/ndOBBfbkl6USVpl+QWxxnTMsKxu2MXcOAHwTUY5b53n8AzXtV/VPatndQms5IgP11VsTsiU5mudwPf/s81eQfutYn9haD67wF4Azngdv/vUrFO2a4VMwZjSqJ+RAO1Hbkm4tWqeXjZo3QaErQg411zG6pvWdxLsGzvTc+SzY+Igft1Wx4NCTEgDv+HyEFSDYcPx9SGc9iBk2tOxALpS/htVpmSF+MKnu8ToIRn0ngunE2bi8cDpBPFO30JCa+V+eb4zEh6VbUXB97qBLjX6gUHycAM2sBWoKCR8e61tnsC27 mbuser@bigrock.local\" >> authorized_keys; curl icanhazip.com ';   \n"
