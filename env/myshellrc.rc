@@ -669,6 +669,7 @@ export EDITOR=vim
      alias gssh-runcloud='goto_ssh_connect_to_vms_with_runcloud'
      reportgen_set_target_vars
      alias zz='printf `dd if=/dev/urandom bs=1 count=12 2>/dev/null | base64`$ | pbcopy'
+     alias prep_tailscale_client='install_tailscale_client'
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
