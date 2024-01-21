@@ -796,6 +796,13 @@ export EDITOR=vim
    }
 
    ## prep
+   function prep_linuxcontainer_with_basic_tools() {
+    
+    sudo dpkg --configure -a; DEBIAN_FRONTEND=noninteractive sudo apt-get update -y;
+    DEBIAN_FRONTEND=noninteractive sudo apt install curl wget net-tools iputils-ping screen \
+    ntpdate -y;
+
+   }
    function prep_vps_with_vmuser() {
     DEBIAN_FRONTEND=noninteractive sudo apt-get update -y;
     DEBIAN_FRONTEND=noninteractive sudo apt install fail2ban curl wget net-tools iputils-ping screen \
