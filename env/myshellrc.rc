@@ -797,7 +797,7 @@ export EDITOR=vim
 
    ## prep
    function prep_linuxcontainer_with_basic_tools() {
-    
+
     sudo dpkg --configure -a; DEBIAN_FRONTEND=noninteractive sudo apt-get update -y;
     DEBIAN_FRONTEND=noninteractive sudo apt install curl wget net-tools iputils-ping screen \
     ntpdate -y;
@@ -1084,6 +1084,19 @@ export EDITOR=vim
     sudo ln -s -f $keyfile ~/.ssh/id_rsa;
     sudo chmod 600 $keyfile;
    }
+
+   function prep_sshfs_testmountpoint() {
+    mirrornodemountpath="/home/vmuser/scratch/mnt10tbvol/waiting/testdir"
+    targetpathonserver="/home/vmuser/scratch/10tbvol/waiting/testdir"
+    targetsshfsserver="vmuser@ogden.netdynamics24.com"
+    mkdir -p $mirrornodemountpath
+    sudo umount $mirrornodemountpath
+    sudo sshfs -o compression=yes -o cipher=arcfour  -oauto_cache,reconnect -o default_permissions  \
+     -o allow_other -o uid=1050 -o gid=1050 -o idmap=user -oIdentityFile=/home/vmuser/.ssh/id_rsa \
+      vmuser@ogden.netdynamics24.com:$targetpathonserver \
+       $mirrornodemountpath
+   }
+
 
    function prep_sshfs_mountpoint() {
     mirrornodemountpath="/home/vmuser/scratch/mnt10tbvol/mntAudioVideoData-isubmirror1"
