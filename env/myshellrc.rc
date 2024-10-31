@@ -677,6 +677,16 @@ export EDITOR=vim
 
      alias tt='run_tgpt_ai_cycle'
      alias aichat.headlines='run_perplexity_ai_search_cycle'
+     alias aichat.perplexity-online='aichat -m openrouter:perplexity/llama-3.1-sonar-large-128k-online'
+     alias aichat.gemini-flash1.5='aichat -m openrouter:google/gemini-flash-1.5'
+     alias aichat.gemini-pro1.5-free='aichat -m openrouter:google/gemini-pro-1.5-exp'
+     alias aichat.gemma-9b-free='aichat -m openrouter:google/gemma-2-9b-it:free'
+     alias aichat.gemini-vision-pro1='aichat -m openrouter:google/gemini-pro-vision'
+     alias aichat.gemini-vision-pro1.5='aichat -m openrouter:google/gemini-pro-1.5'
+     alias aichat.claude3.5-sonnet-self='aichat -m openrouter:anthropic/claude-3.5-sonnet:beta'
+     alias aichat.claude3-haiku-self='aichat -m openrouter:anthropic/claude-3-haiku:beta'
+     alias aichat.llama3.2-11b-vision-free='aichat -m openrouter:meta-llama/llama-3.2-11b-vision-instruct:free'
+
 
    }
    # entry point for respective platforms.
