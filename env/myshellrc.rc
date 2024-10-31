@@ -687,9 +687,11 @@ export EDITOR=vim
      alias aichat.gemma-9b-free='aichat -m openrouter:google/gemma-2-9b-it:free'
      alias aichat.gemini-vision-pro1='aichat -m openrouter:google/gemini-pro-vision'
      alias aichat.gemini-vision-pro1.5='aichat -m openrouter:google/gemini-pro-1.5'
+     alias aichat.gemini-pro1='aichat -m openrouter:google/gemini-pro'
      alias aichat.claude3.5-sonnet='aichat -m openrouter:anthropic/claude-3.5-sonnet'
      alias aichat.claude3.5-sonnet-self='aichat -m openrouter:anthropic/claude-3.5-sonnet:beta'
      alias aichat.claude3-haiku-self='aichat -m openrouter:anthropic/claude-3-haiku:beta'
+     alias aichat.claude3.5-sonnet-self-2024='aichat -m openrouter:anthropic/claude-3.5-sonnet-20240620:beta'
      alias aichat.llama3.2-11b-vision-free='aichat -m openrouter:meta-llama/llama-3.2-11b-vision-instruct:free'
      alias aichat.llama3.2-3b-instruct-free='aichat -m openrouter:meta-llama/llama-3.2-3b-instruct:free'
      alias aichat.llama3.1-70b-instruct-free='aichat -m openrouter:meta-llama/llama-3.1-70b-instruct:free'
@@ -707,7 +709,19 @@ export EDITOR=vim
      alias aichat.nvidia-nemotron70b-instruct='aichat -m openrouter:nvidia/llama-3.1-nemotron-70b-instruct'
      alias aichat.rocinante='aichat -m openrouter:thedrummer/rocinante-12b'
      alias aichat.mistral-nemo='aichat -m openrouter:mistralai/mistral-nemo'
-     alias aichat.palm2-code='aichat -m openrouter:google/palm-2-codechat-bison-32k'
+     alias aichat.palm2-code-32k='aichat -m openrouter:google/palm-2-codechat-bison-32k'
+     alias aichat.palm2-code='aichat -m openrouter:google/palm-2-codechat-bison'
+     alias aichat.hermes3-405b-free='aichat -m openrouter:nousresearch/hermes-3-llama-3.1-405b:free'
+     alias aichat.hermes3-405b-instruct-extended='aichat -m openrouter:nousresearch/hermes-3-llama-3.1-405b:extended'
+     alias aichat.openhermes2.5-mistral-7b='aichat -m openrouter:teknium/openhermes-2.5-mistral-7b'
+     alias aichat.cohere-command-r='aichat -m openrouter:cohere/command-r-08-2024'
+     alias aichat.deepseek-2.5='aichat -m openrouter:deepseek/deepseek-chat'
+     alias aichat.mistral-large='aichat -m openrouter:mistralai/mistral-large'
+     alias aichat.phi3-mini-free='aichat -m openrouter:microsoft/phi-3-mini-128k-instruct:free'
+     alias aichat.phi35-mini='aichat -m openrouter:microsoft/phi-3.5-mini-128k-instruct'
+     alias aichat.phi3-medium-free='aichat -m openrouter:microsoft/phi-3-medium-128k-instruct:free'
+     alias aichat.ministral-8b='aichat -m openrouter:mistralai/ministral-8b'
+
 
 
    }
