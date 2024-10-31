@@ -676,6 +676,8 @@ export EDITOR=vim
      alias prep_tailscale_client='install_tailscale_client'
 
      alias tt='run_tgpt_ai_cycle'
+     alias aichat.headlines='run_perplexity_ai_search_cycle'
+
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
@@ -1402,9 +1404,45 @@ export EDITOR=vim
             echo "Error: Please provide a search query."
             return 1
         fi
-
         # Execute tgpt command with the provided parameter
         tgpt --provider duckduckgo "$1"
+    }
+
+    function run_perplexity_ai_search_cycle() {
+        # Validate if the user has provided an input parameter
+        if [ -z "$1" ]; then
+            echo "Error: Please provide a search query."
+            return 1
+        fi
+        # Execute tgpt command with the provided parameter
+        aichat -r headlines -m openrouter:perplexity/llama-3.1-sonar-large-128k-online "$1"
+    }
+
+    function install_ai_tools_packages() {
+        # List of packages to install
+        ## aichat, mods, fabric, tgpt, glow
+        packages=("vim" "ncdu")
+
+        # Check if system is Debian/Ubuntu by looking for apt
+        if ! command -v apt >/dev/null 2>&1; then
+            echo "Error: This system does not appear to be Debian/Ubuntu based"
+            return 1
+        fi
+
+        # Update package lists first
+        sudo apt-get update -qq
+
+        # Install all packages non-interactively
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${packages[@]}"
+
+        # Check if installation was successful
+        if [ $? -eq 0 ]; then
+            echo "Successfully installed: ${packages[*]}"
+            return 0
+        else
+            echo "Error: Package installation failed"
+            return 1
+        fi
     }
 
 ##
