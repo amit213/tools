@@ -728,10 +728,13 @@ export EDITOR=vim
      alias aichat.dolphin-mixtral22b-uncensored='aichat -m openrouter:cognitivecomputations/dolphin-mixtral-8x22b'
      alias aichat.dolphin-llama3-70b-uncensored='aichat -m openrouter:cognitivecomputations/dolphin-llama-3-70b'
      alias aichat.codellama-70b='aichat -m openrouter:meta-llama/codellama-70b-instruct'
-
-
-
-
+     alias aichat.groq-90b-vision='aichat -m groq:llama-3.2-90b-vision-preview'
+     alias aichat.groq-8b-instant='aichat -m groq:llama-3.1-8b-instant'
+     alias aichat.groq-70b-tool='aichat -m groq:llama3-groq-70b-8192-tool-use-preview'
+     alias aichat.groq-8b-tool='aichat -m groq:llama3-groq-8b-8192-tool-use-preview'
+     alias aichat.groq-llama3.2-90b-text='aichat -m groq:llama-3.2-90b-text-preview'
+     alias aichat.groq-llama3.2-90b-vision='aichat -m groq:llama-3.2-90b-vision-preview'
+     alias aichat.groq='aichat -m groq:llama-3.1-70b-versatile'
 
    }
    # entry point for respective platforms.
