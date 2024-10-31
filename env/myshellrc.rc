@@ -655,8 +655,11 @@ export EDITOR=vim
      alias dlmp4="youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4"
      alias dlmp3book='youtube-dl  --audio-quality 0 --prefer-ffmpeg --extract-audio --audio-format mp3 --audio-quality 100k'
 
+
      #alias ytdlpmp4="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4"
      alias ytdlpmp4="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' -S vcodec:h264 --merge-output-format mp4"
+     #alias ytdlpmp4="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' -S vcodec:h264 --merge-output-format mp4"
+    
 
      #alias reloadenv='curl -s termbin.com/n2bc | bash'
      alias reloadenv='source /dev/stdin <<< "$(curl -s -L bit.ly/sh213)"'
