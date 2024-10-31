@@ -158,7 +158,7 @@ export EDITOR=vim
    }
 
    #setup docker specific aliases
-   set_docker_alias() {
+   Rdocker_alias() {
      #alias drmi='docker images --no-trunc | grep none | awk '{print $3}' | xargs docker rmi'
      alias dimg='docker images'
      alias dps='docker ps; docker ps -a'     
@@ -674,6 +674,8 @@ export EDITOR=vim
      reportgen_set_target_vars
      alias zz='printf `dd if=/dev/urandom bs=1 count=12 2>/dev/null | base64`$ | pbcopy'
      alias prep_tailscale_client='install_tailscale_client'
+
+     alias tt='run_tgpt_ai_cycle'
    }
    # entry point for respective platforms.
    set_os_specific_conf() {
@@ -1394,7 +1396,16 @@ export EDITOR=vim
 
    }
 
+    function run_tgpt_ai_cycle() {
+        # Validate if the user has provided an input parameter
+        if [ -z "$1" ]; then
+            echo "Error: Please provide a search query."
+            return 1
+        fi
 
+        # Execute tgpt command with the provided parameter
+        tgpt --provider duckduckgo "$1"
+    }
 
 ##
 
