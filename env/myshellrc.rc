@@ -682,9 +682,11 @@ export EDITOR=vim
      alias aichat.perplexity-sonar70b-online='aichat -m openrouter:perplexity/llama-3.1-sonar-large-128k-online'
      alias aichat.perplexity-sonar8b-online='aichat -m openrouter:perplexity/llama-3.1-sonar-small-128k-online'
      alias aichat.perplexity-sonar70b-online='aichat -m openrouter:perplexity/llama-3-sonar-large-32k-online'
+
      alias aichat.gemini-flash1.5='aichat -m openrouter:google/gemini-flash-1.5'
      alias aichat.gemini-pro1.5-free='aichat -m openrouter:google/gemini-pro-1.5-exp'
      alias aichat.gemma-9b-free='aichat -m openrouter:google/gemma-2-9b-it:free'
+     alias aichat.gemma-27b='aichat -m openrouter:google/gemma-2-27b-it'
      alias aichat.gemini-vision-pro1='aichat -m openrouter:google/gemini-pro-vision'
      alias aichat.gemini-vision-pro1.5='aichat -m openrouter:google/gemini-pro-1.5'
      alias aichat.gemini-pro1='aichat -m openrouter:google/gemini-pro'
@@ -721,6 +723,13 @@ export EDITOR=vim
      alias aichat.phi35-mini='aichat -m openrouter:microsoft/phi-3.5-mini-128k-instruct'
      alias aichat.phi3-medium-free='aichat -m openrouter:microsoft/phi-3-medium-128k-instruct:free'
      alias aichat.ministral-8b='aichat -m openrouter:mistralai/ministral-8b'
+     alias aichat.dbrx-132b='aichat -m openrouter:databricks/dbrx-instruct'
+     alias aichat.dolphin-mixtral7b-uncensored='aichat -m openrouter:cognitivecomputations/dolphin-mixtral-8x7b'
+     alias aichat.dolphin-mixtral22b-uncensored='aichat -m openrouter:cognitivecomputations/dolphin-mixtral-8x22b'
+     alias aichat.dolphin-llama3-70b-uncensored='aichat -m openrouter:cognitivecomputations/dolphin-llama-3-70b'
+     alias aichat.codellama-70b='aichat -m openrouter:meta-llama/codellama-70b-instruct'
+
+
 
 
 
