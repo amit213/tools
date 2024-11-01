@@ -695,9 +695,11 @@ export EDITOR=vim
      alias aichat.claude3-haiku-self='aichat -m openrouter:anthropic/claude-3-haiku:beta'
      alias aichat.claude3.5-sonnet-self-2024='aichat -m openrouter:anthropic/claude-3.5-sonnet-20240620:beta'
      alias aichat.llama3.2-11b-vision-free='aichat -m openrouter:meta-llama/llama-3.2-11b-vision-instruct:free'
+     alias aichat.llama3.2-11b-vision='aichat -m openrouter:meta-llama/llama-3.2-11b-vision-instruct'
      alias aichat.llama3.2-3b-instruct-free='aichat -m openrouter:meta-llama/llama-3.2-3b-instruct:free'
      alias aichat.llama3.1-70b-instruct-free='aichat -m openrouter:meta-llama/llama-3.1-70b-instruct:free'
      alias aichat.llama3.1-405b-instruct-free='aichat -m openrouter:meta-llama/llama-3.1-405b-instruct:free'
+
      alias aichat.o1-mini-2024='aichat -m openrouter:openai/o1-mini-2024-09-12'
      alias aichat.o1-min='aichat -m openrouter:openai/o1-mini'
      alias aichat.o1-preview-expensive='aichat -m openrouter:openai/o1-preview-2024-09-12'
@@ -1502,6 +1504,8 @@ export EDITOR=vim
             return 1
         fi
     }
+
+
 
 ##
 
